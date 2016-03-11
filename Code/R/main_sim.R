@@ -1,13 +1,12 @@
 # Simulation for LLG
 
 rm(list = ls())
-# setwd("E:/Dropbox/GitHub/LLG/Code/R")
-setwd("/Users/Runze/Dropbox/GitHub/LLG/Code/R")
+setwd("E:/Dropbox/GitHub/LLG/Code/R")
+# setwd("/Users/Runze/Dropbox/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
 require(igraph)
 require(rARPACK)
-# library("rARPACK")
 # source("graphFunctions.R")
 # source("USVT.R")
 
@@ -33,7 +32,7 @@ diag(P) = 0
 # }
 
 MSE_P_Hat = array(rep(0, maxDim*maxIter), dim=c(maxDim, maxIter))
-MSE_P_Hat[1,] = NA
+# MSE_P_Hat[1,] = NA
 MSE_A_Bar = rep(0, 1, maxIter)
 
 for (iter in 1:maxIter) {
@@ -70,3 +69,4 @@ for (iter in 1:maxIter) {
 plot(1:d, type="n", ylim=c(0, 0.002), xlab="embedding dimension", ylab="MSE")
 points(rowMeans(MSE_P_Hat), type="l", col="blue")
 points(rep(mean(MSE_A_Bar), 1, maxDim), type="l", col="red")
+title("Simulation m=50, n=200")
