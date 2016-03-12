@@ -66,13 +66,18 @@ boxplot(elbMat,notch=TRUE,xlab="elbow",ylab="embedding dimension")
 # load("../../Result/evalues.RData")
 
 ################ Cluster M graphs into two groups ################
-# Using first 3 elbows
+# Clustering using first 3 elbows
 GMM = Mclust(eval3Mat, 2)
 
-# clcol <- rainbow(length(unique(GMM$classification)))[GMM$classification]
-# pairs(eval3Mat, col=clcol)
+# Pair plot
+png("../../Result/pair_cluster_3elbow.png")
+clcol <- rainbow(length(unique(GMM$classification)))[GMM$classification]
+pairs(eval3Mat, col=clcol)
+title("2 Clusters using the first 3 elbows")
+dev.off ();
 
-png("../../Result/Cluster_3elbow.png")
+# Scree plot
+png("../../Result/scree_cluster_3elbow.png")
 plot(1:(n-10), type="n", ylim=c(0,50), xlab="embedding dimension", ylab="eigen value")
 for (i in 1:M) {
   if (GMM$classification[i] == 1) {
