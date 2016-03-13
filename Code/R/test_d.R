@@ -94,8 +94,13 @@ for (i in 1:M) {
 title("2 Clusters using the first 3 elbows")
 dev.off ();
 
-
-
+# Check 2 scans
+sum(GMM$classification == 1)
+sum(GMM$classification == 2)
+nv = (GMM$classification == 2)
+tmp = (1:M)[nv]
+sum((GMM$classification[1:(M/2)*2 - 1] == 2) & (GMM$classification[1:(M/2)*2] == 2))
+sum(GMM$classification[1:(M/2)*2 - 1] != GMM$classification[1:(M/2)*2])
 
 # Using first 2 eigenvalues
 
@@ -122,4 +127,11 @@ plot(GMM, what="classification", xlab="first eigenvalue", ylab="second eigenvalu
 title("Clustering result using the first two eigenvalues")
 
 
+
+normDiff = rep(0, 1, M/2)
+for (i in 1:(M/2)) {
+  normDiff[i] = norm(A_all[,,i] - A_all[,,i+1], "F")
+}
+boxplot(normDiff, notch=TRUE, ylab="||A_{i1}-A_{i2}||_F")
+boxplot(normDiff/n/(n-1), notch=TRUE, ylab="||A_{i1}-A_{i2}||_F/n/(n-1)")
 
