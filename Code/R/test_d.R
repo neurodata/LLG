@@ -18,9 +18,7 @@ dataName = "CPAC200"
 # dataName = "slab1068"
 # dataName = "Talairach"
 
-
 ################ Read M graphs ################
-nSample = 50;
 A = read_graph(paste("../../Data/", dataName, "/SWU4_", subjectsID[1], 
                      "_1_", dataName, "_sg.graphml", sep =""), format="graphml")
 A = as_adj(A, type="both", sparse=FALSE)
@@ -37,6 +35,35 @@ for (sub in 1:227) {
   }
 }
 
+
+################ Test on difference between 2 scans ################
+require(rARPACK)
+# dVec = seq(5,n-20,10)
+dVec = 2:15
+dMax = max(dVec)
+normDiff = array(rep(NaN, M/2*dMax), dim=c(M/2, dMax))
+for (i in 1:(M/2)) {
+  print(i)
+  g1 = A_all[,,i*2-1]
+  A1 = g1 + Diagonal(x=rowSums(g1))/(n-1)
+  ASE1 = eigs_sym(matrix(A1, ncol=n), dMax, which = "LM")
+  g2 = A_all[,,i*2]
+  A2 = g2 + Diagonal(x=rowSums(g2))/(n-1)
+  ASE2 = eigs_sym(matrix(A2, ncol=n), dMax, which = "LM")
+  for (d in dVec) {
+    Phat1 = ASE1$vectors[,1:d] %*% Diagonal(x=ASE1$values[1:d]) %*% t(ASE1$vectors[,1:d])
+    Phat2 = ASE2$vectors[,1:d] %*% Diagonal(x=ASE2$values[1:d]) %*% t(ASE2$vectors[,1:d])
+    diag(Phat1) = 0
+    Phat1[Phat1>1] = 1
+    Phat1[Phat1<0] = 0
+    diag(Phat2) = 0
+    Phat2[Phat2>1] = 1
+    Phat2[Phat2<0] = 0
+    normDiff[i, d] = norm(Phat1 - Phat2, "F")/n/(n-1)
+  }
+}
+boxplot(normDiff[,dVec], notch=TRUE, ylab="||A_{i1}-A_{i2}||_F/n/(n-1)",
+        names = dVec)
 
 ################ Plot elbows of all M graphs ################
 source("getElbows.R")
