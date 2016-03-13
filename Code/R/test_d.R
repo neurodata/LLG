@@ -19,40 +19,40 @@ dataName = "CPAC200"
 
 ################ Read M graphs ################
 source("function_collection.R")
-tmpList = readData(dataName)
-A = tmpList[[1]]
+tmpList = read_data(dataName, DA=T)
+A_all = tmpList[[1]]
 n = tmpList[[2]]
 M = tmpList[[3]]
 rm(tmpList)
 
 ################ Test on difference between 2 scans ################
 require(rARPACK)
+require(Matrix)
 # dVec = seq(5,n-20,10)
 dVec = 2:15
+# dVec = seq(2, 15, 3)
+ndVec = length(dVec)
 dMax = max(dVec)
-normDiff = array(rep(NaN, M/2*dMax), dim=c(M/2, dMax))
+normDiff = array(rep(NaN, M/2*ndVec), dim=c(M/2, ndVec))
 for (i in 1:(M/2)) {
   print(i)
-  g1 = A_all[,,i*2-1]
-  A1 = g1 + Diagonal(x=rowSums(g1))/(n-1)
-  ASE1 = eigs_sym(matrix(A1, ncol=n), dMax, which = "LM")
-  g2 = A_all[,,i*2]
-  A2 = g2 + Diagonal(x=rowSums(g2))/(n-1)
-  ASE2 = eigs_sym(matrix(A2, ncol=n), dMax, which = "LM")
-  for (d in dVec) {
-    Phat1 = ASE1$vectors[,1:d] %*% Diagonal(x=ASE1$values[1:d]) %*% t(ASE1$vectors[,1:d])
-    Phat2 = ASE2$vectors[,1:d] %*% Diagonal(x=ASE2$values[1:d]) %*% t(ASE2$vectors[,1:d])
-    diag(Phat1) = 0
-    Phat1[Phat1>1] = 1
-    Phat1[Phat1<0] = 0
-    diag(Phat2) = 0
-    Phat2[Phat2>1] = 1
-    Phat2[Phat2<0] = 0
-    normDiff[i, d] = norm(Phat1 - Phat2, "F")/n/(n-1)
+  A1 = as.matrix(A_all[[i*2-1]])
+  ASE1 = eigs_sym(A1, dMax, which = "LM")
+  A2 = as.matrix(A_all[[i*2]])
+  ASE2 = eigs_sym(A2, dMax, which = "LM")
+  
+  for (iD in 1:ndVec) {
+    d = dVec[iD]
+    Phat1 = ASE1$vectors[,1:d] %*% Diagonal(d, x=ASE1$values[1:d]) %*% t(ASE1$vectors[,1:d])
+    Phat2 = ASE2$vectors[,1:d] %*% Diagonal(d, x=ASE2$values[1:d]) %*% t(ASE2$vectors[,1:d])
+    Phat1 = regularize(Phat1)
+    Phat2 = regularize(Phat2)
+    normDiff[i, iD] = norm(Phat1 - Phat2, "F")/n/(n-1)
   }
 }
-boxplot(normDiff[,dVec], notch=TRUE, ylab="||A_{i1}-A_{i2}||_F/n/(n-1)",
-        names = dVec)
+
+boxplot(normDiff, notch=TRUE, xlab = "embedded dimension", 
+        ylab="||A_{i1}-A_{i2}||_F/n/(n-1)", names = dVec)
 
 ################ Plot elbows of all M graphs ################
 source("getElbows.R")
