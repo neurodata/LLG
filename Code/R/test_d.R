@@ -5,7 +5,6 @@ setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
 # library(igraph)
-# library(mclust)
 # library("rARPACK")
 # source("graphFunctions.R")
 # source("USVT.R")
@@ -56,16 +55,18 @@ boxplot(normDiff, notch=TRUE, xlab = "embedded dimension",
 
 ################ Plot elbows of all M graphs ################
 source("getElbows.R")
-require(Matrix)
+# require(rARPACK)
 require(irlba)
+dMax = n-10
 elbMat = matrix(0, M, 3)
-evalMat = matrix(0, M, n-10)
+evalMat = matrix(0, M, dMax)
 eval3Mat = matrix(0, M, 3)
-plot(1:(n-10), type="n", ylim=c(0,50), xlab="embedding dimension", ylab="eigen value")
+plot(1:dMax, type="n", ylim=c(0,50), xlab="embedding dimension", ylab="eigen value")
 for (i in 1:M) {
-  gi = A_all[,,i]
-  A = gi + Diagonal(x=rowSums(gi))/(n-1)
-  vecs = irlba(A, nrow(gi)-10, ncol(gi)-10)$d
+  A = A_all[[i]]
+  vecs = irlba(A, dMax, dMax)$d
+  # A = as.matrix(A_all[[i]])
+  # vecs = eigs_sym(A, dMax, which = "LM")$values
   evalMat[i,] = vecs
   elb = getElbows(vecs, plot=F)
   elbMat[i,] = elb
@@ -75,14 +76,16 @@ for (i in 1:M) {
 }
 
 # Box plot of elbows of all M graphs
-boxplot(elbMat,notch=TRUE,xlab="elbow",ylab="embedding dimension")
+boxplot(elbMat, notch=TRUE, xlab="elbow", ylab="embedding dimension")
 
 # save.image("../../Result/evalues.RData")
 
 # load("../../Result/evalues.RData")
 
 ################ Cluster M graphs into two groups ################
+
 # Clustering using first 3 elbows
+library(mclust)
 GMM = Mclust(eval3Mat, 2)
 
 # Pair plot
@@ -94,7 +97,7 @@ dev.off ();
 
 # Scree plot
 png("../../Result/scree_cluster_3elbow.png")
-plot(1:(n-10), type="n", ylim=c(0,50), xlab="embedding dimension", ylab="eigen value")
+plot(1:dMax, type="n", ylim=c(0,50), xlab="embedding dimension", ylab="eigen value")
 for (i in 1:M) {
   if (GMM$classification[i] == 1) {
     # colStr = "grey72"
