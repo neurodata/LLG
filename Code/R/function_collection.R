@@ -59,4 +59,17 @@ regularize <- function(A) {
 
 
 
-
+# Dimensions bruteforce exploring
+dim_brute <- function(M, m, d, A_all) {
+  require(rARPACK)
+  
+  sampleVec = sample.int(M, m)
+  A_bar = add(A_all[sampleVec])
+  P_bar = (A_sum - A_bar)/(M - m);
+  A_bar = A_bar/m;
+  
+  ASE = eigs_sym(as.matrix(diag_aug(A_bar)), d, which = "LM")
+  P_hat =  regularize(ASE$vectors %*% diag(ASE$values) %*% t(ASE$vectors))
+  
+  return(c(norm(P_bar - A_bar, "F")/n/(n-1), norm(P_bar - P_hat, "F")/n/(n-1)))
+}

@@ -5,9 +5,10 @@ setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/Experiment_SWU4")
 
 require(rARPACK)
-# library("igraph")
-# source("graphFunctions.R")
-# source("USVT.R")
+
+m = 5;
+nIter = 500;
+dVec = 2:199;
 
 dataName = "CPAC200"
 # dataName = "desikan"
@@ -16,7 +17,7 @@ dataName = "CPAC200"
 # dataName = "slab1068"
 # dataName = "Talairach"
 
-################ Read M graphs ################
+
 source("function_collection.R")
 tmpList = read_data(dataName, DA=F)
 A_all = tmpList[[1]]
@@ -24,11 +25,6 @@ n = tmpList[[2]]
 M = tmpList[[3]]
 rm(tmpList)
 
-
-
-m = 5;
-nIter = 10;
-dVec = 2:5;
 
 nD = length(dVec)
 
@@ -38,23 +34,17 @@ A_sum = add(A_all)
 error_P_hat = matrix(0, nD, nIter)
 error_A_bar = matrix(0, nD, nIter)
 
+# ptm <- proc.time()
+
+# sapply(dVec, function(d) replicate(nIter, dim_brute(M, m, d, A_all)))
+
 for (iD in 1:nD) {
   print(iD)
   d = dVec[iD]
-  for (iIter in 1:nIter) {
-    print(iIter)
-    sampleVec = sample.int(M, m)
-    A_bar = add(A_all[sampleVec])
-    P_bar = (A_sum - A_bar)/(M - m);
-    A_bar = A_bar/m;
-    
-    ASE = eigs_sym(as.matrix(diag_aug(A_bar)), d, which = "LM")
-    P_hat =  regularize(ASE$vectors %*% diag(ASE$values) %*% t(ASE$vectors))
-    
-    error_P_hat[iD, iIter] = norm(P_bar - P_hat, "F")/n/(n-1)
-    error_A_bar[iD, iIter] = norm(P_bar - A_bar, "F")/n/(n-1)
-  }
+  tmp = replicate(nIter, dim_brute(M, m, d, A_all))
 }
+
+# proc.time() - ptm
 
 fileName = paste("../../Result/result_", dataName, "_", n, "brute_", m, ".RData", sep="")
 save(error_P_hat, error_A_bar, n, M, m, dVec, file=fileName)
