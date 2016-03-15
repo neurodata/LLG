@@ -79,5 +79,5 @@ error_P_hat = out[2,,]
 #   }
 # }
 
-fileName = paste("../../Result/result_", dataName, "_", n, "brute_", m, ".RData", sep="")
+fileName = paste("../../Result/result_", dataName, "_", n, "_brute_", m, ".RData", sep="")
 save(error_A_bar, error_P_hat, n, M, m, dVec, file=fileName)
