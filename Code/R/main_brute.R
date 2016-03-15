@@ -7,7 +7,7 @@ setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 
 # require(rARPACK)
 
-m = args[1]
+m = as.numeric(args[1])
 nIter = 500
 dVec = 2:50
 nCores = 12
