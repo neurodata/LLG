@@ -1,15 +1,16 @@
 
-rm(list = ls())
+args <- commandArgs(trailingOnly = TRUE)
+
 setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("E:/GitHub/Experiment_SWU4")
 # setwd("/cis/home/rtang/Experiment_SWU4")
 
 # require(rARPACK)
 
-m = 5
-nIter = 300
-dVec = 2:10
-nCores = 4
+m = args[1]
+nIter = 500
+dVec = 2:50
+nCores = 12
 
 dataName = "CPAC200"
 # dataName = "desikan"
