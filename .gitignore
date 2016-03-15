@@ -1,6 +1,9 @@
 # Data
 Data/*
 
+# Shell
+Code/Shell/
+
 # History files
 .Rhistory
 .Rapp.history
