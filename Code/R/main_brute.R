@@ -6,9 +6,10 @@ setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 
 # require(rARPACK)
 
-m = 5;
-nIter = 100;
-dVec = 2:3;
+m = 5
+nIter = 300
+dVec = 2:10
+nCores = 4
 
 dataName = "CPAC200"
 # dataName = "desikan"
@@ -37,9 +38,12 @@ error_A_bar = matrix(0, nD, nIter)
 # ptm <- proc.time()
 # proc.time() - ptm
 
-# sapply(dVec, function(d) replicate(nIter, dim_brute(M, m, d, A_all)))
-# system.time(out <- mclapply(1:nIter, function(x) sapply(dVec, function(d) dim_brute(M,m,d,A_all))))
-# system.time(out <- sapply(1:nIter, function(x) sapply(dVec, function(d) dim_brute(M,m,d,A_all))))
+require(parallel)
+out <- mclapply(1:nIter, function(x) sapply(dVec, function(d) dim_brute(M, m, d, A_all)),
+                mc.cores=nCores)
+out = array(unlist(out), dim = c(2, nD, nIter))
+error_A_bar = out[1,,]
+error_P_hat = out[2,,]
 
 # for (iD in 1:nD) {
 #   print(iD)
@@ -47,15 +51,32 @@ error_A_bar = matrix(0, nD, nIter)
 #   tmp = replicate(nIter, dim_brute(M, m, d, A_all))
 # }
 
-for (iD in 1:nD) {
-  print(iD)
-  d = dVec[iD]
-  for (iIter in 1:nIter) {
-    out = dim_brute(M, m, d, A_all)
-    error_A_bar[iD, iIter] = out[1]
-    error_P_hat[iD, iIter] = out[2]
-  }
-}
+# library(foreach)
+# library(doParallel)
+# registerDoParallel(4)
+# ptm <- proc.time()
+# foreach(iD = 1:nD) %dopar% {
+#   print(iD)
+#   d = dVec[iD]
+#   for (iIter in 1:nIter) {
+#     out = dim_brute(M, m, d, A_all)
+#     error_A_bar[iD, iIter] = out[1]
+#     error_P_hat[iD, iIter] = out[2]
+#   }
+# }
+# proc.time() - ptm
+# stopImplicitCluster()
+
+
+# for (iD in 1:nD) {
+#   print(iD)
+#   d = dVec[iD]
+#   for (iIter in 1:nIter) {
+#     out = dim_brute(M, m, d, A_all)
+#     error_A_bar[iD, iIter] = out[1]
+#     error_P_hat[iD, iIter] = out[2]
+#   }
+# }
 
 fileName = paste("../../Result/result_", dataName, "_", n, "brute_", m, ".RData", sep="")
-save(error_P_hat, error_A_bar, n, M, m, dVec, file=fileName)
+save(error_A_bar, error_P_hat, n, M, m, dVec, file=fileName)
