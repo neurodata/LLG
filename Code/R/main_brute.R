@@ -40,7 +40,7 @@ error_A_bar = matrix(0, nD, nIter)
 # proc.time() - ptm
 
 require(parallel)
-out <- mclapply(1:nIter, function(x) sapply(dVec, function(d) dim_brute(M, m, d, A_all)),
+out <- mclapply(1:nIter, function(x) sapply(dVec, function(d) dim_brute(M, m, d, A_all, A_sum)),
                 mc.cores=nCores)
 out = array(unlist(out), dim = c(2, nD, nIter))
 error_A_bar = out[1,,]
@@ -49,7 +49,7 @@ error_P_hat = out[2,,]
 # for (iD in 1:nD) {
 #   print(iD)
 #   d = dVec[iD]
-#   tmp = replicate(nIter, dim_brute(M, m, d, A_all))
+#   tmp = replicate(nIter, dim_brute(M, m, d, A_all, A_sum))
 # }
 
 # library(foreach)
@@ -60,7 +60,7 @@ error_P_hat = out[2,,]
 #   print(iD)
 #   d = dVec[iD]
 #   for (iIter in 1:nIter) {
-#     out = dim_brute(M, m, d, A_all)
+#     out = dim_brute(M, m, d, A_all, A_sum)
 #     error_A_bar[iD, iIter] = out[1]
 #     error_P_hat[iD, iIter] = out[2]
 #   }

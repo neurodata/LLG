@@ -60,7 +60,7 @@ regularize <- function(A) {
 
 
 # Dimensions bruteforce exploring
-dim_brute <- function(M, m, d, A_all) {
+dim_brute <- function(M, m, d, A_all, A_sum) {
   require(rARPACK)
   
   sampleVec = sample.int(M, m)
@@ -77,17 +77,69 @@ dim_brute <- function(M, m, d, A_all) {
 
 
 # Using ZG to choose dimension
-dim_ZG <- function(M, m, A_all, d) {
-  require(rARPACK)
-  
+dim_ZG <- function(M, m, A_all, A_sum, d, isSVD=1) {
+
   sampleVec = sample.int(M, m)
   A_bar = add(A_all[sampleVec])
   P_bar = (A_sum - A_bar)/(M - m);
   A_bar = A_bar/m;
   
-  ASE = eigs_sym(as.matrix(diag_aug(A_bar)), d, which = "LM")
-  P_hat =  regularize(ASE$vectors %*% diag(ASE$values) %*% t(ASE$vectors))
-  
+  P_hat = regularize(ase.Ahat(diag_aug(A_bar), d, isSVD))
+    
   return(c(norm(P_bar - A_bar, "F")/n/(n-1), norm(P_bar - P_hat, "F")/n/(n-1)))
 }
+
+
+
+# ASE using SVD or eigen-decomposition.
+ase <- function(A, dim, isSVD=1){
+  if (isSVD) {
+    if(nrow(A) >= 400){
+      require(irlba)
+      A.svd = irlba(A, nu = dim, nv = dim)
+      A.values = A.svd$d
+      A.vectors = A.svd$v
+    } else{
+      A.svd = svd(A)
+      A.values = A.svd$d[1:dim]
+      A.vectors = A.svd$v[,1:dim]
+    }
+  } else {
+    if(nrow(A) >= 400){
+      require(rARPACK)
+      A.eig = eigs(A, dim, which = "LM")
+      A.values = A.eig$values
+      A.vectors = A.eig$vectors
+    } else{
+      A.eig = eigen(A, symmetric = T)
+      A.values = A.eig$values[1:dim]
+      A.vectors = A.eig$vectors[,1:dim]
+    }
+  }
+  return(list(A.values, A.vectors))
+}
+
+
+# ASE return xhat
+ase.x <- function(A, dim, isSVD=1){
+  A.ase = ase(A, dim, isSVD)
+  if(dim == 1)
+    A.x = sqrt(A.ase[[1]]) * A.ase[[2]]
+  else
+    A.x <- A.ase[[2]] %*% diag(sqrt(A.ase[[1]]))
+  return(A.x)
+}
+
+
+# ASE return Ahat
+ase.Ahat <- function(A, dim, isSVD=1){
+  A.ase = ase(A, dim, isSVD)
+  if(dim == 1)
+    Ahat = A.ase[[1]] * A.ase[[2]] %*% t(A.ase[[2]])
+  else
+    Ahat <- A.ase[[2]] %*% diag(A.ase[[1]]) %*% t(A.ase[[2]])
+  return(Ahat)
+}
+
+
 

@@ -5,12 +5,12 @@ setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("E:/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
-require(rARPACK)
-
 # m = as.numeric(args[1])
 m = 5
 nIter = 50
 nCores = 4
+isSVD = 0
+nElb = 2
 
 dataName = "CPAC200"
 # dataName = "desikan"
@@ -42,15 +42,18 @@ M = 121
 source("getElbows.R")
 
 dMax = ceiling(n*3/5)
-elbMat = matrix(0, M, 2)
+elbMat = matrix(0, M, nElb)
 for (i in 1:M) {
-  A = as.matrix(A_all[[i]])
-  vecs = eigs_sym(A, dMax, which = "LM")$values
-  elbMat[i,] = getElbows(vecs, n=2, plot=F)
+  print(i)
+  A = A_all[[i]]
+  evalVec = ase(A, dMax, isSVD)[[1]]
+  elbMat[i,] = getElbows(evalVec, n=nElb, plot=F)
 }
+elbSum = summary(elbMat[,2])
+dHat = elbSum[5]
 
 require(parallel)
-out <- mclapply(1:nIter, function(x) dim_ZG(M, m, A_all, dZG), mc.cores=nCores)
+out <- mclapply(1:nIter, function(x) dim_ZG(M, m, A_all, A_sum, dHat), mc.cores=nCores)
 out = array(unlist(out), dim = c(2, nD, nIter))
 error_A_bar = out[1,,]
 error_P_hat = out[2,,]
