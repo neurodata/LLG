@@ -77,7 +77,22 @@ dim_brute <- function(M, m, d, A_all, A_sum) {
 
 
 # Using ZG to choose dimension
-dim_ZG <- function(M, m, A_all, A_sum, d, isSVD=1) {
+llg_ZG <- function(M, m, A_all, A_sum, isSVD=1) {
+  
+  sampleVec = sample.int(M, m)
+  A_bar = add(A_all[sampleVec])
+  P_bar = (A_sum - A_bar)/(M - m);
+  A_bar = A_bar/m;
+  
+  P_hat = regularize(ase.Ahat(diag_aug(A_bar), d, isSVD))
+  
+  return(c(norm(P_bar - A_bar, "F")/n/(n-1), norm(P_bar - P_hat, "F")/n/(n-1)), d)
+}
+
+
+
+
+llg_d <- function(M, m, A_all, A_sum, d, isSVD=1) {
 
   sampleVec = sample.int(M, m)
   A_bar = add(A_all[sampleVec])
@@ -86,7 +101,7 @@ dim_ZG <- function(M, m, A_all, A_sum, d, isSVD=1) {
   
   P_hat = regularize(ase.Ahat(diag_aug(A_bar), d, isSVD))
     
-  return(c(norm(P_bar - A_bar, "F")/n/(n-1), norm(P_bar - P_hat, "F")/n/(n-1)))
+  return(c(norm(P_bar - A_bar, "F")/n/(n-1), norm(P_bar - P_hat, "F")/n/(n-1), d))
 }
 
 

@@ -6,8 +6,8 @@ setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
 # m = as.numeric(args[1])
-m = 5
-nIter = 50
+m = 2
+nIter = 100
 nCores = 4
 isSVD = 0
 nElb = 2
@@ -37,8 +37,6 @@ error_A_bar = matrix(0, 1, nIter)
 # ptm <- proc.time()
 # proc.time() - ptm
 
-M = 121
-
 source("getElbows.R")
 
 dMax = ceiling(n*3/5)
@@ -53,43 +51,18 @@ elbSum = summary(elbMat[,2])
 dHat = elbSum[5]
 
 require(parallel)
-out <- mclapply(1:nIter, function(x) dim_ZG(M, m, A_all, A_sum, dHat), mc.cores=nCores)
-out = array(unlist(out), dim = c(2, nD, nIter))
-error_A_bar = out[1,,]
-error_P_hat = out[2,,]
+out = mclapply(1:nIter, function(x) llg_d(M, m, A_all, A_sum, dHat), mc.cores=nCores)
+out = array(unlist(out), dim = c(3, nIter))
+error_A_bar = out[1,]
+error_P_hat = out[2,]
+dVec = out[3,]
 
-# for (iD in 1:nD) {
-#   print(iD)
-#   d = dVec[iD]
-#   tmp = replicate(nIter, dim_brute(M, m, d, A_all))
-# }
+# mean(error_A_bar)
+# mean(error_P_hat)
 
-# library(foreach)
-# library(doParallel)
-# registerDoParallel(4)
-# ptm <- proc.time()
-# foreach(iD = 1:nD) %dopar% {
-#   print(iD)
-#   d = dVec[iD]
-#   for (iIter in 1:nIter) {
-#     out = dim_brute(M, m, d, A_all)
-#     error_A_bar[iD, iIter] = out[1]
-#     error_P_hat[iD, iIter] = out[2]
-#   }
-# }
-# proc.time() - ptm
-# stopImplicitCluster()
-
-
-# for (iD in 1:nD) {
-#   print(iD)
-#   d = dVec[iD]
-#   for (iIter in 1:nIter) {
-#     out = dim_brute(M, m, d, A_all)
-#     error_A_bar[iD, iIter] = out[1]
-#     error_P_hat[iD, iIter] = out[2]
-#   }
-# }
-
-fileName = paste("../../Result/result_", dataName, "_", n, "_brute_", m, ".RData", sep="")
+if (isSVD) {
+  fileName = paste("../../Result/result_", dataName, "_", n, "_", m, "_svd.RData", sep="")
+} else {
+  fileName = paste("../../Result/result_", dataName, "_", n, "_", m, "_eig.RData", sep="")
+}
 save(error_A_bar, error_P_hat, n, M, m, dVec, file=fileName)
