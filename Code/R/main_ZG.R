@@ -5,7 +5,7 @@ setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("E:/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
-# require(rARPACK)
+require(rARPACK)
 
 # m = as.numeric(args[1])
 m = 5
@@ -37,9 +37,20 @@ error_A_bar = matrix(0, 1, nIter)
 # ptm <- proc.time()
 # proc.time() - ptm
 
+M = 121
+
+source("getElbows.R")
+
+dMax = ceiling(n*3/5)
+elbMat = matrix(0, M, 2)
+for (i in 1:M) {
+  A = as.matrix(A_all[[i]])
+  vecs = eigs_sym(A, dMax, which = "LM")$values
+  elbMat[i,] = getElbows(vecs, n=2, plot=F)
+}
+
 require(parallel)
-out <- mclapply(1:nIter, function(x) sapply(dVec, function(d) dim_brute(M, m, d, A_all)),
-                mc.cores=nCores)
+out <- mclapply(1:nIter, function(x) dim_ZG(M, m, A_all, dZG), mc.cores=nCores)
 out = array(unlist(out), dim = c(2, nD, nIter))
 error_A_bar = out[1,,]
 error_P_hat = out[2,,]
