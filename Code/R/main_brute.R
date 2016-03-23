@@ -1,21 +1,26 @@
 
-args <- commandArgs(trailingOnly = TRUE)
+# args <- commandArgs(trailingOnly = TRUE)
 
 setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("E:/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
-# require(rARPACK)
+# m = as.numeric(args[1])
+# m = 1
+# isSVD = 1
 
-m = as.numeric(args[1])
-nIter = 500
-dVec = 2:50
-nCores = 12
+for (m in c(1,2,5,10)) {
+  for (isSVD in 0:1) {
 
-dataName = "CPAC200"
+    print(c(m, isSVD))
+    
+nIter = 1000
+nCores = 4
+
+# dataName = "CPAC200"
 # dataName = "desikan"
 # dataName = "JHU"
-# dataName = "slab907"
+dataName = "slab907"
 # dataName = "slab1068"
 # dataName = "Talairach"
 
@@ -27,24 +32,33 @@ n = tmpList[[2]]
 M = tmpList[[3]]
 rm(tmpList)
 
-
+dVec = 1:n
 nD = length(dVec)
 
-add <- function(x) Reduce("+", x)
 A_sum = add(A_all)
 
 error_P_hat = matrix(0, nD, nIter)
 error_A_bar = matrix(0, nD, nIter)
 
+require(parallel)
+
 # ptm <- proc.time()
 # proc.time() - ptm
 
-require(parallel)
-out <- mclapply(1:nIter, function(x) sapply(dVec, function(d) dim_brute(M, m, d, A_all, A_sum)),
+# out <- mclapply(1:nIter, function(x) sapply(dVec, function(d) dim_brute(M, m, d, A_all, A_sum)),
+#                 mc.cores=nCores)
+# out = array(unlist(out), dim = c(2, nD, nIter))
+# error_A_bar = out[1,,]
+# error_P_hat = out[2,,]
+
+out <- mclapply(1:nIter, function(x) dim_brute1(M, m, dVec, A_all, A_sum, isSVD), 
                 mc.cores=nCores)
-out = array(unlist(out), dim = c(2, nD, nIter))
-error_A_bar = out[1,,]
-error_P_hat = out[2,,]
+out = array(unlist(out), dim = c(nD+1, nIter))
+
+error_A_bar = out[1,]
+error_P_hat = out[2:(nD+1),]
+# mean(error_A_bar)
+# mean(error_P_hat[3,])
 
 # for (iD in 1:nD) {
 #   print(iD)
@@ -79,5 +93,13 @@ error_P_hat = out[2,,]
 #   }
 # }
 
-fileName = paste("../../Result/result_", dataName, "_", n, "_brute_", m, ".RData", sep="")
-save(error_A_bar, error_P_hat, n, M, m, dVec, file=fileName)
+if (isSVD) {
+  fileName = paste("../../Result/result_", dataName, "_brute_", "_", m, "_svd.RData", sep="")
+} else {
+  fileName = paste("../../Result/result_", dataName, "_brute_", "_", m, "_eig.RData", sep="")
+}
+
+save(error_A_bar, error_P_hat, n, M, m, dVec, nIter, file=fileName)
+
+
+}}

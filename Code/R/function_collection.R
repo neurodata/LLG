@@ -58,20 +58,45 @@ regularize <- function(A) {
 }
 
 
+add <- function(x) Reduce("+", x)
 
 # Dimensions bruteforce exploring
-dim_brute <- function(M, m, d, A_all, A_sum) {
-  require(rARPACK)
+dim_brute <- function(M, m, d, A_all, A_sum, isSVD=1) {
   
   sampleVec = sample.int(M, m)
   A_bar = add(A_all[sampleVec])
   P_bar = (A_sum - A_bar)/(M - m);
   A_bar = A_bar/m;
   
-  ASE = eigs_sym(as.matrix(diag_aug(A_bar)), d, which = "LM")
-  P_hat =  regularize(ASE$vectors %*% diag(ASE$values) %*% t(ASE$vectors))
+  P_hat = regularize(ase.Ahat(diag_aug(A_bar), d, isSVD))
   
   return(c(norm(P_bar - A_bar, "F")/n/(n-1), norm(P_bar - P_hat, "F")/n/(n-1)))
+}
+
+dim_brute1 <- function(M, m, dVec, A_all, A_sum, isSVD=1) {
+  result = rep(NaN, nD+1)
+  
+  sampleVec = sample.int(M, m)
+  A_bar = add(A_all[sampleVec])
+  P_bar = (A_sum - A_bar)/(M - m)
+  A_bar = A_bar/m
+  result[1] = norm(P_bar - A_bar, "F")/n/(n-1)
+  
+  dMax = max(dVec)
+  nD = length(dVec)
+  
+  A.ase = ase(diag_aug(A_bar), dMax, isSVD)
+  for (iD in 1:nD) {
+    d = dVec[iD]
+    if (d == 1)
+      Ahat = A.ase[[1]][1] * A.ase[[2]][,1:d] %*% t(A.ase[[2]][,1:d])
+    else
+      Ahat <- A.ase[[2]][,1:d] %*% diag(A.ase[[1]][1:d]) %*% t(A.ase[[2]][,1:d])
+    P_hat = regularize(Ahat)
+    result[iD+1] = norm(P_bar - P_hat, "F")/n/(n-1)
+  }
+  
+  return(result)
 }
 
 
@@ -93,14 +118,14 @@ llg_ZG <- function(M, m, A_all, A_sum, isSVD=1) {
 
 
 llg_d <- function(M, m, A_all, A_sum, d, isSVD=1) {
-
+  
   sampleVec = sample.int(M, m)
   A_bar = add(A_all[sampleVec])
   P_bar = (A_sum - A_bar)/(M - m);
   A_bar = A_bar/m;
   
   P_hat = regularize(ase.Ahat(diag_aug(A_bar), d, isSVD))
-    
+  
   return(c(norm(P_bar - A_bar, "F")/n/(n-1), norm(P_bar - P_hat, "F")/n/(n-1), d))
 }
 
@@ -158,3 +183,38 @@ ase.Ahat <- function(A, dim, isSVD=1){
 
 
 
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+  
+  numPlots = length(plots)
+  
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+    
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
