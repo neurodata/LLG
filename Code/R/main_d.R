@@ -1,25 +1,22 @@
 
-args <- commandArgs(trailingOnly = TRUE)
+# args <- commandArgs(trailingOnly = TRUE)
 
-# setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
+setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("E:/GitHub/LLG/Code/R")
-setwd("/cis/home/rtang/LLG/Code/R")
-
-m = as.numeric(args[1])
-isSVD = as.numeric(args[2])
+# setwd("/cis/home/rtang/LLG/Code/R")
 
 # m = 2
 nIter = 1000
-nCores = 12
+nCores = 4
 # isSVD = 0
 nElb = 2
 
-dataName = "CPAC200"
+# dataName = "CPAC200"
 # dataName = "desikan"
 # dataName = "JHU"
 # dataName = "slab907"
 # dataName = "slab1068"
-# dataName = "Talairach"
+dataName = "Talairach"
 
 
 source("function_collection.R")
@@ -33,14 +30,6 @@ rm(tmpList)
 add <- function(x) Reduce("+", x)
 A_sum = add(A_all)
 
-error_P_hat = matrix(0, 1, nIter)
-error_A_bar = matrix(0, 1, nIter)
-
-# ptm <- proc.time()
-# proc.time() - ptm
-
-source("getElbows.R")
-
 dMax = ceiling(n*3/5)
 elbMat = matrix(0, M, nElb)
 for (i in 1:M) {
@@ -52,19 +41,34 @@ for (i in 1:M) {
 elbSum = summary(elbMat[,2])
 dHat = elbSum[5]
 
-require(parallel)
-out = mclapply(1:nIter, function(x) llg_d(M, m, A_all, A_sum, dHat), mc.cores=nCores)
-out = array(unlist(out), dim = c(3, nIter))
-error_A_bar = out[1,]
-error_P_hat = out[2,]
-dVec = out[3,]
-
-# mean(error_A_bar)
-# mean(error_P_hat)
-
-if (isSVD) {
-  fileName = paste("../../Result/result_", dataName, "_", n, "_", m, "_svd.RData", sep="")
-} else {
-  fileName = paste("../../Result/result_", dataName, "_", n, "_", m, "_eig.RData", sep="")
+for (m in 1:4) {
+  for (isSVD in 0:1) {
+    
+    print(c(m, isSVD))
+    
+    error_P_hat = matrix(0, 1, nIter)
+    error_A_bar = matrix(0, 1, nIter)
+    
+    # ptm <- proc.time()
+    # proc.time() - ptm
+    
+    source("getElbows.R")
+    
+    require(parallel)
+    out = mclapply(1:nIter, function(x) llg_d(M, m, A_all, A_sum, dHat), mc.cores=nCores)
+    out = array(unlist(out), dim = c(3, nIter))
+    error_A_bar = out[1,]
+    error_P_hat = out[2,]
+    dVec = out[3,]
+    
+    # mean(error_A_bar)
+    # mean(error_P_hat)
+    
+    if (isSVD) {
+      fileName = paste("../../Result/result_", dataName, "_", n, "_", m, "_svd.RData", sep="")
+    } else {
+      fileName = paste("../../Result/result_", dataName, "_", n, "_", m, "_eig.RData", sep="")
+    }
+    save(error_A_bar, error_P_hat, n, M, m, dVec, file=fileName)
+  }
 }
-save(error_A_bar, error_P_hat, n, M, m, dVec, file=fileName)
