@@ -17,10 +17,10 @@ for (m in c(1,2,5,10)) {
 nIter = 1000
 nCores = 4
 
-# dataName = "CPAC200"
+dataName = "CPAC200"
 # dataName = "desikan"
 # dataName = "JHU"
-dataName = "slab907"
+# dataName = "slab907"
 # dataName = "slab1068"
 # dataName = "Talairach"
 
@@ -94,9 +94,9 @@ error_P_hat = out[2:(nD+1),]
 # }
 
 if (isSVD) {
-  fileName = paste("../../Result/result_", dataName, "_brute_", "_", m, "_svd.RData", sep="")
+  fileName = paste("../../Result/result_", dataName, "_brute_", "m_", m, "_svd.RData", sep="")
 } else {
-  fileName = paste("../../Result/result_", dataName, "_brute_", "_", m, "_eig.RData", sep="")
+  fileName = paste("../../Result/result_", dataName, "_brute_", "m_", m, "_eig.RData", sep="")
 }
 
 save(error_A_bar, error_P_hat, n, M, m, dVec, nIter, file=fileName)

@@ -3,12 +3,12 @@ rm(list = ls())
 setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
-# dataName = "CPAC200"
+dataName = "CPAC200"
 # dataName = "desikan"
 # dataName = "JHU"
 # dataName = "slab907"
 # dataName = "slab1068"
-dataName = "Talairach"
+# dataName = "Talairach"
 
 mVec = c(1, 2, 5, 10)
 
@@ -48,13 +48,14 @@ mVec = c(1, 2, 5, 10)
 yMin = Inf
 yMax = 0
 for (m in mVec) {
-  fileName = paste("../../Result/result_", dataName, "_brute_", "_", m, "_eig.RData", sep="")
+  # EIG
+  fileName = paste("../../Result/result_", dataName, "_brute_", "m_", m, "_eig.RData", sep="")
   load(fileName)
   yMin = min(yMin, rowMeans(error_P_hat), mean(error_A_bar))
   yMax = max(yMax, rowMeans(error_P_hat), mean(error_A_bar))
   
   # SVD
-  fileName = paste("../../Result/result_", dataName, "_brute_", "_", m, "_svd.RData", sep="")
+  fileName = paste("../../Result/result_", dataName, "_brute_", "m_", m, "_svd.RData", sep="")
   load(fileName)
   yMin = min(yMin, rowMeans(error_P_hat), mean(error_A_bar))
   yMax = max(yMax, rowMeans(error_P_hat), mean(error_A_bar))
@@ -96,6 +97,7 @@ yMin = yMin*0.9
 
 
 library(ggplot2)
+library(grid)
 source("function_collection.R")
 
 pp = list()
@@ -104,7 +106,7 @@ for (iM in 1:length(mVec)) {
   m = mVec[iM]
   
   # SVD
-  fileName = paste("../../Result/result_", dataName, "_brute_", "_", m, "_svd.RData", sep="")
+  fileName = paste("../../Result/result_", dataName, "_brute_", "m_", m, "_svd.RData", sep="")
   load(fileName)
   errorPhatSVDMean = rowMeans(error_P_hat)
   errorPhatSVDLower = errorPhatSVDMean - 
@@ -113,7 +115,7 @@ for (iM in 1:length(mVec)) {
     sqrt(apply(error_P_hat, 1, var))/sqrt(dim(error_P_hat)[2])*1.96
   
   # Eigen-decomposition
-  fileName = paste("../../Result/result_", dataName, "_brute_", "_", m, "_eig.RData", sep="")
+  fileName = paste("../../Result/result_", dataName, "_brute_", "m_", m, "_eig.RData", sep="")
   load(fileName)
   errorAbarMean = rep(mean(error_A_bar))
   errorAbarLower = errorAbarMean - sqrt(var(error_A_bar))/sqrt(length(error_A_bar))*1.96
@@ -140,7 +142,7 @@ for (iM in 1:length(mVec)) {
   p = p + theme(plot.title = element_text(face="bold"))
   p = p + scale_x_continuous(name="Dimension") + scale_y_continuous(name="MSE")
   p = p + ggtitle(paste("m = ", m, sep=""))
-  p = p + expand_limits(y=c(0, yMax))
+  p = p + expand_limits(y=c(yMin, yMax))
   pp[[iM]] = p
 }
 
