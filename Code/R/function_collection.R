@@ -150,8 +150,7 @@ ase <- function(A, dim, isSVD=1){
   } else {
     if(nrow(A) >= 400){
       require(rARPACK)
-      A.eig = eigs(matrix(A, ncol=dim(A)[1]), dim, which = "LM")
-#       A.eig = eigs(A, dim, which = "LA")
+      A.eig = eigs(matrix(A, ncol=dim(A)[1]), dim, which = "LA")
       A.values = A.eig$values
       A.lvectors = A.eig$vectors
       A.rvectors = A.lvectors
