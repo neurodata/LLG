@@ -79,6 +79,7 @@ dim_brute1 <- function(M, m, dVec, A_all, A_sum, isSVD=1) {
   sampleVec = sample.int(M, m)
   A_bar = add(A_all[sampleVec])
   P_bar = (A_sum - A_bar)/(M - m)
+#   P_bar = A_sum/M
   A_bar = A_bar/m
   result[1] = norm(P_bar - A_bar, "F")/n/(n-1)
   
@@ -89,9 +90,9 @@ dim_brute1 <- function(M, m, dVec, A_all, A_sum, isSVD=1) {
   for (iD in 1:nD) {
     d = dVec[iD]
     if (d == 1)
-      Ahat = A.ase[[1]][1] * A.ase[[2]][,1:d] %*% t(A.ase[[2]][,1:d])
+      Ahat = A.ase[[1]][1] * A.ase[[3]][,1:d] %*% t(A.ase[[2]][,1:d])
     else
-      Ahat <- A.ase[[2]][,1:d] %*% diag(A.ase[[1]][1:d]) %*% t(A.ase[[2]][,1:d])
+      Ahat <- A.ase[[3]][,1:d] %*% diag(A.ase[[1]][1:d]) %*% t(A.ase[[2]][,1:d])
     P_hat = regularize(Ahat)
     result[iD+1] = norm(P_bar - P_hat, "F")/n/(n-1)
   }
@@ -138,25 +139,30 @@ ase <- function(A, dim, isSVD=1){
       require(irlba)
       A.svd = irlba(A, nu = dim, nv = dim)
       A.values = A.svd$d
-      A.vectors = A.svd$v
+      A.lvectors = A.svd$u
+      A.rvectors = A.svd$v
     } else{
       A.svd = svd(A)
       A.values = A.svd$d[1:dim]
-      A.vectors = A.svd$v[,1:dim]
+      A.lvectors = A.svd$u[,1:dim]
+      A.rvectors = A.svd$v[,1:dim]
     }
   } else {
     if(nrow(A) >= 400){
       require(rARPACK)
-      A.eig = eigs(A, dim, which = "LM")
+      A.eig = eigs(matrix(A, ncol=dim(A)[1]), dim, which = "LM")
+#       A.eig = eigs(A, dim, which = "LA")
       A.values = A.eig$values
-      A.vectors = A.eig$vectors
+      A.lvectors = A.eig$vectors
+      A.rvectors = A.lvectors
     } else{
       A.eig = eigen(A, symmetric = T)
       A.values = A.eig$values[1:dim]
-      A.vectors = A.eig$vectors[,1:dim]
+      A.lvectors = A.eig$vectors[,1:dim]
+      A.rvectors = A.lvectors
     }
   }
-  return(list(A.values, A.vectors))
+  return(list(A.values, A.rvectors, A.lvectors))
 }
 
 
@@ -175,9 +181,9 @@ ase.x <- function(A, dim, isSVD=1){
 ase.Ahat <- function(A, dim, isSVD=1){
   A.ase = ase(A, dim, isSVD)
   if(dim == 1)
-    Ahat = A.ase[[1]] * A.ase[[2]] %*% t(A.ase[[2]])
+    Ahat = A.ase[[1]] * A.ase[[3]] %*% t(A.ase[[2]])
   else
-    Ahat <- A.ase[[2]] %*% diag(A.ase[[1]]) %*% t(A.ase[[2]])
+    Ahat <- A.ase[[3]] %*% diag(A.ase[[1]]) %*% t(A.ase[[2]])
   return(Ahat)
 }
 
