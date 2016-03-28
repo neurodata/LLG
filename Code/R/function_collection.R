@@ -60,18 +60,41 @@ regularize <- function(A) {
 
 add <- function(x) Reduce("+", x)
 
-# Dimensions bruteforce exploring
-dim_brute <- function(M, m, d, A_all, A_sum, isSVD=1) {
+dim_brute <- function(m, n, rho, tau, B, dVec, isSVD=1) {
+  result = rep(NaN, nD+1)
   
-  sampleVec = sample.int(M, m)
-  A_bar = add(A_all[sampleVec])
-  P_bar = (A_sum - A_bar)/(M - m);
-  A_bar = A_bar/m;
+  require(igraph)
+  A_all = list()
+  for (i in 1:m) {
+    g = sample_sbm(n, B, n*rho, directed=F, loops=F)
+    A = as_adj(g, type="both", sparse=FALSE)
+    A_all[[i]] = A
+  }
   
-  P_hat = regularize(ase.Ahat(diag_aug(A_bar), d, isSVD))
+  tau = rep(1:K,n*rho)
+  P = B[tau,tau]
+  diag(P) = 0
   
-  return(c(norm(P_bar - A_bar, "F")/n/(n-1), norm(P_bar - P_hat, "F")/n/(n-1)))
+  A_bar = add(A_all)/m
+  result[1] = norm(P - A_bar, "F")/n/(n-1)
+  
+  dMax = max(dVec)
+  nD = length(dVec)
+  
+  A.ase = ase(diag_aug(A_bar), dMax, isSVD)
+  for (iD in 1:nD) {
+    d = dVec[iD]
+    if (d == 1)
+      Ahat = A.ase[[1]][1] * A.ase[[3]][,1:d] %*% t(A.ase[[2]][,1:d])
+    else
+      Ahat <- A.ase[[3]][,1:d] %*% diag(A.ase[[1]][1:d]) %*% t(A.ase[[2]][,1:d])
+    P_hat = regularize(Ahat)
+    result[iD+1] = norm(P - P_hat, "F")/n/(n-1)
+  }
+  
+  return(result)
 }
+
 
 dim_brute1 <- function(M, m, dVec, A_all, A_sum, isSVD=1) {
   result = rep(NaN, nD+1)
