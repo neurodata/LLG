@@ -3,8 +3,8 @@ rm(list = ls())
 setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
-dataName = "CPAC200"
-# dataName = "desikan"
+# dataName = "CPAC200"
+dataName = "desikan"
 # dataName = "JHU"
 # dataName = "slab907"
 # dataName = "slab1068"

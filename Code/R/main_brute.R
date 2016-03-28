@@ -21,8 +21,8 @@ for (m in mVec) {
     nCores = 4
     
 #     dataName = "CPAC200"
-#     dataName = "desikan"
-    dataName = "JHU"
+    dataName = "desikan"
+#     dataName = "JHU"
 #     dataName = "slab907"
 #     dataName = "slab1068"
 #     dataName = "Talairach"

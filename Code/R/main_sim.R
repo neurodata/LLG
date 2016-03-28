@@ -11,9 +11,12 @@ setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 source("function_collection.R")
 # source("USVT.R")
 
-n = 50
+n = 200
 
-for (m in c(1,5,10,50)) {
+# mVec = c(1,5,10,50)
+mVec = 50
+
+for (m in mVec) {
   for (isSVD in 0:1) {
     
     print(c(m, isSVD))
@@ -57,9 +60,9 @@ for (m in c(1,5,10,50)) {
     error_P_hat = out[2:(nD+1),]
     
     if (isSVD) {
-      fileName = paste("../../Result/result_sim_", iModel, "_brute_n", n, "m_", m, "_svd.RData", sep="")
+      fileName = paste("../../Result/result_sim_", iModel, "_brute_n_", n, "_m_", m, "_svd.RData", sep="")
     } else {
-      fileName = paste("../../Result/result_sim_", iModel, "_brute_n", n, "m_", m, "_eig.RData", sep="")
+      fileName = paste("../../Result/result_sim_", iModel, "_brute_n_", n, "_m_", m, "_eig.RData", sep="")
     }
     
     save(error_A_bar, error_P_hat, n, m, rho, tau, B, dVec, nIter, file=fileName)

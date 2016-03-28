@@ -3,7 +3,7 @@ rm(list = ls())
 setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
-n = 50
+n = 200
 iModel = 1
 
 mVec = c(1, 5, 10, 50)
@@ -12,13 +12,13 @@ yMin = Inf
 yMax = 0
 for (m in mVec) {
   # EIG
-  fileName = paste("../../Result/result_sim_", iModel, "_brute_n", n, "m_", m, "_eig.RData", sep="")
+  fileName = paste("../../Result/result_sim_", iModel, "_brute_n_", n, "_m_", m, "_eig.RData", sep="")
   load(fileName)
   yMin = min(yMin, rowMeans(error_P_hat), mean(error_A_bar))
   yMax = max(yMax, rowMeans(error_P_hat), mean(error_A_bar))
   
   # SVD
-  fileName = paste("../../Result/result_sim_", iModel, "_brute_n", n, "m_", m, "_svd.RData", sep="")
+  fileName = paste("../../Result/result_sim_", iModel, "_brute_n_", n, "_m_", m, "_svd.RData", sep="")
   load(fileName)
   yMin = min(yMin, rowMeans(error_P_hat), mean(error_A_bar))
   yMax = max(yMax, rowMeans(error_P_hat), mean(error_A_bar))
@@ -36,7 +36,7 @@ for (iM in 1:length(mVec)) {
   m = mVec[iM]
   
   # SVD
-  fileName = paste("../../Result/result_sim_", iModel, "_brute_n", n, "m_", m, "_svd.RData", sep="")
+  fileName = paste("../../Result/result_sim_", iModel, "_brute_n_", n, "_m_", m, "_svd.RData", sep="")
   load(fileName)
   errorPhatSVDMean = rowMeans(error_P_hat)
   errorPhatSVDLower = errorPhatSVDMean - 
@@ -45,7 +45,7 @@ for (iM in 1:length(mVec)) {
     sqrt(apply(error_P_hat, 1, var))/sqrt(dim(error_P_hat)[2])*1.96
   
   # Eigen-decomposition
-  fileName = paste("../../Result/result_sim_", iModel, "_brute_n", n, "m_", m, "_eig.RData", sep="")
+  fileName = paste("../../Result/result_sim_", iModel, "_brute_n_", n, "_m_", m, "_eig.RData", sep="")
   load(fileName)
   errorAbarMean = rep(mean(error_A_bar))
   errorAbarLower = errorAbarMean - sqrt(var(error_A_bar))/sqrt(length(error_A_bar))*1.96
