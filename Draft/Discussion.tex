@@ -1,0 +1,8 @@
+\section{Discussion}
+
+In this paper we have proposed a better way to estimate the mean of a collection of graphs sampling from the SBM. Our methodology is motivated by the asymptotical distribution of the adjacency spectral embedding of RDPG graphs.
+To take advantage of the low-rank structure of the graphs, adjacency spectral embedding, a rank-reduction procedure, is applied to the element-wise MLE. We then give a closed form for asymptotical relative efficiency between our estimator and the element-wise MLE, which theoretically proves that our estimator has smaller variance with sufficiently large $N$ while keeping to be asymptotically unbiased. These results are demonstrate by various simulations. Moreover, our estimator also outperforms element-wise MLE for the CoRR brain graphs, which shows our estimator is valid even when the data does not perfectly follow a SBM.
+
+%Given the popularity of large N connectome datasets that have known vertex correspondence, perhaps ASE should be chosen over ABar when estimating a group averaged graph.\\\\
+%NMF may be even better estimate than ASE.
+%\cite{Ho2008} 

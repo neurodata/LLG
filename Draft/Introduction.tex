@@ -1,0 +1,26 @@
+\section{Introduction}
+
+%OCP/HCP/FCP connectome setting\\\\
+%Examples of $\bar{A}$ being used when vertex correspondence known\\\\
+%Looking for better estimators of “mean” graph by making assumption that many vertices will behave similarly\\
+%\cite{Athreya2013}
+%\cite{Cerqueira2015}
+%\cite{Fishkind2012}
+%\cite{Freer2014}\\
+%\cite{Oliveira2009}
+%
+%
+%we are trying to estimate the population mean adjacency matrix for a specific population of brain graphs. This population could be multiple scans from a single individual under the same or different conditions, or the brains of men aged 18-25, etc. We see a sample from this population, the variation comes from variation in the population as well as measurement error.
+
+Estimating the mean of a collection of graphs is becoming more and more important both in statistical inference and in various applications like connectomics, social networks, etc.
+Element-wise maximum likelihood estimate is a reasonable estimator if we only consider the independent graph model without taking any graph structure into account.
+
+However, in a large graph, vertices are generally clustered into different communities such that vertices of the same community behave similarly. The stochastic blockmodel (SBM) introduced in Holland et al. (1983)  captures such structural property and is widely used in modeling networks. In this model, each of the $N$ vertices is assigned to one of the $K$ blocks. And the probability of an edge between two vertices only depends on their respective block memberships.
+For example, when modeling connectomics, vertices may represent neurons with edges indicating axon-synapse-dendrite connections, or vertices may represent brain regions with edges indicating connectivity between regions.
+
+Also, latent positions graph model proposes a way to parameterize the graph structure by latent positions associated with each vertex. And random dot product graph, a special case of latent positions graph, is considered in this paper. In the RDPG, each vertex is associated with one latent vector. And the probability of an edge between two vertices only depends on the dot product of the two respective latent vectors.
+In particular, this paper considers SBM as a RDPG. So we will have exactly $K$ different latent positions for $N$ vertices.
+
+Using the estimates of the latent positions in an RDPG based on a truncated eigen-decomposition of the adjacency matrix proposed by Sussman et al. (2012), we invent a new estimator for the mean of the collection of graphs which captures the low-rank structure. Moreover, with the asymptotic result in Athreya et al. (2015) which says the latent positions estimated using adjacency spectral graph embedding converge in distribution to a multivariate Gaussian mixture in the RDPG, we give a closed form representation for the asymptotic relative efficiency between our estimator and the element-wise MLE. Based on that, we theoretically prove that our estimator reduces the variance and is better than the element-wise MLE according to the relative efficiency when $N$ is large enough.
+
+
