@@ -11,10 +11,10 @@ setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 source("function_collection.R")
 # source("USVT.R")
 
-n = 200
+n = 50
 
-# mVec = c(1,5,10,50)
-mVec = 50
+mVec = c(1,5,10,50)
+# mVec = 50
 
 for (m in mVec) {
   for (isSVD in 0:1) {
@@ -24,12 +24,13 @@ for (m in mVec) {
     nIter = 100
     nCores = 2
     
-    iModel = 1
+    #     iModel = 1
+    #     B = matrix(c(0.42, 0.2, 0.2, 0.7), ncol = 2)
+    #     rho = c(0.5, 0.5)
     
-    B = matrix(c(0.42, 0.2, 0.2, 0.7), ncol = 2)
+    iModel = 2
+    B = matrix(c(0.2, 0.6, 0.6, 0.2), ncol = 2)
     rho = c(0.5, 0.5)
-    
-    set.seed(12345)
     
     K = length(rho)
     tau = rep(1:K,n*rho)
