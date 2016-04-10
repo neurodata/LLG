@@ -130,7 +130,7 @@ for (rho1 in (1:9)/10) {
   
   rho = c(rho1, 1-rho1)
   iModel = 10*(rho1 + 1)
-  tau = rep(1:K,n*rho)
+  tau = rep(1:K,round(n*rho))
   P = B[tau,tau]
   diag(P) = 0
   d = 2

@@ -260,7 +260,7 @@ sim_all <- function(m, n, tau, B, d, isSVD=1) {
   require(igraph)
   A_all = list()
   for (i in 1:m) {
-    g = sample_sbm(n, B, n*rho, directed=F, loops=F)
+    g = sample_sbm(n, B, round(n*rho), directed=F, loops=F)
     A = as_adj(g, type="both", sparse=FALSE)
     A_all[[i]] = A
   }
