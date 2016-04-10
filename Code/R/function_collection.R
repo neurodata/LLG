@@ -44,10 +44,11 @@ diag_aug <- function(A, d=1) {
 #   require(Matrix)
 #   n = dim(A)[1]
 #   return(A + Diagonal(n, x=rowSums(A))/(n-1))
-  A_tmp = A
-  tmp = ase(A, d, 0)
-  diag(A_tmp) = diag(tmp[[3]][,1:d] %*% diag(tmp[[1]][1:d]) %*% t(tmp[[2]][,1:d]))
-  return(A_tmp)
+  for (iIter in 1:1) {
+    tmp = ase(A, d, 0)
+    diag(A) = diag(tmp[[3]][,1:d] %*% diag(tmp[[1]][1:d]) %*% t(tmp[[2]][,1:d]))    
+  }
+  return(A)
 }
 
 
@@ -302,6 +303,50 @@ sim_all <- function(m, n, tau, B, d, isSVD=1) {
 }
 
 
-
+# sim_all1 <- function(m, n, tau, B, d, isSVD=1) {
+#   result = matrix(rep(NaN, 2*3), ncol=2)
+#   
+#   require(igraph)
+#   A_all = list()
+#   for (i in 1:m) {
+#     g = sample_sbm(n, B, n*rho, directed=F, loops=T)
+#     A = as_adj(g, type="both", sparse=FALSE)
+#     A_all[[i]] = A
+#   }
+#   
+#   P = B[tau,tau]
+#   
+#   nv1 = (tau == 1)
+#   nv2 = (tau == 2)
+#   n1 = sum(nv1)
+#   n2 = sum(nv2)
+#   
+#   A_bar = add(A_all)/m
+#   A_bar1 = A_bar[nv1, nv1]
+#   A_bar2 = A_bar[nv2, nv2]
+#   A_bar3 = A_bar[nv1, nv2]
+#   
+#   result[1, 1] = (norm(P[nv1, nv1] - A_bar1, "F"))^2/n1/n1
+#   result[2, 1] = (norm(P[nv2, nv2] - A_bar2, "F"))^2/n2/n2
+#   result[3, 1] = (norm(P[nv1, nv2] - A_bar3, "F"))^2/n1/n2
+#   
+#   A.ase = ase(A_bar, d, isSVD)
+#   
+#   if (d == 1) {
+#     Ahat = A.ase[[1]][1] * A.ase[[3]][,1:d] %*% t(A.ase[[2]][,1:d])
+#   } else {
+#     Ahat = A.ase[[3]][,1:d] %*% diag(A.ase[[1]][1:d]) %*% t(A.ase[[2]][,1:d])
+#   }
+#   P_hat = regularize(Ahat)
+#   P_hat1 = P_hat[nv1, nv1]
+#   P_hat2 = P_hat[nv2, nv2]
+#   P_hat3 = P_hat[nv1, nv2]
+#   
+#   result[1, 2] = (norm(P[nv1, nv1] - P_hat1, "F"))^2/n1/n1
+#   result[2, 2] = (norm(P[nv2, nv2] - P_hat2, "F"))^2/n2/n2
+#   result[3, 2] = (norm(P[nv1, nv2] - P_hat3, "F"))^2/n1/n2
+#   
+#   return(result)
+# }
 
 
