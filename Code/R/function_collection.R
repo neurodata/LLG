@@ -40,15 +40,18 @@ read_data <- function(dataName, DA=T) {
 
 
 # Diagonal Augmentation
-diag_aug <- function(A, d=1) {
-#   require(Matrix)
-#   n = dim(A)[1]
-#   return(A + Diagonal(n, x=rowSums(A))/(n-1))
-  for (iIter in 1:1) {
-    tmp = ase(A, d, 0)
-    diag(A) = diag(tmp[[3]][,1:d] %*% diag(tmp[[1]][1:d]) %*% t(tmp[[2]][,1:d]))    
+diag_aug <- function(A, d=0) {
+  if (d == 0) {
+    require(Matrix)
+    n = dim(A)[1]
+    return(A + Diagonal(n, x=rowSums(A))/(n-1))
+  } else {
+    for (iIter in 1:1) {
+      tmp = ase(A, d, 0)
+      diag(A) = diag(tmp[[3]][,1:d] %*% diag(tmp[[1]][1:d]) %*% t(tmp[[2]][,1:d]))    
+    }
+    return(A)
   }
-  return(A)
 }
 
 
@@ -283,7 +286,7 @@ sim_all <- function(m, n, tau, B, d, isSVD=1) {
   result[3, 1] = (norm(P[nv1, nv2] - A_bar3, "F"))^2/n1/n2
   
   A.ase = ase(diag_aug(A_bar, d), d, isSVD)
-#   A.ase = ase(diag_aug(A_bar), d, isSVD)
+  #   A.ase = ase(diag_aug(A_bar), d, isSVD)
   
   if (d == 1) {
     Ahat = A.ase[[1]][1] * A.ase[[3]][,1:d] %*% t(A.ase[[2]][,1:d])
