@@ -3,8 +3,8 @@ rm(list = ls())
 setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
-n = 200
-iModel = 1
+n = 50
+iModel = 2
 
 mVec = c(1, 5, 10, 50)
 
