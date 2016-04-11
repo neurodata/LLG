@@ -3,7 +3,7 @@ rm(list = ls())
 setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
-maxIter = 200
+maxIter = 1000
 
 ###### Fix m ######
 m = 100
@@ -406,7 +406,7 @@ p = p + scale_x_continuous(name=expression(rho[1])) +
   scale_y_continuous(name=expression(MSE(hat(P))))
 p = p + theme(axis.text=element_text(size=14,face="bold"),
               axis.title=element_text(size=14,face="bold"))
-p = p + ggtitle(paste("N = ", n, " M = ", m, sep=""))
+p = p + ggtitle(paste("N = ", n, ", M = ", m, sep=""))
 pp[[5]] = p
 
 
@@ -451,8 +451,9 @@ p = p + scale_x_continuous(name=expression(rho[1])) +
   scale_y_continuous(name=expression(RE(bar(A),hat(P))))
 p = p + theme(axis.text=element_text(size=14,face="bold"),
               axis.title=element_text(size=14,face="bold"))
-p = p + ggtitle(paste("N = ", n, " M = ", m, sep=""))
+p = p + ggtitle(paste("N = ", n, ", M = ", m, sep=""))
 pp[[6]] = p
 
 
 grid_arrange_shared_legend2(list(pp[[5]], pp[[6]]), 1, 2)
+# 1170x700
