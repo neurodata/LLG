@@ -12,29 +12,20 @@ dataName = "JHU"
 
 mVec = c(1, 2, 5, 10)
 
-# 2nd elbow
-if (dataName == "JHU") {
-  dZG_2 = 7
-  dZG_3 = 13
-} else if (dataName == "desikan") {
-  dZG_2 = 4
-  dZG_3 = 8
-} else if (dataName == "CPAC200") {
-  dZG_2 = 18
-  dZG_3 = 37
-}
-
-
-
-
 yMin = Inf
 yMax = 0
 for (m in mVec) {
   # EIG
   fileName = paste("../../Result/result_", dataName, "_brute_", "m_", m, "_eig.RData", sep="")
   load(fileName)
-  yMin = min(yMin, rowMeans(error_P_hat^2), mean(error_A_bar^2))
-  yMax = max(yMax, rowMeans(error_P_hat^2), mean(error_A_bar^2))
+  yMin = min(yMin, rowMeans(error_P_hat), mean(error_A_bar))
+  yMax = max(yMax, rowMeans(error_P_hat), mean(error_A_bar))
+  
+  # SVD
+  fileName = paste("../../Result/result_", dataName, "_brute_", "m_", m, "_svd.RData", sep="")
+  load(fileName)
+  yMin = min(yMin, rowMeans(error_P_hat), mean(error_A_bar))
+  yMax = max(yMax, rowMeans(error_P_hat), mean(error_A_bar))
 }
 yMax = yMax*1.1
 yMin = yMin*0.9
@@ -47,14 +38,19 @@ pp = list()
 
 for (iM in 1:length(mVec)) {
   m = mVec[iM]
-
+  
+  # SVD
+  fileName = paste("../../Result/result_", dataName, "_brute_", "m_", m, "_svd.RData", sep="")
+  load(fileName)
+  errorPhatSVDMean = rowMeans(error_P_hat)
+  errorPhatSVDLower = errorPhatSVDMean - 
+    sqrt(apply(error_P_hat, 1, var))/sqrt(dim(error_P_hat)[2])*1.96
+  errorPhatSVDUpper = errorPhatSVDMean + 
+    sqrt(apply(error_P_hat, 1, var))/sqrt(dim(error_P_hat)[2])*1.96
+  
   # Eigen-decomposition
   fileName = paste("../../Result/result_", dataName, "_brute_", "m_", m, "_eig.RData", sep="")
   load(fileName)
-  
-  error_A_bar = error_A_bar^2
-  error_P_hat = error_P_hat^2
-  
   errorAbarMean = rep(mean(error_A_bar))
   errorAbarLower = errorAbarMean - sqrt(var(error_A_bar))/sqrt(length(error_A_bar))*1.96
   errorAbarUpper = errorAbarMean + sqrt(var(error_A_bar))/sqrt(length(error_A_bar))*1.96
@@ -64,28 +60,22 @@ for (iM in 1:length(mVec)) {
   errorPhatEIGUpper = errorPhatEIGMean + 
     sqrt(apply(error_P_hat, 1, var))/sqrt(dim(error_P_hat)[2])*1.96
   
-  df = data.frame(d=rep(dVec,2), errorMean=c(rep(mean(error_A_bar), length(dVec)),
-                                             errorPhatEIGMean),
-                  errorLower=c(rep(errorAbarLower, length(dVec)),
+  df = data.frame(d=rep(dVec,3), errorMean=c(rep(mean(error_A_bar), length(dVec)),
+                                             errorPhatSVDMean,errorPhatEIGMean),
+                  errorLower=c(rep(errorAbarLower, length(dVec)), errorPhatSVDLower,
                                errorPhatEIGLower),
-                  errorUpper=c(rep(errorAbarUpper, length(dVec)),
+                  errorUpper=c(rep(errorAbarUpper, length(dVec)), errorPhatSVDUpper,
                                errorPhatEIGUpper),
-                  flag=c(rep("Abar",length(dVec)),
-                         rep("Phat",length(dVec))))
+                  flag=c(rep("Abar",length(dVec)), rep("Phat_SVD",length(dVec)),
+                         rep("Phat_EIG",length(dVec))))
   
   p = ggplot(data=df, aes(x=d, y=errorMean, color=flag)) + geom_point() + geom_line() +
     geom_ribbon(aes(ymin=errorLower, ymax=errorUpper), linetype=2, alpha=0.1)
-  p = p + geom_vline(aes(lty="Dimension chosen by ZG using the 2nd elbow",
-                         xintercept=dZG_2), show.legend = TRUE)
-  p = p + geom_vline(aes(lty="Dimension chosen by ZG using the 3rd elbow",
-                         xintercept=dZG_3), show.legend = TRUE)
-  p = p + theme(legend.text=element_text(size = 20, face="bold"))
+  p = p + theme(legend.text=element_text(size = 12, face="bold"))
   p = p + theme(legend.title=element_blank())
-  p = p + theme(plot.title = element_text(size = 16, face="bold"))
+  p = p + theme(plot.title = element_text(face="bold"))
   p = p + scale_x_continuous(name="Dimension") + scale_y_continuous(name="MSE")
-  p = p + theme(axis.text=element_text(size=14,face="bold"),
-                axis.title=element_text(size=14,face="bold"))
-  p = p + ggtitle(paste("M = ", m, sep=""))
+  p = p + ggtitle(paste("m = ", m, sep=""))
   p = p + expand_limits(y=c(yMin, yMax))
   pp[[iM]] = p
 }
@@ -112,7 +102,7 @@ grid_arrange_shared_legend <- function(t, ...) {
   g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs
   legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
   lheight <- sum(legend$height)
-  theight <- lheight*0.8
+  theight <- lheight*0.5
   grid.arrange(
     main=textGrob(t, gp=gpar(cex=1.5)),
     do.call(arrangeGrob, lapply(plots, function(x)
@@ -122,7 +112,7 @@ grid_arrange_shared_legend <- function(t, ...) {
     heights = unit.c(theight, unit(1, "npc") - lheight - theight, lheight))
 }
 
-grid_arrange_shared_legend(paste(dataName, ", N=", n, ", ", M, " graphs", sep=""), 
+grid_arrange_shared_legend(paste(dataName, ", n=", n, ", M=", M, sep=""), 
                            pp[[1]], pp[[2]], pp[[3]], pp[[4]])
 
 

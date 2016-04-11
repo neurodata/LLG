@@ -18,7 +18,7 @@ for (m in mVec) {
     print(c(m, isSVD))
     
     nIter = 1000
-    nCores = 4
+    nCores = 2
     
 #     dataName = "CPAC200"
     dataName = "desikan"
