@@ -22,12 +22,28 @@ Generally, in a large graph, vertices are clustered into different communities s
 
 Formally, the SBM is determined by the number of blocks $K$ (generally way less than the number of vertices $N$), block proportion vector $\rho$, and block probability matrix $B$. In this model each vertex is assigned to one of $K$ blocks and the fraction of vertices belonging to the $i$ th block is designated as $\rho_i$.  The connection probabilities of this block structure are stored in the symmetric $K \times K$ block matrix $B$, where $B_{ij}$ represents the probability of an edge existing between a vertex of block $i$ and one of block $j$.
 
-\begin{figure}[!htb]
-	\centering
-	\includegraphics[width=16cm]{SBM_Example.png}
-	\caption{Example illustrating the SBM. (a) Probability matrix that follows a SBM with K = 7 blocks; (b) Adjacency matrix generated from the SBM with probability matrix in (a).
-	\label{fig:plot1}
+
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=1.2\linewidth]{SBM_P.png}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=1.2\linewidth]{SBM_A.png}
+\end{subfigure}
+\caption{Example illustrating the SBM. (a) Probability matrix that follows a SBM with K = 7 blocks; (b) Adjacency matrix generated from the SBM with probability matrix in (a).}
+\label{fig:SBM_example}
 \end{figure}
+
+
+%\begin{figure}[!htb]
+%	\centering
+%	\includegraphics[width=16cm]{SBM_Example.png}
+%	\caption{Example illustrating the SBM. (a) Probability matrix that follows a SBM with K = 7 blocks; (b) Adjacency matrix generated from the SBM with probability matrix in (a).}
+%	\label{fig:plot1}
+%\end{figure}
 
 
 Now if we consider the SBM as a random dot product graph, all vertices in the same block would have identical latent positions.
