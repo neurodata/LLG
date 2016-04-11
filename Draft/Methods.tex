@@ -1,39 +1,43 @@
 
 \section{Methods}
 
-	\subsection{Algorithm: $\hat{P}$}
-
+\subsection{Algorithm: $\hat{P}$}
+\label{subsection:alg}
 \begin{algorithm}[H]
 \caption{}
 \label{algo:basic}
 \begin{algorithmic}[1]
-    \STATE \textbf{Input:} $A^{(1)}, A^{(2)}, \cdots, A^{(M)}$, with each $A^{(m)} \in \{0,1\}^{N \times N}$ sampling from SBM with vertex correspondence;
-    \STATE Calculate $\bar{A} = \frac{1}{M}\sum\limits_{m = 1}^M A^{(m)}$;
-	\STATE Estimate the dimension of the SBM (see section 5.2);
-	\STATE Obtain latent positions $X \in R^{N \times K}$ by applying adjacency spectral embedding to $\bar{A}$ with the columns in $X$ consisting of the eigenvectors corresponding to the largest $d$ eigenvalues of $\bar{A}$, with the diagonal entries augmented (see section 5.3);
-    \STATE $\hat{P} = XX^{T}$ is our estimator.
+\STATE \textbf{Input:} $A^{(1)}, A^{(2)}, \cdots, A^{(M)}$, with each $A^{(m)} \in \{0,1\}^{N \times N}$ sampling from SBM with vertex correspondence;
+\STATE Calculate $\bar{A} = \frac{1}{M}\sum\limits_{m = 1}^M A^{(m)}$;
+\STATE Estimate the dimension in the SBM $d$ (see Section \ref{subsection:choose_dim});
+\STATE Obtain estimated latent positions $\hat{X} \in \mathbb{R}^{N \times d}$ by applying adjacency spectral embedding to $\bar{A}$ with diagonal augmentation. The columns of $\hat{X}$ consist of the eigenvectors corresponding to the $d$ largest eigenvalues of diagonal augmented $\bar{A}$ (see Section \ref{subsection:diag_aug});
+\STATE $\hat{P} = \hat{X} \hat{X}^{T}$ is our estimator.
 \end{algorithmic}
 \end{algorithm}
 
 
-	\subsection{Choosing Dimension}
-	Often in dimensionality reduction techniques, the choice for dimension, $d$, relies on visually analyzing a plot of the ordered eigenvalues, looking for a ``gap'' or ``elbow'' in this scree-plot.  Zhu and Ghodsi \cite{Zhu2006} present an automated method for finding this gap in the scree-plot that takes only the ordered eigenvalues as an input.  In order to prevent underestimating $d$, which is much more harmful than over-estimating, we initialize $d_0 = 0$ and iterate over the Zhu and Ghodsi algorithm by removing the first $d_{i-1}$ eigenvalues from calculation at the $i$th iteration to determine the location of the ``next elbow''.  For the experiments performed in this work, we choose $d$ to be the 3rd elbow under this approach.
-	
-	\RT{Need the scree plot for a connectome here and Corr data set effect of M on d}
-	
-	\subsection{Graph Diagonal Augmentation}
-	The graphs examined in this work are hollow, in that there are no self-loops and thus the diagonal entries of the adjacency matrix are 0.  This leads to a bias in the calculation of the eigenvectors.  We minimize this bias by using an iterative method developed by Scheinerman and Tucker \cite{Scheinerman2010}. In this method, steps 4 and 5 of Algorithm \ref{algo:basic} are repeated, each time replacing the diagonal component of $\bar{A}$ with the diagonal of $\hat{P}$, until $\hat{P}$ converges.
+\subsection{Choosing Dimension}
+\label{subsection:choose_dim}
+Often in dimensionality reduction techniques, the choice for dimension, $d$, relies on visually analyzing a plot of the ordered eigenvalues, looking for a ``gap'' or ``elbow'' in the scree-plot.  Zhu and Ghodsi \cite{zhu2006automatic} present an automated method for finding this gap in the scree-plot that takes only the ordered eigenvalues as an input.  In order to prevent underestimating $d$, which is much more harmful than over-estimating, we initialize $d_0 = 0$ and iterate over the Zhu and Ghodsi algorithm by removing the first $d_{i-1}$ eigenvalues from calculation at the $i$th iteration to determine the location of the ``next elbow''.  For the experiments performed in this work, we choose $d$ to be the 2nd and 3rd elbow under this approach.
 
-	\subsection{Dataset Description\RTC{Needs update}}
-	The connectomes analyzed were created from resting state functional MRI (fMRI) and Diffusion Tensor Imaging (DTI) scans from the Consortium for Reliability and Reproducibility (CoRR) and are available via the International Neuroimaging Data-sharing Initiative (INDI).  The SWU 4 - Southwest University image collection was used to generate 464 connectomes with 788 anatomically corresponding vertices.  (Need to describe how graphs were made with reference)
-	\subsection{Source code and data}
-	\subsection{Outline for Proof of Relative Efficiency}
-	Here we provide an outline of the proof for the MSE($\hat{P}$) result presented in section 3.1.
 	
-	When comparing two estimators, the first thing we need to consider is consistency.
-	It is easy to see that $\bar{A}$ is unbiased as an estimate of $P$. Moreover, since two latent positions are conditionally asymptotically independent by extended version of Corollary 4.11 in Athreya et al. (2013), we know $\hat{P}$ is consistent, as well as $\bar{A}$.
+\subsection{Diagonal Augmentation}
+\label{subsection:diag_aug}
+The graphs examined in this work are hollow, in that there are no self-loops and thus the diagonal entries of the adjacency matrix are 0.  This leads to a bias in the calculation of the eigenvectors.  We minimize this bias by using an iterative method developed by Scheinerman and Tucker \cite{scheinerman2010modeling}. In this method, Steps 4 and 5 of Algorithm \ref{algo:basic} are repeated, each time replacing the diagonal component of $\bar{A}$ with the diagonal of $\hat{P}$, until $\hat{P}$ converges.
+
+\subsection{Dataset Description \RTC{Needs update}}
+\label{subsection:data_description}
+	The connectomes analyzed were created from resting state functional MRI (fMRI) and Diffusion Tensor Imaging (DTI) scans from the Consortium for Reliability and Reproducibility (CoRR) and are available via the International Neuroimaging Data-sharing Initiative (INDI).  The SWU 4 - Southwest University image collection was used to generate 454 connectomes with 788 anatomically corresponding vertices.  (Need to describe how graphs were made with reference, etc.)
+
+\subsection{Source code and data}
+
+\subsection{Outline for Proof of Relative Efficiency}
+Here we provide an outline of the proof for the MSE($\hat{P}$) result presented in Section \ref{subsection:theoretical_results}.
+	
+When comparing two estimators, the first thing we need to consider is consistency.
+It is easy to see that $\bar{A}$ is unbiased as an estimate of $P$. Moreover, since two latent positions are conditionally asymptotically independent by extended version of Corollary 4.11 in Athreya et al. (2013) \cite{athreya2013limit}, we know $\hat{P}$ is consistent, as well as $\bar{A}$.
 	
 	Thus the relative efficiency between $\hat{P}$ and $\bar{A}$, which is equivalent to the ratio of mean square errors in this case, is a good indicate in comparison.
-	Since $\hat{P}_{ij} = \hat{X}_i^T \hat{X}_j$ is a noisy version of the dot product of $\nu_s^T \nu_t$, by Equation 5 in Brown and Rutemiller (1977), combined with asymptotic independence between $\hat{X}_i$ and $\hat{X}_j$, and the covariance matrices given by extended version of Corollary 4.11 in Athreya et al. (2013), we have the variance of $\hat{P}_{ij}$ converges to $\left( 1/\rho_{\tau_i} + 1/\rho_{\tau_j} \right) P_{ij} (1-P_{ij})/(N \cdot M)$ as $N \rightarrow \infty$. Since the variance of $\bar{A}_{ij}$ is $P_{ij} (1-P_{ij})/M$, the relative efficiency between $\hat{P}_{ij}$ and $\bar{A}_{ij}$ is approximately $(\rho_{\tau_i}^{-1} + \rho_{\tau_j}^{-1})/N$ when $N$ is sufficiently large.
+	Since $\hat{P}_{ij} = \hat{X}_i^T \hat{X}_j$ is a noisy version of the dot product of $\nu_s^T \nu_t$, by Equation 5 in Brown and Rutemiller (1977) \cite{brown1977means}, combined with asymptotic independence between $\hat{X}_i$ and $\hat{X}_j$, and the covariance matrices given by extended version of Corollary 4.11 in Athreya et al. (2013) \cite{athreya2013limit}, we have the variance of $\hat{P}_{ij}$ converges to $\left( 1/\rho_{\tau_i} + 1/\rho_{\tau_j} \right) P_{ij} (1-P_{ij})/(N \cdot M)$ as $N \rightarrow \infty$. Since the variance of $\bar{A}_{ij}$ is $P_{ij} (1-P_{ij})/M$, the relative efficiency between $\hat{P}_{ij}$ and $\bar{A}_{ij}$ is approximately $(\rho_{\tau_i}^{-1} + \rho_{\tau_j}^{-1})/N$ when $N$ is sufficiently large.
 	
 	The (relative) full proof is provided in the appendix. 

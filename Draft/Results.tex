@@ -1,5 +1,8 @@
 \section{Results}
+\label{section:results}
+
 \subsection{Theoretical Results}
+\label{subsection:theoretical_results}
 
 \begin{theorem}
 \label{thm:ARE}
@@ -33,6 +36,7 @@ This result implicates that for large random dot product graphs that follow a st
 
 
 \subsection{Validation with Simulations}
+\label{subsection:simulations}
 We demonstrate the theoretical results in Section 3.1, the variance of $\hat{P}$ and the relative efficiency, via various Monte Carlo simulation experiments. Specifically, we consider the 2-block SBM parameterized by
 \begin{equation*}
 B = \begin{bmatrix}
@@ -46,70 +50,85 @@ B = \begin{bmatrix}
 
 The block proportion vector $\rho$ shows that each vertex is uniformly assigned to either block. And probability matrix $B$ indicates the probability of corresponding edges.
 
-For each Monte Carlo replicate, we generate $M$ random graphs with known vertex correspondence under the SBM described above. Specifically, we first draw the block assignment $\tau \in [K]^N$ for each vertex from a multinomial distribution with parameter $\rho$. Note that $\tau$ will be identical for all $M$ graphs we are going to generate for vertex correspondence. Then we sample $M$ conditionally independent graphs $A^{(1)}, \cdots, A^{(M)}$ such that $A^{(m)}_{ij}|\tau \stackrel{ind}{\sim} Bern(P_{ij})$, where $P_{ij} = B_{\tau_i, \tau_j}$, $1 \le m \le M$, $1 \le i, j \le N$.
+For each Monte Carlo replicate, we generate $M$ random graphs with known vertex correspondence under the SBM described above. Specifically, we first draw the block assignment $\tau \in [K]^N$ for each vertex from a multinomial distribution with parameter $\rho$. Note that $\tau$ will be identical for all $M$ graphs we are going to generate for vertex correspondence. Then we sample $M$ conditionally independent graphs $A^{(1)}, \cdots, A^{(M)}$, which are binary, symmetric and hollow, such that $A^{(m)}_{ij}|\tau \stackrel{ind}{\sim} Bern(P_{ij})$, where $P_{ij} = B_{\tau_i, \tau_j}$, $1 \le m \le M$, $1 \le i < j \le N$.
 
-Given $M$ graphs, we can calculate $\bar{A}$ and $\hat{P}$ assuming that $d = \mathrm{rank}(B) = 2$ is known. Also, $\mathrm{MSE}(\hat{P}_{ij})$, $\mathrm{MSE}(\bar{A}_{ij})$ and $\mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ with $1 \le i, j \le N$ for the data can be derived as $P$ is known in this simulation. Moreover, since vertices are equivalent in the same block under the SBM, we average over all the MSE and RE associated with edges corresponding to the same blocks as our estimates using the true labels $\tau$. That is, $\mathrm{MSE}_{st}(\hat{P}) = (\sum_{\tau_i = s, \tau_j = t, i\ne j} \mathrm{MSE}(\hat{P}_{ij}))/(\sum_{\tau_i = s, \tau_j = t, i\ne j}1)$, $\mathrm{MSE}_{st}(\bar{A}) = (\sum_{\tau_i = s, \tau_j = t, i\ne j} \mathrm{MSE}(\bar{A}_{ij}))/(\sum_{\tau_i = s, \tau_j = t, i\ne j}1)$ and $\mathrm{RE}_{st}(\bar{A}, \hat{P}) = \mathrm{MSE}_{st}(\hat{P})/\mathrm{MSE}_{st}(\bar{A})$ for $1 \le s, t \le K$.
+Given $M$ graphs, we can calculate $\bar{A}$ and $\hat{P}$ assuming that $d = \mathrm{rank}(B) = 2$ is known. Also, $\mathrm{MSE}(\hat{P}_{ij})$, $\mathrm{MSE}(\bar{A}_{ij})$ and $\mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ with $1 \le i < j \le N$ for the data can be derived as $P$ is known in this simulation. Moreover, since vertices are equivalent in the same block under the SBM, we average over all the MSE and RE associated with edges corresponding to the same blocks as our estimates using the true labels $\tau$. That is, $\mathrm{MSE}_{st}(\hat{P}) = (\sum_{\tau_i = s, \tau_j = t, i\ne j} \mathrm{MSE}(\hat{P}_{ij}))/(\sum_{\tau_i = s, \tau_j = t, i\ne j}1)$, $\mathrm{MSE}_{st}(\bar{A}) = (\sum_{\tau_i = s, \tau_j = t, i\ne j} \mathrm{MSE}(\bar{A}_{ij}))/(\sum_{\tau_i = s, \tau_j = t, i\ne j}1)$ and $\mathrm{RE}_{st}(\bar{A}, \hat{P}) = \mathrm{MSE}_{st}(\hat{P})/\mathrm{MSE}_{st}(\bar{A})$ for $1 \le s, t \le K$.
 
-By checking the averaging MSE and RE of the two estimates $\hat{P}$ and $\bar{A}$ over 1000 Monte Carlo replicates, we demonstrate that the theoretical results in Secion 3.1.
+By checking the averaging MSE and RE of the two estimates $\hat{P}$ and $\bar{A}$ over 1000 Monte Carlo replicates, we demonstrate that the theoretical results in Section \ref{subsection:theoretical_results}.
 
-Figure \ref{fig:MSE} plot the scaled average MSE with different $N$ and $M$ of 1000 Monte Carlo replicates. Colors denote the block membership associated with the edges we are averaging over. Solid lines represent the scaled MSE for the data while dashed lines denote the theoretical values.
-Figure \ref{fig:MSE}(a) shows that with a fixed $M$, as $N$ increases, $N \cdot \mathrm{MSE}_{st}(\hat{P})$ converges to $(1/\rho_s + 1/\rho_t) B_{st}(1-B_{st}) / M$ represented as the dashed lines, suggested in Lemma \ref{lm:VarPhat}. Notice that this means $\mathrm{MSE}_{st}(\hat{P})$ is decreasing at rate $1/N$.
-Figure \ref{fig:MSE}(b) illustrates that $M \cdot \mathrm{MSE}_{st}(\hat{P})$ holds to be $(1/\rho_s + 1/\rho_t) B_{st}(1-B_{st}) / N$ independently of the value of $M$ while keeping $N$ sufficiently large and fixed. Thus a sufficiently large $M$ is not a necessary condition for Lemma \ref{lm:VarPhat} as expected.
+Figure \ref{fig:MSE} plots the scaled average MSE with different $N$ and $M$ of 1000 Monte Carlo replicates. Colors denote the block membership associated with the edges we are averaging over. Lines in black represent the theoretical values.
+Figure \ref{fig:MSE}(a) shows that with a fixed $M$, as $N$ increases, $N \cdot \mathrm{MSE}_{st}(\hat{P})$ converges to $(1/\rho_s + 1/\rho_t) B_{st}(1-B_{st}) / M$ represented as the black lines, as suggested in Lemma \ref{lm:VarPhat}. Notice that this means $\mathrm{MSE}_{st}(\hat{P})$ is decreasing at rate $1/N$.
+Figure \ref{fig:MSE}(b) illustrates that $M \cdot \mathrm{MSE}_{st}(\hat{P})$ holds to be $(1/\rho_s + 1/\rho_t) B_{st}(1-B_{st}) / N$ approximately independent of the value of $M$ while keeping $N$ sufficiently large and fixed. Thus a sufficiently large $M$ is not a necessary condition for Lemma \ref{lm:VarPhat} as expected.
 
 
 \begin{figure}[!htb]
-	\centering
-	\includegraphics[width=16cm]{MSE.png}
-	\caption{Simulation results for the scaled average MSE with different $N$ and $M$ of 1000 Monte Carlo replicates. Colors denote the block membership associated with the edges we are averaging over. Solid lines represent the scaled MSE for the data while dashed lines denote the theoretical values.
+\centering
+\includegraphics[width=16cm]{MSE.png}
+\caption{Simulation results for the scaled average MSE of $\hat{P}$ with different $N$ and $M$ of 1000 Monte Carlo replicates. Colors denote the block membership associated with the edges we are averaging over. Lines in black represent the theoretical values.
  (a) shows that $N \cdot \mathrm{MSE}_{st}(\hat{P})$ converges to $(1/\rho_s + 1/\rho_t) B_{st}(1-B_{st}) / M$ represented as the dashed lines with a fixed $M$ as $N$ increases.
- (b) illustrates that $M \cdot \mathrm{MSE}_{st}(\hat{P})$ holds to be $(1/\rho_s + 1/\rho_t) B_{st}(1-B_{st}) / N$ independently of the value of $M$ while keeping $N$ sufficiently large and fixed.
-\RTC{The right panel, $y$-axis should be M*MSE instead of N*MSE. Both should be ``associated edges'' instead of ``associated vertices''}}
-	\label{fig:MSE}
+ (b) illustrates that $M \cdot \mathrm{MSE}_{st}(\hat{P})$ holds to be $(1/\rho_s + 1/\rho_t) B_{st}(1-B_{st}) / N$ approximately independent of the value of $M$ while keeping $N$ sufficiently large and fixed.}
+\label{fig:MSE}
 \end{figure}
 
 
 
 
-Figure \ref{fig:RE} plot the scaled average RE with different $N$ and fixed $M$ of 1000 Monte Carlo replicates. Colors denote the block membership associated with the edges we are averaging over. Solid lines represent the scaled RE for the data while dashed lines denote the theoretical values. From the figure, we see that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t$ represented as the dashed lines, suggested in Lemma \ref{thm:ARE}. Notice that this means $\mathrm{RE}_{st}(\bar{A}, \hat{P})$ is decreasing at rate $1/N$.
+Figure \ref{fig:RE} plot the scaled average RE with different $N$ and fixed $M$ of 1000 Monte Carlo replicates. Colors denote the block membership associated with the edges we are averaging over. Solid line in black represents the theoretical value for scaled RE. From the figure, we see that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t$ represented as the black solid line, as suggested in Lemma \ref{thm:ARE}. Notice that this means $\mathrm{RE}_{st}(\bar{A}, \hat{P})$ is decreasing at rate $1/N$.
 
 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=9cm]{RE.png}
-	\caption{Scaled average RE with different $N$ and fixed $M$ of 1000 Monte Carlo replicates. Solid lines represent the scaled RE for the data while dashed lines denote the theoretical values. Observe that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t$ as expected.}
+	\caption{Scaled average RE with different $N$ and fixed $M$ of 1000 Monte Carlo replicates. Solid line in black represents the theoretical value for scaled RE. Observe that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t$ as expected.}
 	\label{fig:RE}
 \end{figure}
 
 
 
 
-To verify Theorem \ref{thm:ARE} and Lemma \ref{lm:VarPhat} holds with different $\rho$, Figure \ref{fig:RErho} shows the average MSE and average RE with $N = 500$ and $M = 100$. These simulated results again match well for the predictions from Theorem \ref{thm:ARE} and Lemma \ref{lm:VarPhat}, with a mean deviation of 2.4e-7, and 1.1e-4, respectively.
+To verify Theorem \ref{thm:ARE} and Lemma \ref{lm:VarPhat} holds with different $\rho$, Figure \ref{fig:RErho} shows the average MSE and average RE with $N = 500$ and $M = 100$ while changing $\rho_1$ from 0.1 to 0.9. These simulated results again match well for the predictions from Theorem \ref{thm:ARE} and Lemma \ref{lm:VarPhat}.
 \begin{figure}[!htb]
-	\centering
-	\includegraphics[width=14cm]{VarRE.PNG}
-	\caption{Simulated results for (a) $\mathrm{MSE}_{st}(\hat{P})$ and (b) $\mathrm{RE}_{st}(\bar{A}, \hat{P})$ with $N = 500$ and $M = 100$. The simulated values for the average MSE and average RE measurements deviated from the predictions with a mean of 2.4e-7, and 1.1e-4, respectively.}
-	\label{fig:RErho}
+\centering
+\includegraphics[width=14cm]{Rho.png}
+\caption{Simulated results for (a) $\mathrm{MSE}_{st}(\hat{P})$ and (b) $\mathrm{RE}_{st}(\bar{A}, \hat{P})$ with $N = 500$ and $M = 100$ of 1000 Monte Carlo replicates while changing $\rho_1$ from 0.1 to 0.9.. The simulated values for the average MSE and average RE measurements match perfectly with the theoretical values.}
+\label{fig:RErho}
 \end{figure}
 
 
 
 
 
-\subsection{CoRR Brain Graphs: Cross-Validation \RTC{Needs to be updated with the latest dataset}}
-	
-	To demonstrate that the $\hat{P}$ estimate is valid under data that does not perfectly follow a SBM, we examine a set of 464 brain connectomes generated from fMRI scans available at the Consortium for Reliability and Reproducibility (CoRR).  Details on this dataset and connectome generation can be seen in section 5.4.  The connectomes generated each have 788 vertices, with anatomical correspondence. To compare $\bar{A}$ and $\hat{P}$ we perform a cross-validation study to examine the impact of the number of available graphs, $M$.  For each sample size $m$, we randomly sample $m$ adjacency matrices from the CoRR data set and estimate the mean with both $\bar{A}$ and $\hat{P}$.  Also, we assure $m$ to be relatively small such that the mean of the $(464 - M)$ remaining graphs is a valid approximation to the true probability matrix $P$ we are estimating. Then we can calculate the MSE of the two estimators based on the estimated probability matrix.
-	
+\subsection{CoRR Brain Graphs}
+\label{subsection:real_data}
 
+To demonstrate that the $\hat{P}$ estimate is valid under data that does not perfectly follow a SBM, we examine three datasets, JHU, desikan and CPAC200, which are sets of 454 brain connectomes with different number of nodes generated from fMRI scans available at the Consortium for Reliability and Reproducibility (CoRR). Details on these datasets and connectome generation can be seen in Section \ref{subsection:data_description}.  The connectomes generated have 48(JHU), 70(desikan) and 200(CPAC200) vertices respectively, with anatomical correspondence. To compare $\bar{A}$ and $\hat{P}$ we perform a cross-validation study to examine the impact of the number of available graphs $M$.  For each sample size $M$, we randomly sample $M$ graphs from the 454 graphs in the CoRR dataset and estimate the mean with both $\bar{A}$ and $\hat{P}$ with some proper embedding dimension.  Also, we assure $M$ to be relatively small such that the mean of the $(454 - M)$ remaining graphs is a valid approximation to the true probability matrix $P$ we are estimating. Then we can calculate the MSE of the two estimators based on the estimated probability matrix similarly as long as we know which dimension we should embed the graphs into.
 
+Figure \ref{fig:JHU}, Figure \ref{fig:desikan} and Figure \ref{fig:CPAC200} demonstrate that when $M$ is small, $\hat{P}$ estimate outperforms $\bar{A}$ in MSE when applying our algorithm to the three datasets. As we can see, Zhu and Ghodsi's algorithm does a good job on these datasets. Moreover, the result is insensitive to the embedding dimension we choose, which makes our estimator more robust and useful in analyzing real data. The results justify that $\hat{P}$ is a valid and likely more accurate estimate of $P$ even when the data does not perfectly follow an SBM.
 
-Figure \ref{fig:MSEcorr} demonstrates that for this dataset, the $\hat{P}$ estimate outperforms $\bar{A}$ in MSE, justifying that the $\hat{P}$ is a valid and likely more accurate estimate of $P$ even when the data does not perfectly follow an SBM.
-	
 \begin{figure}[!htb]
-		\centering
-		\includegraphics[width=8cm]{Corr_XV_3.PNG}
-		\caption{Mean squared error for $\bar{A}$ and $\hat{P}$, calculated through cross-validation, in estimating the mean graph on the CoRR brain graphs. }
-		\label{fig:MSEcorr}
+\centering
+\includegraphics[width=14cm]{JHU.png}
+\caption{Comparison of MSE between $\bar{A}$ (red) and $\hat{P}$ (blue) for JHU dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by Zhu and Ghodsi is denoted by solid lines (2nd elbow) and dashed lines (3rd elbow). When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
+\label{fig:JHU}
 \end{figure}
-\RTC{To make the difference more clear, we might want: 1. scale MSE by $M$; 2. show the ratio of MSE}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=14cm]{desikan.png}
+\caption{Comparison of MSE between $\bar{A}$ (red) and $\hat{P}$ (blue) for desikan dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by Zhu and Ghodsi is denoted by solid lines (2nd elbow) and dashed lines (3rd elbow). When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
+\label{fig:desikan}
+\end{figure}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=14cm]{CPAC200.png}
+\caption{Comparison of MSE between $\bar{A}$ (red) and $\hat{P}$ (blue) for CPAC200 dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by Zhu and Ghodsi is denoted by solid lines (2nd elbow) and dashed lines (3rd elbow). When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
+\label{fig:CPAC200}
+\end{figure}
+
+
+
+
+
 \newpage
 
