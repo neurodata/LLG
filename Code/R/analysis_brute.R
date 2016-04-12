@@ -3,8 +3,8 @@ rm(list = ls())
 setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
-# dataName = "CPAC200"
-dataName = "desikan"
+dataName = "CPAC200"
+# dataName = "desikan"
 # dataName = "JHU"
 # dataName = "slab907"
 # dataName = "slab1068"
@@ -62,7 +62,7 @@ pp = list()
 
 for (iM in 1:length(mVec)) {
   m = mVec[iM]
-
+  
   # Eigen-decomposition
   fileName = paste("../../Result/result_", dataName, "_brute_", "m_", m, "_eig.RData", sep="")
   load(fileName)
@@ -79,25 +79,29 @@ for (iM in 1:length(mVec)) {
   errorPhatEIGUpper = errorPhatEIGMean + 
     sqrt(apply(error_P_hat, 1, var))/sqrt(dim(error_P_hat)[2])*1.96
   
-  df = data.frame(d=rep(dVec,2), errorMean=c(rep(mean(error_A_bar), length(dVec)),
-                                             errorPhatEIGMean),
+  df = data.frame(d=c(rep(dVec,2), NaN, NaN), 
+                  errorMean=c(rep(mean(error_A_bar), length(dVec)),
+                              errorPhatEIGMean, NaN, NaN),
                   errorLower=c(rep(errorAbarLower, length(dVec)),
-                               errorPhatEIGLower),
+                               errorPhatEIGLower, NaN, NaN),
                   errorUpper=c(rep(errorAbarUpper, length(dVec)),
-                               errorPhatEIGUpper),
+                               errorPhatEIGUpper, NaN, NaN),
                   flag=c(rep("Abar",length(dVec)),
-                         rep("Phat",length(dVec))))
+                         rep("Phat",length(dVec)),
+                         "ZG 2nd elbow",
+                         "ZG 3rd elbow"))
   
   p = ggplot(data=df, aes(x=d, y=errorMean, color=flag)) + geom_point() + geom_line() +
-    geom_ribbon(aes(ymin=errorLower, ymax=errorUpper), linetype=2, alpha=0.1)
-#   p = p + geom_vline(xintercept=30, color="green", linetype = "longdash",
-#                      labels = "A", show.legend = TRUE)
-#   p = p + geom_vline(xintercept=35, color="purple", linetype = "longdash",
-#                      labels = "B", show.legend = TRUE)
-  p = p + geom_vline(aes(lty="Dimension chosen by ZG using the 2nd elbow",
-                         xintercept=dZG2Mean[iM]), show.legend = TRUE)
-  p = p + geom_vline(aes(lty="Dimension chosen by ZG using the 3rd elbow",
-                         xintercept=dZG3Mean[iM]), show.legend = TRUE)
+    geom_ribbon(aes(x=d, ymin=errorLower, ymax=errorUpper), linetype=2, alpha=0.1)
+  
+  p = p + geom_vline(xintercept=dZG2Mean[iM], linetype="solid", color="green")
+  p = p + geom_vline(xintercept=dZG2L[iM], linetype="dashed", color="green")
+  p = p + geom_vline(xintercept=dZG2U[iM], linetype="dashed", color="green")
+  
+  p = p + geom_vline(xintercept=dZG3Mean[iM], linetype="solid", color="purple")
+  p = p + geom_vline(xintercept=dZG3L[iM], linetype="dashed", color="purple")
+  p = p + geom_vline(xintercept=dZG3U[iM], linetype="dashed", color="purple")
+  
   p = p + theme(legend.text=element_text(size = 20, face="bold"))
   p = p + theme(legend.title=element_blank())
   p = p + theme(plot.title = element_text(size = 16, face="bold"))
@@ -106,6 +110,7 @@ for (iM in 1:length(mVec)) {
                 axis.title=element_text(size=14,face="bold"))
   p = p + ggtitle(paste("M = ", m, sep=""))
   p = p + expand_limits(y=c(yMin, yMax))
+  p = p + scale_color_manual(values=c("red", "blue", "green", "purple"))
   pp[[iM]] = p
 }
 
