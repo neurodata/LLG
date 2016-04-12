@@ -64,7 +64,7 @@ Figure \ref{fig:MSE}(b) illustrates that $M \cdot \mathrm{MSE}_{st}(\hat{P})$ ho
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=16cm]{MSE.png}
-\caption{Simulation results for the scaled average MSE of $\hat{P}$ with different $N$ and $M$ of 1000 Monte Carlo replicates. Colors denote the block membership associated with the edges we are averaging over. Lines in black represent the theoretical values.
+\caption{Simulation results for the scaled average MSE of $\hat{P}$ with different $N$ and $M$ of 1000 Monte Carlo replicates. Colors denote the block membership associated with the edges we are averaging over. Dashed lines represent the 95\% confidence interval. Lines in black represent the theoretical values.
  (a) shows that $N \cdot \mathrm{MSE}_{st}(\hat{P})$ converges to $(1/\rho_s + 1/\rho_t) B_{st}(1-B_{st}) / M$ represented as the dashed lines with a fixed $M$ as $N$ increases.
  (b) illustrates that $M \cdot \mathrm{MSE}_{st}(\hat{P})$ holds to be $(1/\rho_s + 1/\rho_t) B_{st}(1-B_{st}) / N$ approximately independent of the value of $M$ while keeping $N$ sufficiently large and fixed.}
 \label{fig:MSE}
@@ -79,7 +79,7 @@ Figure \ref{fig:RE} plot the scaled average RE with different $N$ and fixed $M$ 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=9cm]{RE.png}
-	\caption{Scaled average RE with different $N$ and fixed $M$ of 1000 Monte Carlo replicates. Solid line in black represents the theoretical value for scaled RE. Observe that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t$ as expected.}
+	\caption{Scaled average RE with different $N$ and fixed $M$ of 1000 Monte Carlo replicates. Colors denote the block membership associated with the edges we are averaging over. Dashed lines represent the 95\% confidence interval. Solid line in black represents the theoretical value for scaled RE. Observe that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t$ as expected.}
 	\label{fig:RE}
 \end{figure}
 
@@ -90,7 +90,7 @@ To verify Theorem \ref{thm:ARE} and Lemma \ref{lm:VarPhat} holds with different 
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=14cm]{Rho.png}
-\caption{Simulated results for (a) $\mathrm{MSE}_{st}(\hat{P})$ and (b) $\mathrm{RE}_{st}(\bar{A}, \hat{P})$ with $N = 500$ and $M = 100$ of 1000 Monte Carlo replicates while changing $\rho_1$ from 0.1 to 0.9.. The simulated values for the average MSE and average RE measurements match perfectly with the theoretical values.}
+\caption{Simulated results for (a) $\mathrm{MSE}_{st}(\hat{P})$ and (b) $\mathrm{RE}_{st}(\bar{A}, \hat{P})$ with $N = 500$ and $M = 100$ of 1000 Monte Carlo replicates while changing $\rho_1$ from 0.1 to 0.9. Dashed lines represent the 95\% confidence interval. The simulated values for the average MSE and average RE measurements match perfectly with the theoretical values.}
 \label{fig:RErho}
 \end{figure}
 
@@ -103,26 +103,29 @@ To verify Theorem \ref{thm:ARE} and Lemma \ref{lm:VarPhat} holds with different 
 
 To demonstrate that the $\hat{P}$ estimate is valid under data that does not perfectly follow a SBM, we examine three datasets, JHU, desikan and CPAC200, which are sets of 454 brain connectomes with different number of nodes generated from fMRI scans available at the Consortium for Reliability and Reproducibility (CoRR). Details on these datasets and connectome generation can be seen in Section \ref{subsection:data_description}.  The connectomes generated have 48(JHU), 70(desikan) and 200(CPAC200) vertices respectively, with anatomical correspondence. To compare $\bar{A}$ and $\hat{P}$ we perform a cross-validation study to examine the impact of the number of available graphs $M$.  For each sample size $M$, we randomly sample $M$ graphs from the 454 graphs in the CoRR dataset and estimate the mean with both $\bar{A}$ and $\hat{P}$ with some proper embedding dimension.  Also, we assure $M$ to be relatively small such that the mean of the $(454 - M)$ remaining graphs is a valid approximation to the true probability matrix $P$ we are estimating. Then we can calculate the MSE of the two estimators based on the estimated probability matrix similarly as long as we know which dimension we should embed the graphs into.
 
-Figure \ref{fig:JHU}, Figure \ref{fig:desikan} and Figure \ref{fig:CPAC200} demonstrate that when $M$ is small, $\hat{P}$ estimate outperforms $\bar{A}$ in MSE when applying our algorithm to the three datasets. As we can see, Zhu and Ghodsi's algorithm does a good job on these datasets. Moreover, the result is insensitive to the embedding dimension we choose, which makes our estimator more robust and useful in analyzing real data. The results justify that $\hat{P}$ is a valid and likely more accurate estimate of $P$ even when the data does not perfectly follow an SBM.
+Figure \ref{fig:JHU}, Figure \ref{fig:desikan} and Figure \ref{fig:CPAC200} demonstrate that our algorithm gives a better estimate $\hat{P}$ according to all three datasets. 
+When $M$ is small, $\bar{A}$ has large variance which leads to large MSE. Meanwhile, $\hat{P}$ reduces the variance by taking advantages of the graph structure and outperforms $\bar{A}$ dramatically. With a relatively large $M$, $\bar{A}$ has enough information to performs well, leaving less space for improvement. And we can see both estimators perform almost perfect when $M$ is large.
+Moreover, Zhu and Ghodsi's algorithm does a good job for selecting the dimension to embed. As we can see, the result is insensitive to the embedding dimension we choose, which makes our estimator more robust and useful in analyzing real data.
+The results justify that $\hat{P}$ is a valid and likely more accurate estimate of $P$ even when the data does not perfectly follow an SBM.
 
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=14cm]{JHU.png}
-\caption{Comparison of MSE between $\bar{A}$ (red) and $\hat{P}$ (blue) for JHU dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by Zhu and Ghodsi is denoted by solid lines (2nd elbow) and dashed lines (3rd elbow). When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
+\caption{Comparison of MSE between $\bar{A}$ (red) and $\hat{P}$ (blue) for JHU dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by Zhu and Ghodsi is denoted in green (2nd elbow) and purple (3rd elbow). Dashed lines represent the 95\% confidence interval. When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
 \label{fig:JHU}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=14cm]{desikan.png}
-\caption{Comparison of MSE between $\bar{A}$ (red) and $\hat{P}$ (blue) for desikan dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by Zhu and Ghodsi is denoted by solid lines (2nd elbow) and dashed lines (3rd elbow). When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
+\caption{Comparison of MSE between $\bar{A}$ (red) and $\hat{P}$ (blue) for desikan dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by Zhu and Ghodsi is denoted in green (2nd elbow) and purple (3rd elbow). Dashed lines represent the 95\% confidence interval.  When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
 \label{fig:desikan}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=14cm]{CPAC200.png}
-\caption{Comparison of MSE between $\bar{A}$ (red) and $\hat{P}$ (blue) for CPAC200 dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by Zhu and Ghodsi is denoted by solid lines (2nd elbow) and dashed lines (3rd elbow). When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
+\caption{Comparison of MSE between $\bar{A}$ (red) and $\hat{P}$ (blue) for CPAC200 dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by Zhu and Ghodsi is denoted in green (2nd elbow) and purple (3rd elbow). Dashed lines represent the 95\% confidence interval.  When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
 \label{fig:CPAC200}
 \end{figure}
 
