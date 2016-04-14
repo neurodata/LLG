@@ -10,7 +10,7 @@ dataName = "CPAC200"
 # dataName = "slab1068"
 # dataName = "Talairach"
 
-nElbow = 3
+nElbow = 2
 mVec = c(1,2,5,10)
 isSVD = 0
 nIter = 100
@@ -32,7 +32,7 @@ for (iM in 1:length(mVec)) {
   for (iIter in 1:nIter) {
     print(c(m, iIter))
     sampleVec = sample.int(M, m)
-    A_bar = add(A_all[sampleVec])
+    A_bar = add(A_all[sampleVec])/m
     evalVec = ase(A_bar, ceiling(n*3/5), isSVD)[[1]]
     dZG[iM, iIter] = getElbows(evalVec, n=nElbow, plot=F)[[nElbow]]
   }
