@@ -12,7 +12,7 @@ dataName = "CPAC200"
 
 mVec = c(1, 2, 5, 10)
 
-# 2nd elbow
+# 2nd and 3rd elbow
 if (dataName == "JHU") {
   dZG2Mean = c(7.06, 6.39, 6.37, 6.37)
   dZG2L = c(6.724751, 6.112961, 6.206003, 6.240362)
@@ -40,25 +40,64 @@ if (dataName == "JHU") {
 }
 
 
-
-
-yMin = Inf
-yMax = 0
-for (m in mVec) {
-  # EIG
-  fileName = paste("../../Result/result_", dataName, "_brute_", "m_", m, "_eig.RData", sep="")
-  load(fileName)
-  yMin = min(yMin, rowMeans(error_P_hat^2), mean(error_A_bar^2))
-  yMax = max(yMax, rowMeans(error_P_hat^2), mean(error_A_bar^2))
+# USVT
+if (dataName == "JHU") {
+  dUSVT05Mean = c(9.38, 12.66, 19.72, 27.24)
+  dUSVT05L = c(9.111663, 12.39393, 19.53089, 27.07727)
+  dUSVT05U = c(9.648337, 12.92607, 19.90911, 27.40273)
+  
+  dUSVT07Mean = c(4.61, 6.13, 11.61, 18.18)
+  dUSVT07L = c(4.465526, 5.866221, 11.39987, 17.95997)
+  dUSVT07U = c(4.754474, 6.393779, 11.82013, 18.40003)
+  
+  dUSVT08Mean = c(3.07, 4.82, 8.54, 14.8)
+  dUSVT08L = c(2.911783, 4.642974, 8.293301, 14.59528)
+  dUSVT08U = c(3.228217, 4.997026, 8.786699, 15.00472)
+  
+  dUSVT1Mean = c(1.84, 2.54, 5.1, 9.45)
+  dUSVT1L = c(1.744629, 2.423727, 4.941184, 9.264424)
+  dUSVT1U = c(1.935371, 2.656273, 5.258816, 9.635576)
+} else if (dataName == "desikan") {
+  dUSVT05Mean = c(11.54, 14.94, 22.19, 31.81)
+  dUSVT05L = c(11.3383, 14.70556, 21.93362, 31.61963)
+  dUSVT05U = c(11.7417, 15.17444, 22.44638, 32.00037)
+  
+  dUSVT07Mean = c(6.36, 8.02, 12.68, 19.55)
+  dUSVT07L = c(6.198711, 7.843853, 12.47551, 19.35032)
+  dUSVT07U = c(6.521289, 8.196147, 12.88449, 19.74968)
+  
+  dUSVT08Mean = c(4.79, 6.28, 9.7, 15.89)
+  dUSVT08L = c(4.626857, 6.062278, 9.496235, 15.69923)
+  dUSVT08U = c(4.953143, 6.497722, 9.903765, 16.08077)
+  
+  dUSVT1Mean = c(2.86, 4.44, 6.64, 9.89)
+  dUSVT1L = c(2.738505, 4.289153, 6.473969, 9.723095)
+  dUSVT1U = c(2.981495, 4.590847, 6.806031, 10.056905)
+} else if (dataName == "CPAC200") {
+  dUSVT05Mean = c(18.6, 23.14, 34.82, 54.69)
+  dUSVT05L = c(17.97707, 22.57316, 34.34121, 54.30129)
+  dUSVT05U = c(19.22293, 23.70684, 35.29879, 55.07871)
+  
+  dUSVT07Mean = c(10.08, 12.8, 18.86, 27.77)
+  dUSVT07L = c(9.732408, 12.47156, 18.51539, 27.44055)
+  dUSVT07U = c(10.427592, 13.12844, 19.20461, 28.09945)
+  
+  dUSVT08Mean = c(7.81, 10.08, 15.22, 22.02)
+  dUSVT08L = c(7.546162, 9.842501, 14.9218, 21.73867)
+  dUSVT08U = c(8.073838, 10.317499, 15.5182, 22.30133)
+  
+  dUSVT1Mean = c(4.92, 7.01, 10.88, 15.75)
+  dUSVT1L = c(4.715892, 6.861291, 10.67857, 15.53534)
+  dUSVT1U = c(5.124108, 7.158709, 11.08143, 15.96466)
 }
-yMax = yMax*1.1
-yMin = yMin*0.9
+
 
 library(ggplot2)
-library(grid)
-source("function_collection.R")
+library(plyr)
+library(dplyr)
+library(reshape2)
 
-pp = list()
+mVec = c(1,2,5,10)
 
 for (iM in 1:length(mVec)) {
   m = mVec[iM]
@@ -67,86 +106,171 @@ for (iM in 1:length(mVec)) {
   fileName = paste("../../Result/result_", dataName, "_brute_", "m_", m, "_eig.RData", sep="")
   load(fileName)
   
-  error_A_bar = error_A_bar^2
-  error_P_hat = error_P_hat^2
+  if (iM == 1) {
+    errorAbarMean = array(0, dim=c(length(mVec), 1))
+    errorAbarLower = array(0, dim=c(length(mVec), 1))
+    errorAbarUpper = array(0, dim=c(length(mVec), 1))
+    errorPhatEIGMean = array(0, dim=c(length(mVec), n))
+    errorPhatEIGLower = array(0, dim=c(length(mVec), n))
+    errorPhatEIGUpper = array(0, dim=c(length(mVec), n))
+  }
   
-  errorAbarMean = rep(mean(error_A_bar))
-  errorAbarLower = errorAbarMean - sqrt(var(error_A_bar))/sqrt(length(error_A_bar))*1.96
-  errorAbarUpper = errorAbarMean + sqrt(var(error_A_bar))/sqrt(length(error_A_bar))*1.96
-  errorPhatEIGMean = rowMeans(error_P_hat)
-  errorPhatEIGLower = errorPhatEIGMean - 
+  error_A_bar = error_A_bar^2*n*(n-1)
+  error_P_hat = error_P_hat^2*n*(n-1)
+  
+  errorAbarMean[iM] = rep(mean(error_A_bar))
+  errorAbarLower[iM] = errorAbarMean[iM] - sqrt(var(error_A_bar))/sqrt(length(error_A_bar))*1.96
+  errorAbarUpper[iM] = errorAbarMean[iM] + sqrt(var(error_A_bar))/sqrt(length(error_A_bar))*1.96
+  errorPhatEIGMean[iM,] = rowMeans(error_P_hat)
+  errorPhatEIGLower[iM,] = errorPhatEIGMean[iM,] - 
     sqrt(apply(error_P_hat, 1, var))/sqrt(dim(error_P_hat)[2])*1.96
-  errorPhatEIGUpper = errorPhatEIGMean + 
+  errorPhatEIGUpper[iM,] = errorPhatEIGMean[iM,] + 
     sqrt(apply(error_P_hat, 1, var))/sqrt(dim(error_P_hat)[2])*1.96
   
-  df = data.frame(d=c(rep(dVec,2), NaN, NaN), 
-                  errorMean=c(rep(mean(error_A_bar), length(dVec)),
-                              errorPhatEIGMean, NaN, NaN),
-                  errorLower=c(rep(errorAbarLower, length(dVec)),
-                               errorPhatEIGLower, NaN, NaN),
-                  errorUpper=c(rep(errorAbarUpper, length(dVec)),
-                               errorPhatEIGUpper, NaN, NaN),
-                  flag=c(rep("Abar",length(dVec)),
-                         rep("Phat",length(dVec)),
-                         "ZG 2nd elbow",
-                         "ZG 3rd elbow"))
-  
-  p = ggplot(data=df, aes(x=d, y=errorMean, color=flag)) + geom_point() + geom_line() +
-    geom_ribbon(aes(x=d, ymin=errorLower, ymax=errorUpper), linetype=2, alpha=0.1)
-  
-  p = p + geom_vline(xintercept=dZG2Mean[iM], linetype="solid", color="green")
-  p = p + geom_vline(xintercept=dZG2L[iM], linetype="dashed", color="green")
-  p = p + geom_vline(xintercept=dZG2U[iM], linetype="dashed", color="green")
-  
-  p = p + geom_vline(xintercept=dZG3Mean[iM], linetype="solid", color="purple")
-  p = p + geom_vline(xintercept=dZG3L[iM], linetype="dashed", color="purple")
-  p = p + geom_vline(xintercept=dZG3U[iM], linetype="dashed", color="purple")
-  
-  p = p + theme(legend.text=element_text(size = 20, face="bold"))
-  p = p + theme(legend.title=element_blank())
-  p = p + theme(plot.title = element_text(size = 16, face="bold"))
-  p = p + scale_x_continuous(name="Dimension") + scale_y_continuous(name="MSE")
-  p = p + theme(axis.text=element_text(size=14,face="bold"),
-                axis.title=element_text(size=14,face="bold"))
-  p = p + ggtitle(paste("M = ", m, sep=""))
-  p = p + expand_limits(y=c(yMin, yMax))
-  p = p + scale_color_manual(values=c("red", "blue", "green", "purple"))
-  pp[[iM]] = p
 }
 
-# layout <- matrix(1:4, nrow = 2, byrow = TRUE)
-# multiplot(plotlist = pp, layout = layout)
+dim_selection_df <- rbind(
+  data.frame(mean=dZG2Mean,lci= dZG2L, uci=dZG2U,which="ZG 2nd",m=mVec),
+  data.frame(mean=dZG3Mean,lci= dZG3L, uci=dZG3U,which="ZG 3rd",m=mVec),
+  data.frame(mean=dUSVT1Mean,lci= dUSVT1L, uci=dUSVT1U,which="USVT c=1",m=mVec),
+  data.frame(mean=dUSVT07Mean,lci= dUSVT07L, uci=dUSVT07U,which="USVT c=0.7",m=mVec)) %>% 
+  melt(id.vars=c("which","m")) %>% mutate(m=factor(paste0("m=",m),c("m=1","m=2","m=5","m=10")))
 
-# grid.newpage()
-# pushViewport(viewport(layout = grid.layout(3, 2, heights = unit(c(1, 8, 8), "null"))))
-# grid.text(paste(dataName, ", n=", n, ", M=", M, sep=""),
-#           vp = viewport(layout.pos.row = 1, layout.pos.col = 1:2),
-#           gp=gpar(fontsize=30))
-# for (iRow in 2:3) {
-#   for (iCol in 1:2) {
-#     print(pp[[(iRow-2)*2+iCol]], vp = viewport(layout.pos.row = iRow, layout.pos.col = iCol))
-#   }
+error_by_dim_df <- rbind(
+  data.frame(mse=errorAbarMean,lci=errorAbarLower,uci=errorAbarUpper,
+             which="Abar",m=mVec,d=n),
+  data.frame(mse=errorAbarMean,lci=errorAbarLower,uci=errorAbarUpper,
+             which="Abar",m=mVec,d=1),
+  data.frame(mse=c(errorPhatEIGMean),lci=c(errorPhatEIGLower),uci=c(errorPhatEIGUpper),
+             which="Phat",m=rep(mVec,n),d=rep(1:n,each=4))) %>%
+  mutate(m=factor(paste0("m=",m),c("m=1","m=2","m=5","m=10")))
+
+label_y <- with(error_by_dim_df, .75*max(mse)+.25*min(mse))
+
+gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which)))+
+  geom_line(alpha=.75,size=.333)+
+  geom_linerange(aes(ymin=lci,ymax=uci),alpha=.5)+
+  geom_vline(data=dim_selection_df,
+             aes(xintercept=value,color=which,linetype=variable))+
+  scale_linetype_manual(name="",values=c(2,2,1,1,2),guide=FALSE)+
+  geom_text(data=dim_selection_df %>% filter(variable=="mean"),
+            aes(x=value+n/30,y=label_y,linetype=variable,label=which,color=which),angle=90)+
+  scale_color_discrete(guide=FALSE)+
+  facet_wrap(~m)+
+  xlab("dimension")+ylab("mean square error")
+print(gg)
+
+
+
+
+
+
+## --- Previous Plots --- ##
+
+# yMin = Inf
+# yMax = 0
+# for (m in mVec) {
+#   # EIG
+#   fileName = paste("../../Result/result_", dataName, "_brute_", "m_", m, "_eig.RData", sep="")
+#   load(fileName)
+#   yMin = min(yMin, rowMeans(error_P_hat^2), mean(error_A_bar^2))
+#   yMax = max(yMax, rowMeans(error_P_hat^2), mean(error_A_bar^2))
 # }
-
-
-library(gridExtra)
-
-grid_arrange_shared_legend <- function(t, ...) {
-  plots <- list(...)
-  g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs
-  legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
-  lheight <- sum(legend$height)
-  theight <- lheight*0.8
-  grid.arrange(
-    main=textGrob(t, gp=gpar(cex=1.5)),
-    do.call(arrangeGrob, lapply(plots, function(x)
-      x + theme(legend.position="none"))),
-    legend,
-    ncol = 1,
-    heights = unit.c(theight, unit(1, "npc") - lheight - theight, lheight))
-}
-
-grid_arrange_shared_legend(paste(dataName, ", N=", n, ", ", M, " graphs", sep=""), 
-                           pp[[1]], pp[[2]], pp[[3]], pp[[4]])
-
-
+# yMax = yMax*1.1
+# yMin = yMin*0.9
+# 
+# library(ggplot2)
+# library(grid)
+# source("function_collection.R")
+# 
+# pp = list()
+# 
+# for (iM in 1:length(mVec)) {
+#   m = mVec[iM]
+#   
+#   # Eigen-decomposition
+#   fileName = paste("../../Result/result_", dataName, "_brute_", "m_", m, "_eig.RData", sep="")
+#   load(fileName)
+#   
+#   error_A_bar = error_A_bar^2*n*(n-1)
+#   error_P_hat = error_P_hat^2*n*(n-1)
+#   
+#   errorAbarMean = rep(mean(error_A_bar))
+#   errorAbarLower = errorAbarMean - sqrt(var(error_A_bar))/sqrt(length(error_A_bar))*1.96
+#   errorAbarUpper = errorAbarMean + sqrt(var(error_A_bar))/sqrt(length(error_A_bar))*1.96
+#   errorPhatEIGMean = rowMeans(error_P_hat)
+#   errorPhatEIGLower = errorPhatEIGMean - 
+#     sqrt(apply(error_P_hat, 1, var))/sqrt(dim(error_P_hat)[2])*1.96
+#   errorPhatEIGUpper = errorPhatEIGMean + 
+#     sqrt(apply(error_P_hat, 1, var))/sqrt(dim(error_P_hat)[2])*1.96
+#   
+#   df = data.frame(d=c(rep(dVec,2), NaN, NaN), 
+#                   errorMean=c(rep(mean(error_A_bar), length(dVec)),
+#                               errorPhatEIGMean, NaN, NaN),
+#                   errorLower=c(rep(errorAbarLower, length(dVec)),
+#                                errorPhatEIGLower, NaN, NaN),
+#                   errorUpper=c(rep(errorAbarUpper, length(dVec)),
+#                                errorPhatEIGUpper, NaN, NaN),
+#                   flag=c(rep("Abar",length(dVec)),
+#                          rep("Phat",length(dVec)),
+#                          "ZG 2nd elbow",
+#                          "ZG 3rd elbow"))
+#   
+#   p = ggplot(data=df, aes(x=d, y=errorMean, color=flag)) + geom_point() + geom_line() +
+#     geom_ribbon(aes(x=d, ymin=errorLower, ymax=errorUpper), linetype=2, alpha=0.1)
+#   
+#   p = p + geom_vline(xintercept=dZG2Mean[iM], linetype="solid", color="green")
+#   p = p + geom_vline(xintercept=dZG2L[iM], linetype="dashed", color="green")
+#   p = p + geom_vline(xintercept=dZG2U[iM], linetype="dashed", color="green")
+#   
+#   p = p + geom_vline(xintercept=dZG3Mean[iM], linetype="solid", color="purple")
+#   p = p + geom_vline(xintercept=dZG3L[iM], linetype="dashed", color="purple")
+#   p = p + geom_vline(xintercept=dZG3U[iM], linetype="dashed", color="purple")
+#   
+#   p = p + theme(legend.text=element_text(size = 20, face="bold"))
+#   p = p + theme(legend.title=element_blank())
+#   p = p + theme(plot.title = element_text(size = 16, face="bold"))
+#   p = p + scale_x_continuous(name="Dimension") + scale_y_continuous(name="MSE")
+#   p = p + theme(axis.text=element_text(size=14,face="bold"),
+#                 axis.title=element_text(size=14,face="bold"))
+#   p = p + ggtitle(paste("M = ", m, sep=""))
+#   p = p + expand_limits(y=c(yMin, yMax))
+#   p = p + scale_color_manual(values=c("red", "blue", "green", "purple"))
+#   pp[[iM]] = p
+# }
+# 
+# # layout <- matrix(1:4, nrow = 2, byrow = TRUE)
+# # multiplot(plotlist = pp, layout = layout)
+# 
+# # grid.newpage()
+# # pushViewport(viewport(layout = grid.layout(3, 2, heights = unit(c(1, 8, 8), "null"))))
+# # grid.text(paste(dataName, ", n=", n, ", M=", M, sep=""),
+# #           vp = viewport(layout.pos.row = 1, layout.pos.col = 1:2),
+# #           gp=gpar(fontsize=30))
+# # for (iRow in 2:3) {
+# #   for (iCol in 1:2) {
+# #     print(pp[[(iRow-2)*2+iCol]], vp = viewport(layout.pos.row = iRow, layout.pos.col = iCol))
+# #   }
+# # }
+# 
+# 
+# library(gridExtra)
+# 
+# grid_arrange_shared_legend <- function(t, ...) {
+#   plots <- list(...)
+#   g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs
+#   legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
+#   lheight <- sum(legend$height)
+#   theight <- lheight*0.8
+#   grid.arrange(
+#     main=textGrob(t, gp=gpar(cex=1.5)),
+#     do.call(arrangeGrob, lapply(plots, function(x)
+#       x + theme(legend.position="none"))),
+#     legend,
+#     ncol = 1,
+#     heights = unit.c(theight, unit(1, "npc") - lheight - theight, lheight))
+# }
+# 
+# grid_arrange_shared_legend(paste(dataName, ", N=", n, ", ", M, " graphs", sep=""), 
+#                            pp[[1]], pp[[2]], pp[[3]], pp[[4]])
+# 
