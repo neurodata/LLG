@@ -342,3 +342,34 @@ dim_brute_fullrank <- function(m, dVec, P, isSVD=1) {
   
   return(result)
 }
+
+
+
+test_rank1 <- function(m, dVec, P, isSVD=1) {
+  
+  dMax = max(dVec)
+  nD = length(dVec)
+  result = rep(NaN, nD)
+  
+  require(igraph)
+  A_all = list()
+  for (i in 1:m) {
+    g = sample_sbm(n, P, rep(1,n), directed=F, loops=F)
+    A = as_adj(g, type="both", sparse=FALSE)
+    A_all[[i]] = A
+  }
+  
+  A_bar = add(A_all)/m
+  
+  A.ase = eigen(diag_aug(A_bar), dMax)
+  P.ase = eigen(diag_aug(P), dMax)
+  
+  for (iD in 1:nD) {
+    d = dVec[iD]
+    A_hat = A.ase$values[d] * A.ase$vectors[,d] %*% t(A.ase$vectors[,d])
+    P_hat = P.ase$values[d] * P.ase$vectors[,d] %*% t(P.ase$vectors[,d])
+    result[iD] = norm(A_hat - P_hat, "F")/n/(n-1)
+  }
+  
+  return(result)
+}
