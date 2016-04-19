@@ -39,3 +39,10 @@ Draft/*.blg
 Draft/*.log
 Draft/*.out
 Draft/*.gz
+Outline/*.bak
+Outline/*.aux
+Outline/*.bbl
+Outline/*.blg
+Outline/*.log
+Outline/*.out
+Outline/*.gz
