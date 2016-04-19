@@ -1,0 +1,152 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+
+\usepackage{theorem}
+\usepackage{amssymb}
+
+\usepackage{hyperref}
+
+\newenvironment{proof}{{\bf Proof:  }}{\hfill\rule{2mm}{2mm}}
+
+\newtheorem{fact}{Fact}[section]
+\newtheorem{lemma}[fact]{Lemma}
+\newtheorem{theorem}[fact]{Theorem}
+\newtheorem{definition}[fact]{Definition}
+\newtheorem{corollary}[fact]{Corollary}
+\newtheorem{proposition}[fact]{Proposition}
+\newtheorem{claim}[fact]{Claim}
+\newtheorem{exercise}[fact]{Exercise}
+
+\newcommand{\RT}[1]{\marginpar{\footnotesize\color{red}RT: #1}}
+
+\title{Outline for LLG}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+\begin{itemize}
+\item Estimating the mean of a collection of graphs is becoming important but the general element-wise MLE doesn't take advantage of the graph structure.
+\item SBM is a good model which captures the graph structure in reality.
+\item SBM as a RDPG is what we are going to consider.
+\item Under the model, we propose a new estimator based on ASE and prove theoretically that it is better than element-wise MLE.
+\end{itemize}
+
+
+\section{Model}
+
+\begin{itemize}
+\item Goal is to estimate the mean of a collection of unweighted simple graphs by observing their adjacency matrices with known vertex correspondence.
+\item Introduce problem setting, i.e. how $M$ graphs are generated in the model.
+\end{itemize}
+
+\subsection{Entry-Wise Least Squares Estimate}
+\begin{itemize}
+\item MLE is the right thing to do under Independent Edge Graph Model, i.e. without taking graph structure into account.
+\end{itemize}
+
+\subsection{Random Dot Product Graph}
+\begin{itemize}
+\item Introduce Latent Positions Graph Model.
+\item RDPG is a special case of Latent Positions Graph Model.
+\end{itemize}
+
+\subsection{Stochastic Block Model as a Random Dot Product Graph}
+\begin{itemize}
+\item Intuition behind SBM.
+\item Formal definition of SBM.
+\item Consider SBM as RDPG in this paper.
+\end{itemize}
+
+\subsection{Estimator $\hat{P}$ Based on Adjacency Spectral Embedding}
+\begin{itemize}
+\item Introduce the new estimator based on ASE.
+\item Intuition why this should be better.
+\end{itemize}
+
+\subsection{Performance Evaluation: Relative Efficiency}
+\begin{itemize}
+\item Definition of RE.
+\end{itemize}
+
+
+\section{Results}
+
+\subsection{Theoretical Results}
+\begin{itemize}
+\item $\mathrm{RE}_{ij} = \frac{\mathrm{MSE}(\hat{P}_{ij})}{\mathrm{MSE}(\bar{A}_{ij})} \approx \frac{1/\rho_i + 1/\rho_j}{N}$
+\item $\mathrm{MSE}(\hat{P}_{ij}) \approx \frac{(1/\rho_i + 1/\rho_j)P_{ij}(1-P_{ij})}{NM}$
+\item 
+\end{itemize}
+
+\subsection{Validation with Simulations}
+\begin{itemize}
+\item Consider a specific SBM.
+\item Figure shows that simulated RE agrees with theoretical values when changing $N$.
+\item Figure shows that simulated MSE agrees with theoretical values when changing $\rho$.
+\end{itemize}
+
+\subsection{CoRR Brain Graphs: Cross-Validation}
+\begin{itemize}
+\item Consider three datasets, JHU, desikan and CPAC200.
+\item Explain how we sample from the whole dataset.
+\item Figure shows the performance of $\bar{A}$ and $\hat{P}$ when embedding into different dimension.
+\item $\hat{P}$ outperforms $\bar{A}$ when $M$ is small.
+\item ZG and USVT are both doing good jobs in dimension selection, while the result is not very sensitive to the dimension selection.
+\item Simulation with $P$ being the mean graph of the real data shows that $\hat{P}$ still does a good job when the low rank assumption is violated.
+\end{itemize}
+
+
+
+
+\section{Discussion}
+\begin{itemize}
+\item Scheinerman's method is better than row sum divided by $N-1$ in diagonal augmentation.
+\end{itemize}
+
+
+
+
+
+
+\section{Methods}
+
+\subsection{Algorithm}
+\begin{itemize}
+\item Detailed description of the algorithm for our estimator $\hat{P}$.
+\end{itemize}
+
+\subsection{Choosing Dimension}
+\begin{itemize}
+\item ZG.
+\item USVT.
+\end{itemize}
+
+\subsection{Graph Diagonal Augmentation}
+\begin{itemize}
+\item Reason for diagonal augmentation.
+\item Introduce the iterative method developed by Scheinerman and Tucker.
+\end{itemize}
+
+\subsection{Source Code}
+
+\subsection{Dataset Description}
+Give detailed description of the data we are using.
+
+\subsection{Outline for the Proof of the Theorems}
+
+
+
+
+
+
+
+\end{document}
