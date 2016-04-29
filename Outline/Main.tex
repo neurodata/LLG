@@ -35,23 +35,31 @@
 
 \begin{itemize}
 \item Estimating the mean of a collection of graphs is becoming more and more important both in statistical inference and in various applications like connectomics, social networks, etc.
-\item Element-wise maximum likelihood estimate is a reasonable estimator if we only consider the independent graph model without taking any graph structure into account.
+\item Element-wise maximum likelihood estimate is a reasonable estimator if we only consider the independent edge graph model without taking any graph structure into account. However, it does not perform very well especially when we have a few observations, which is likely the case in real world.
+\item (Challenges) Generally, we don't have any information about the structure of the graphs. So it is hard to take advantage of the unknown graph structure.
 \item However, in a large graph, vertices are generally clustered into different communities such that vertices of the same community behave similarly. The stochastic blockmodel (SBM) captures such structural property and is widely used in modeling networks.
 \item Also, latent positions graph model proposes a way to parameterize the graph structure by latent positions associated with each vertex. And random dot product graph, a special case of latent positions graph, is considered in this paper. In particular, this paper considers SBM as a RDPG. So we will have exactly K different latent positions for N vertices.
-\item Using the estimates of the latent positions in an RDPG based on a truncated eigen-decomposition of the adjacency matrix, we invent a new estimator for the mean of the collection of graphs which captures the low-rank structure. And we prove theoretically that it is better than element-wise MLE.
+\item Using the estimates of the latent positions in an RDPG based on a truncated eigen-decomposition of the adjacency matrix, we invent a new estimator for the mean of the collection of graphs which captures the low-rank structure. And we prove via both theory and simulations/real data analysis that it is better than element-wise MLE.
+\item (Future work) Robust estimation, dimension selection, diagonal augmentation, etc.
 \end{itemize}
 
 
-\section{Model}
+\section{Models and Estimators}
 
+%\begin{itemize}
+%\item The goal is to estimate the mean of a collection of unweighted simple graphs by observing their adjacency matrices with known vertex correspondence.
+%\item This work considers the scenario of having $M$ graphs represented as adjacency matrices, each having $N$ vertices with known correspondence. And much more detailed description.
+%\end{itemize}
+
+%\subsection{Entry-Wise Least Squares Estimate}
+\subsection{Independent Edge Model}
 \begin{itemize}
-\item The goal is to estimate the mean of a collection of unweighted simple graphs by observing their adjacency matrices with known vertex correspondence.
-\item This work considers the scenario of having $M$ graphs represented as adjacency matrices, each having $N$ vertices with known correspondence. And much more detailed description.
+\item (Any reference?) Under the independent edge model, each edge $A_{ij}$ independently follows the Bernoulli distribution with parameter $P_{ij}$.
 \end{itemize}
 
-\subsection{Entry-Wise Least Squares Estimate}
+\subsection{Estimator $\bar{A}$}
 \begin{itemize}
-\item The most intuitive approach in this scenario is the element-wise mean among the adjacency matrices.
+\item Under the independent edge model, element-wise mean of the adjacency matrices $\bar{A}$ is the MLE as well as the least squared estimate.
 \end{itemize}
 
 \subsection{Random Dot Product Graph}
@@ -63,25 +71,25 @@
 \subsection{Stochastic Block Model as a Random Dot Product Graph}
 \begin{itemize}
 \item Generally, in a large graph, vertices are clustered into different communities such that vertices within the same community behave similarly. Such structural property is captured by the stochastic block model (SBM), where each vertex is assigned to a block and the probability that an edge exists between two vertices depends only on their respective block memberships.
-\item Formally, the SBM is determined by the number of blocks K (generally way less than the number of vertices N), block proportion vector ?, and block probability matrix B.
+\item Formally, the SBM is determined by the number of blocks K (generally way less than the number of vertices N), block proportion vector $\rho$, and block probability matrix B.
 \item Now if we consider the SBM as a random dot product graph, all vertices in the same block would have identical latent positions.
 \end{itemize}
 
 \subsection{Estimator $\hat{P}$ Based on Adjacency Spectral Embedding}
 \begin{itemize}
-\item In order to take advantage of the underlying low dimensions of the RDPG, we would like to use the adjacency spectral embedding (ASE) studied by Sussman et. al. to enforce a low rank approximation on the adjacency matrix A, which will decrease the variance if we embed it into the right dimension.
-\item Due to the underlying block-distibuted RDPG structure of graphs, enforcing this low rank approximation on $\bar{A}$ will provide a better estimate for the true mean matrix $P$.
+\item In order to take advantage of the underlying low dimensions of the RDPG, we would like to use the adjacency spectral embedding (ASE) studied by Sussman et. al. to enforce a low rank approximation on the entry-wise mean matrix $\bar{A}$, which will decrease the variance if we embed it into the right dimension.
+%\item Due to the underlying block-distibuted RDPG structure of graphs, enforcing this low rank approximation on $\bar{A}$ will provide a better estimate for the true mean matrix $P$.
 \end{itemize}
 
 \subsection{Performance Evaluation: Relative Efficiency}
-\begin{itemize}
-\item To compare the performance between $\hat{P}$ and $\bar{A}$, we examine the relative efficiency (RE), in mean squared error (MSE), among the two defined as: $RE_{ij} = \frac{MSE(\hat{P}_{ij})}{MSE(\bar{A}_{ij})}$.
-\end{itemize}
 
 
 \section{Results}
 
 \subsection{Theoretical Results}
+\begin{itemize}
+\item To compare the performance between $\hat{P}$ and $\bar{A}$, we examine the relative efficiency (RE), in mean squared error (MSE), among the two defined as: $RE_{ij} = \frac{MSE(\hat{P}_{ij})}{MSE(\bar{A}_{ij})}$.
+\item
 \begin{theorem}
 \label{thm:ARE}
 For any $i$ and $j$, conditioning on $X_i = \nu_{\tau_i}$ and $X_j = \nu_{\tau_j}$, we have
@@ -94,7 +102,7 @@ And for $N$ large enough, conditioning on $X_i = \nu_{\tau_i}$ and $X_j = \nu_{\
     \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{N}.
 \]
 \end{theorem}
-
+\item
 \begin{lemma}
 \label{lm:VarPhat}
 In the same setting as above, for any $i, j$, conditioning on $X_i = \nu_{\tau_i}$ and $X_j = \nu_{\tau_j}$, we have
@@ -108,6 +116,7 @@ And for $N$ large enough, conditioning on $X_i = \nu_{\tau_i}$ and $X_j = \nu_{\
     \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{M N} P_{ij}(1-P_{ij}).
 \]
 \end{lemma}
+\end{itemize}
 
 \subsection{Validation with Simulations}
 \begin{itemize}
@@ -142,8 +151,17 @@ B = \begin{bmatrix}
 
 
 \section{Discussion}
+
+\subsection{Summary}
 \begin{itemize}
-\item Scheinerman's method is better than row sum divided by $N-1$ in diagonal augmentation.
+\item In this paper, we propose a better way to estimate the mean of a collection of graphs by taking advantage of the low rank structure of the graphs.
+\end{itemize}
+
+\subsection{Future Work}
+\begin{itemize}
+\item Generally the observations we have are always contaminated in practice. In this case, improved robust estimator based on the low rank structure of the graphs is preferred.
+\item Estimating the rank of the graph structure accurately will certainly help improve the results.
+\item In this paper, we are using Scheinerman's method with 1 iteration for diagonal augmentation.
 \end{itemize}
 
 
@@ -173,7 +191,9 @@ B = \begin{bmatrix}
 \subsection{Source Code}
 
 \subsection{Dataset Description}
-Detailed description of the data we are using.
+\begin{itemize}
+\item Detailed description of the data we are using.
+\end{itemize}
 
 \subsection{Outline for the Proof of the Theorems}
 
