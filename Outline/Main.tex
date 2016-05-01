@@ -34,12 +34,13 @@
 \section{Introduction}
 
 \begin{itemize}
-\item Estimating the mean of a collection of graphs is becoming more and more important both in statistical inference and in various applications like connectomics, social networks, etc.
+\item The mean of a collection of graphs can be defined in various ways. One natural definition is the proportion of the existence of an edge between any pair of vertices. Estimating the mean of a population of graphs based on a sample is becoming more and more important both in statistical inference and in various applications like connectomics, social networks, etc.
 \item Element-wise maximum likelihood estimate is a reasonable estimator if we only consider the independent edge graph model without taking any graph structure into account. However, it does not perform very well especially when we have a few observations, which is likely the case in real world.
 \item (Challenges) Generally, we don't have any information about the structure of the graphs. So it is hard to take advantage of the unknown graph structure.
-\item However, in a large graph, vertices are generally clustered into different communities such that vertices of the same community behave similarly. The stochastic blockmodel (SBM) captures such structural property and is widely used in modeling networks.
-\item Also, latent positions graph model proposes a way to parameterize the graph structure by latent positions associated with each vertex. And random dot product graph, a special case of latent positions graph, is considered in this paper. In particular, this paper considers SBM as a RDPG. So we will have exactly K different latent positions for N vertices.
-\item Using the estimates of the latent positions in an RDPG based on a truncated eigen-decomposition of the adjacency matrix, we invent a new estimator for the mean of the collection of graphs which captures the low-rank structure. And we prove via both theory and simulations/real data analysis that it is better than element-wise MLE.
+\item One of the most important structures is the community structure in which vertices are clustered into different communities such that vertices of the same community behave similarly. The stochastic blockmodel (SBM) captures such structural property and is widely used in modeling networks.
+\item Meanwhile, the latent positions model (LPM), a much more general model compared to SBM, proposes a way to parameterize the graph structure by latent positions associated with each vertex. However, the random dot product graph (RDPG) which is a special case of LPM stays in between and motivates our estimator. In this paper, we analyze our estimator in terms of RDPG specifically.
+%And random dot product graph, a special case of latent positions graph, is considered in this paper. In particular, this paper considers SBM as a RDPG. So we will have exactly K different latent positions for N vertices.
+\item Using the estimates of the latent positions in an RDPG setting based on a truncated eigen-decomposition of the adjacency matrix, we consider a new estimator for the mean of the collection of graphs which captures the low-rank structure. And we prove via both theory and simulations/real data analysis that it is better than element-wise MLE.
 \item (Future work) Robust estimation, dimension selection, diagonal augmentation, etc.
 \end{itemize}
 
@@ -54,12 +55,13 @@
 %\subsection{Entry-Wise Least Squares Estimate}
 \subsection{Independent Edge Model}
 \begin{itemize}
-\item (Any reference?) Under the independent edge model, each edge $A_{ij}$ independently follows the Bernoulli distribution with parameter $P_{ij}$.
+\item Under the independent edge model (IEM), each edge $A_{ij}$ independently follows the Bernoulli distribution with parameter $P_{ij}$.
 \end{itemize}
 
 \subsection{Estimator $\bar{A}$}
 \begin{itemize}
-\item Under the independent edge model, element-wise mean of the adjacency matrices $\bar{A}$ is the MLE as well as the least squared estimate.
+\item Under the IEM, element-wise mean of the adjacency matrices $\bar{A}$ is the MLE as well as the least squared estimate.
+\item $\bar{A}$ is unbiased for IEM and has entry-wise variance $\mathrm{Var}(\bar{A}_{ij}) = P_{ij} (1-P_{ij})/M$. And it is the UMVUE under IEG with no constraints. But, it doesn't exploit any structure. 
 \end{itemize}
 
 \subsection{Random Dot Product Graph}
@@ -68,20 +70,19 @@
 \item A specific instance of this model that we will examine is the random dot product graph model (RDPG) in which the link function is the dot product, i.e. the probability of an edge being present between two nodes is the dot product of their latent vectors.
 \end{itemize}
 
+\subsection{Estimator $\hat{P}$ Based on Adjacency Spectral Embedding}
+\begin{itemize}
+\item In order to take advantage of the underlying low rank structure of the RDPG, we use the adjacency spectral embedding (ASE) studied by Sussman et. al. to enforce a low rank approximation on the entry-wise mean matrix $\bar{A}$, which will decrease the variance without losing much in bias if we embed it into the right dimension.
+%\item Due to the underlying block-distibuted RDPG structure of graphs, enforcing this low rank approximation on $\bar{A}$ will provide a better estimate for the true mean matrix $P$.
+\item Detailed description of the algorithm for our estimator $\hat{P}$.
+\end{itemize}
+
 \subsection{Stochastic Block Model as a Random Dot Product Graph}
 \begin{itemize}
-\item Generally, in a large graph, vertices are clustered into different communities such that vertices within the same community behave similarly. Such structural property is captured by the stochastic block model (SBM), where each vertex is assigned to a block and the probability that an edge exists between two vertices depends only on their respective block memberships.
+\item One of the most important structures is the community structure in which vertices are clustered into different communities such that vertices of the same community behave similarly. Such structural property is captured by the SBM, where each vertex is assigned to a block and the probability that an edge exists between two vertices depends only on their respective block memberships.
 \item Formally, the SBM is determined by the number of blocks K (generally way less than the number of vertices N), block proportion vector $\rho$, and block probability matrix B.
 \item Now if we consider the SBM as a random dot product graph, all vertices in the same block would have identical latent positions.
 \end{itemize}
-
-\subsection{Estimator $\hat{P}$ Based on Adjacency Spectral Embedding}
-\begin{itemize}
-\item In order to take advantage of the underlying low dimensions of the RDPG, we would like to use the adjacency spectral embedding (ASE) studied by Sussman et. al. to enforce a low rank approximation on the entry-wise mean matrix $\bar{A}$, which will decrease the variance if we embed it into the right dimension.
-%\item Due to the underlying block-distibuted RDPG structure of graphs, enforcing this low rank approximation on $\bar{A}$ will provide a better estimate for the true mean matrix $P$.
-\end{itemize}
-
-\subsection{Performance Evaluation: Relative Efficiency}
 
 
 \section{Results}
@@ -139,7 +140,7 @@ B = \begin{bmatrix}
 
 \subsection{CoRR Brain Graphs: Cross-Validation}
 \begin{itemize}
-\item To demonstrate that the $\hat{P}$ estimate is valid under data that does not perfectly follow a SBM, we examine three datasets, JHU, desikan and CPAC200, which are sets of 454 brain connectomes with different number of nodes generated from fMRI scans available at the Consortium for Reliability and Reproducibility (CoRR).
+\item In practice, the graphs may not perfectly follow an RDPG, or even not IEM. But we are still interested in the mean graph. To demonstrate that the $\hat{P}$ estimate is still valid in such cases, we examine three datasets, JHU, desikan and CPAC200, which are sets of 454 brain connectomes with different number of nodes generated from fMRI scans available at the Consortium for Reliability and Reproducibility (CoRR).
 \item To compare $\bar{A}$ and $\hat{P}$ we perform a cross-validation study to examine the impact of the number of available graphs $M$.
 \item Figures demonstrate that our algorithm gives a better estimate $\hat{P}$ according to all three datasets. 
 \item When $M$ is small, $\bar{A}$ has large variance which leads to large MSE. Meanwhile, $\hat{P}$ reduces the variance by taking advantages of the graph structure and outperforms $\bar{A}$ dramatically.
@@ -170,11 +171,6 @@ B = \begin{bmatrix}
 
 
 \section{Methods}
-
-\subsection{Algorithm}
-\begin{itemize}
-\item Detailed description of the algorithm for our estimator $\hat{P}$.
-\end{itemize}
 
 \subsection{Choosing Dimension}
 \begin{itemize}
