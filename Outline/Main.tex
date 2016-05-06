@@ -34,12 +34,18 @@
 \section{Introduction}
 
 \begin{itemize}
+\item Mean is one of the most important and basic concept in statistics. Motivated by the law of large numbers, sample mean is always considered to be the best estimate of the population mean. As a result, nowadays we take averages almost everywhere, from the fundamental elements in Euclidean space to more general objects, like shapes, documents and graphs.
+
+However, contradict to the general intuition, arithmetic average should not be our first choice all the time. In 1955, Stein's paradox shows the inadmissibility of the sample mean when there are more than three normal distributions. The fact that James?Stein estimator dominates the sample mean makes it less preferable to take the average in that situation. 27 years later, Gutmann proved that this cannot occur when the sample spaces are finite. But even when sample mean is admissible, it doesn't close the door of other estimators to be better in some cases. So in a specific situation, for instance dealing with a collection of graphs, there is always a chance to have a better estimator than the sample mean.
+
+
+
+
 \item The mean of a collection of graphs can be defined in various ways. One natural definition is the proportion of the existence of an edge between any pair of vertices. Estimating the mean of a population of graphs based on a sample is becoming more and more important both in statistical inference and in various applications like connectomics, social networks, etc.
 \item Element-wise maximum likelihood estimate is a reasonable estimator if we only consider the independent edge graph model without taking any graph structure into account. However, it does not perform very well especially when we have a few observations, which is likely the case in real world.
 \item (Challenges) Generally, we don't have any information about the structure of the graphs. So it is hard to take advantage of the unknown graph structure.
 \item One of the most important structures is the community structure in which vertices are clustered into different communities such that vertices of the same community behave similarly. The stochastic blockmodel (SBM) captures such structural property and is widely used in modeling networks.
 \item Meanwhile, the latent positions model (LPM), a much more general model compared to SBM, proposes a way to parameterize the graph structure by latent positions associated with each vertex. However, the random dot product graph (RDPG) which is a special case of LPM stays in between and motivates our estimator. In this paper, we analyze our estimator in terms of RDPG specifically.
-%And random dot product graph, a special case of latent positions graph, is considered in this paper. In particular, this paper considers SBM as a RDPG. So we will have exactly K different latent positions for N vertices.
 \item Using the estimates of the latent positions in an RDPG setting based on a truncated eigen-decomposition of the adjacency matrix, we consider a new estimator for the mean of the collection of graphs which captures the low-rank structure. And we prove via both theory and simulations/real data analysis that it is better than element-wise MLE.
 \item (Future work) Robust estimation, dimension selection, diagonal augmentation, etc.
 \end{itemize}
@@ -73,7 +79,7 @@
 \subsection{Estimator $\hat{P}$ Based on Adjacency Spectral Embedding}
 \begin{itemize}
 \item In order to take advantage of the underlying low rank structure of the RDPG, we use the adjacency spectral embedding (ASE) studied by Sussman et. al. to enforce a low rank approximation on the entry-wise mean matrix $\bar{A}$, which will decrease the variance without losing much in bias if we embed it into the right dimension.
-%\item Due to the underlying block-distibuted RDPG structure of graphs, enforcing this low rank approximation on $\bar{A}$ will provide a better estimate for the true mean matrix $P$.
+\item There are varies ways dealing with dimension selection. In this paper, we consider Zhu and Ghodsi's elbow selection method and the universal singular value thresholding (USVT) method. Details are discussed in Section \ref{section:dim_select}.
 \item Detailed description of the algorithm for our estimator $\hat{P}$.
 \end{itemize}
 
@@ -121,7 +127,11 @@ And for $N$ large enough, conditioning on $X_i = \nu_{\tau_i}$ and $X_j = \nu_{\
 
 \subsection{Validation with Simulations}
 \begin{itemize}
-\item We demonstrate the theoretical results in Section 3.1, the variance of $\hat{P}$ and the relative efficiency, via various Monte Carlo simulation experiments. Specifically, we consider the 2-block SBM parameterized by
+\item We demonstrate the theoretical results in Section 3.1, the relative efficiency of $\hat{P}$, via various Monte Carlo simulation experiments.
+\end{itemize}
+\subsubsection{Simulation Setting}
+\begin{itemize}
+\item Here we consider the 2-block SBM parameterized by
 \begin{equation*}
 B = \begin{bmatrix}
 0.42 & 0.2 \\
@@ -131,11 +141,13 @@ B = \begin{bmatrix}
 0.5 & 0.5
 \end{bmatrix}.
 \end{equation*}
-\item For each Monte Carlo replicate, we generate $M$ random graphs with known vertex correspondence under the SBM described above. And details.
-\item Given $M$ graphs, we can calculate $\bar{A}$ and $\hat{P}$ assuming that $d = \mathrm{rank}(B) = 2$ is known. 
-\item By checking the averaging MSE and RE of the two estimates $\hat{P}$ and $\bar{A}$ over 1000 Monte Carlo replicates, we demonstrate that the theoretical results in Section 3.1.
+\item And we embed the graphs into the dimension $d = \mathrm{rank}(B) = 2$.
+\end{itemize}
+\subsubsection{Simulation Results}
+\begin{itemize}
 \item Figure \ref{fig:RE} plots the scaled average RE with different $N$ and fixed $M$ of 1000 Monte Carlo replicates. Blue lines denote the simulated scaled RE associated with the edges we are averaging over. Solid line in black represents the theoretical value for scaled RE. From the figure, we see that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t$ represented as the black solid line, as suggested in Lemma \ref{thm:ARE}. Notice that this means $\mathrm{RE}_{st}(\bar{A}, \hat{P})$ is decreasing at rate $1/N$.
 \item To verify Theorem \ref{thm:ARE} and Lemma \ref{lm:VarPhat} hold with different $\rho$, Figure \ref{fig:RErho} shows the average MSE and average RE with $N = 500$ and $M = 100$ while changing $\rho_1$ from 0.1 to 0.9. 
+\item By checking the averaging MSE and RE of the two estimates $\hat{P}$ and $\bar{A}$ over 1000 Monte Carlo replicates, we demonstrate that the theoretical results in Section 3.1.
 \end{itemize}
 
 \begin{figure}[!htb]
@@ -207,6 +219,7 @@ B = \begin{bmatrix}
 \section{Methods}
 
 \subsection{Choosing Dimension}
+\label{section:dim_select}
 \begin{itemize}
 \item Often in dimensionality reduction techniques, the choice for dimension, d, relies on visually analyzing a plot of the ordered eigenvalues, looking for a ``gap'' or ``elbow'' in the scree-plot.
 \item USVT is a simple estimation procedure that works for any matrix that has ``a little bit of structure''.
