@@ -3,9 +3,9 @@ rm(list = ls())
 setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
-dataName = "CPAC200"
+# dataName = "CPAC200"
 # dataName = "desikan"
-# dataName = "JHU"
+dataName = "JHU"
 # dataName = "slab907"
 # dataName = "slab1068"
 # dataName = "Talairach"
@@ -130,11 +130,12 @@ for (iM in 1:length(mVec)) {
 }
 
 dim_selection_df <- rbind(
-  data.frame(mean=dZG2Mean,lci= dZG2L, uci=dZG2U,which="ZG 2nd",m=mVec),
+  #data.frame(mean=dZG2Mean,lci= dZG2L, uci=dZG2U,which="ZG 2nd",m=mVec),
   data.frame(mean=dZG3Mean,lci= dZG3L, uci=dZG3U,which="ZG 3rd",m=mVec),
-  data.frame(mean=dUSVT1Mean,lci= dUSVT1L, uci=dUSVT1U,which="USVT c=1",m=mVec),
+  #data.frame(mean=dUSVT1Mean,lci= dUSVT1L, uci=dUSVT1U,which="USVT c=1",m=mVec),
   data.frame(mean=dUSVT07Mean,lci= dUSVT07L, uci=dUSVT07U,which="USVT c=0.7",m=mVec)) %>% 
-  melt(id.vars=c("which","m")) %>% mutate(m=factor(paste0("m=",m),c("m=1","m=2","m=5","m=10")))
+  melt(id.vars=c("which","m")) %>%
+  mutate(m=factor(paste0("m=",m),c("m=1","m=2","m=5","m=10")))
 
 error_by_dim_df <- rbind(
   data.frame(mse=errorAbarMean,lci=errorAbarLower,uci=errorAbarUpper,
@@ -148,16 +149,17 @@ error_by_dim_df <- rbind(
 label_y <- with(error_by_dim_df, .75*max(mse)+.25*min(mse))
 
 gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which)))+
-  geom_line(alpha=.75,size=.333)+
-  geom_linerange(aes(ymin=lci,ymax=uci),alpha=.5)+
+  facet_wrap(~m)+
+  geom_line(alpha=.75,size=.5)+
+  geom_linerange(aes(ymin=lci,ymax=uci),alpha=.5,size=1)+
   geom_vline(data=dim_selection_df,
              aes(xintercept=value,color=which,linetype=variable))+
   scale_linetype_manual(name="",values=c(2,2,1,1,2),guide=FALSE)+
   geom_text(data=dim_selection_df %>% filter(variable=="mean"),
             aes(x=value+n/30,y=label_y,linetype=variable,label=which,color=which),angle=90)+
   scale_color_discrete(guide=FALSE)+
-  facet_wrap(~m)+
-  xlab("dimension")+ylab("mean square error")
+  #facet_wrap(~m)+
+  xlab("Dimension")+ylab("Mean Squared Error")
 print(gg)
 
 
@@ -166,7 +168,7 @@ print(gg)
 
 
 ## --- Previous Plots --- ##
-
+# 
 # yMin = Inf
 # yMax = 0
 # for (m in mVec) {
@@ -213,15 +215,15 @@ print(gg)
 #                                errorPhatEIGUpper, NaN, NaN),
 #                   flag=c(rep("Abar",length(dVec)),
 #                          rep("Phat",length(dVec)),
-#                          "ZG 2nd elbow",
+#                          "USVT c=0.7",
 #                          "ZG 3rd elbow"))
 #   
 #   p = ggplot(data=df, aes(x=d, y=errorMean, color=flag)) + geom_point() + geom_line() +
 #     geom_ribbon(aes(x=d, ymin=errorLower, ymax=errorUpper), linetype=2, alpha=0.1)
 #   
-#   p = p + geom_vline(xintercept=dZG2Mean[iM], linetype="solid", color="green")
-#   p = p + geom_vline(xintercept=dZG2L[iM], linetype="dashed", color="green")
-#   p = p + geom_vline(xintercept=dZG2U[iM], linetype="dashed", color="green")
+#   p = p + geom_vline(xintercept=dUSVT07Mean[iM], linetype="solid", color="green")
+#   p = p + geom_vline(xintercept=dUSVT07L[iM], linetype="dashed", color="green")
+#   p = p + geom_vline(xintercept=dUSVT07U[iM], linetype="dashed", color="green")
 #   
 #   p = p + geom_vline(xintercept=dZG3Mean[iM], linetype="solid", color="purple")
 #   p = p + geom_vline(xintercept=dZG3L[iM], linetype="dashed", color="purple")

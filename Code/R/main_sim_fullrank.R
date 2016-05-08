@@ -47,10 +47,10 @@ for (m in mVec) {
   error_P_hat = out[2:(nD+1),]
   
   if (isSVD) {
-    fileName = paste("../../Result/result_", dataName, "_brute_fullrank_",
+    fileName = paste("../../Result/result_", dataName, "_brute_fullrank1_",
                      "m_", m, "_svd.RData", sep="")
   } else {
-    fileName = paste("../../Result/result_", dataName, "_brute_fullrank_",
+    fileName = paste("../../Result/result_", dataName, "_brute_fullrank1_",
                      "m_", m, "_eig.RData", sep="")
   }
   

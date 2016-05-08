@@ -9,6 +9,7 @@ maxIter = 1000
 m = 100
 # nVec = c(30, 50, 100, 250, 500, 1000, 2000)
 nVec = c(30, 50, 100, 250, 500, 1000)
+# nVec = c(30, 50, 100, 250)
 isSVD = 0
 iModel = 1
 d = 2
@@ -302,9 +303,65 @@ grid_arrange_shared_legend2(list(pp[[3]]), 1, 1)
 
 
 
+###### New RE Plot ######
+df = data.frame(n=nVec, errorMean=re1MeanM,
+                errorLower=re1LowerM,
+                errorUpper=re1UpperM,
+                flag=rep("Simulated value for corresponding edges",length(nVec)))
+p = ggplot(data=df, aes(x=n, y=errorMean, color=flag)) + geom_point() + geom_line() +
+  geom_ribbon(aes(ymin=errorLower, ymax=errorUpper), linetype=2, alpha=0.1)
+p = p + geom_hline(aes(lty="Theoretical value",
+                       yintercept=reExpect), show.legend = TRUE)
+p = p + theme(legend.text=element_text(size = 14, face="bold"))
+p = p + theme(legend.title=element_blank())
+p = p + theme(plot.title=element_text(size = 16, face="bold"))
+p = p + scale_x_continuous(name="N") + 
+  scale_y_continuous(name=expression(N %.% RE(bar(A),hat(P))))
+p = p + theme(axis.text=element_text(size=14,face="bold"),
+              axis.title=element_text(size=14,face="bold"))
+p = p + ggtitle(paste0("M = ", m, ", B11 associated edges"))
+p = p + scale_color_manual(values=c("blue"))
+pp[[7]] = p
 
+df = data.frame(n=nVec, errorMean=re2MeanM,
+                errorLower=re2LowerM,
+                errorUpper=re2UpperM,
+                flag=rep("B22 associated edges",length(nVec)))
+p = ggplot(data=df, aes(x=n, y=errorMean, color=flag)) + geom_point() + geom_line() +
+  geom_ribbon(aes(ymin=errorLower, ymax=errorUpper), linetype=2, alpha=0.1)
+p = p + geom_hline(aes(lty="Theoretical value",
+                       yintercept=reExpect), show.legend = TRUE)
+p = p + theme(legend.text=element_text(size = 14, face="bold"))
+p = p + theme(legend.title=element_blank())
+p = p + theme(plot.title=element_text(size = 16, face="bold"))
+p = p + scale_x_continuous(name="N") + 
+  scale_y_continuous(name=expression(N %.% RE(bar(A),hat(P))))
+p = p + theme(axis.text=element_text(size=14,face="bold"),
+              axis.title=element_text(size=14,face="bold"))
+p = p + ggtitle(paste0("M = ", m, ", B22 associated edges"))
+p = p + scale_color_manual(values=c("blue"))
+pp[[8]] = p
 
+df = data.frame(n=nVec, errorMean=re3MeanM,
+                errorLower=re3LowerM,
+                errorUpper=re3UpperM,
+                flag=rep("B12 associated edges",length(nVec)))
+p = ggplot(data=df, aes(x=n, y=errorMean, color=flag)) + geom_point() + geom_line() +
+  geom_ribbon(aes(ymin=errorLower, ymax=errorUpper), linetype=2, alpha=0.1)
+p = p + geom_hline(aes(lty="Theoretical value",
+                       yintercept=reExpect), show.legend = TRUE)
+p = p + theme(legend.text=element_text(size = 14, face="bold"))
+p = p + theme(legend.title=element_blank())
+p = p + theme(plot.title=element_text(size = 16, face="bold"))
+p = p + scale_x_continuous(name="N") + 
+  scale_y_continuous(name=expression(N %.% RE(bar(A),hat(P))))
+p = p + theme(axis.text=element_text(size=14,face="bold"),
+              axis.title=element_text(size=14,face="bold"))
+p = p + ggtitle(paste0("M = ", m, ", B12 associated edges"))
+p = p + scale_color_manual(values=c("blue"))
+pp[[9]] = p
 
+grid_arrange_shared_legend2(list(pp[[7]],pp[[8]],pp[[9]]), 3, 1)
 
 
 

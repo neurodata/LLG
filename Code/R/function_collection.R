@@ -1,4 +1,12 @@
-
+grid_arrange_shared_legend2 <- function(plots, nrows = 1, ncols = 2) {
+  library(gridExtra)
+  g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs
+  legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
+  lheight <- sum(legend$height)
+  pl  <- lapply(plots, function(x) x + theme(legend.position="none"))
+  tmp <- do.call(arrangeGrob, c(pl, list(ncol=ncols, nrow=nrows)))
+  grid.arrange(tmp, legend, ncol=1, heights = unit.c(unit(1, "npc") - lheight, lheight))
+}
 
 # Read M graphs
 read_data <- function(dataName, DA=T) {
@@ -112,6 +120,35 @@ dim_brute1 <- function(M, m, dVec, A_all, A_sum, isSVD=1) {
   
   sampleVec = sample.int(M, m)
   A_bar = add(A_all[sampleVec])
+  P_bar = (A_sum - A_bar)/(M - m)
+  #   P_bar = A_sum/M
+  A_bar = A_bar/m
+  result[1] = norm(P_bar - A_bar, "F")/n/(n-1)
+  
+  dMax = max(dVec)
+  nD = length(dVec)
+  
+  A.ase = ase(diag_aug(A_bar), dMax, isSVD)
+  for (iD in 1:nD) {
+    d = dVec[iD]
+    if (d == 1)
+      Ahat = A.ase[[1]] * A.ase[[3]] %*% t(A.ase[[2]])
+    else
+      Ahat <- A.ase[[3]][,1:d] %*% diag(A.ase[[1]][1:d]) %*% t(A.ase[[2]][,1:d])
+    P_hat = regularize(Ahat)
+    result[iD+1] = norm(P_bar - P_hat, "F")/n/(n-1)
+  }
+  
+  return(result)
+}
+
+
+dim_brute_robust <- function(M, m, dVec, A_all, A_all_unlist, isSVD=1) {
+  result = rep(NaN, nD+1)
+  
+  sampleVec = sample.int(M, m)
+  A_bar_robust = apply(A_all_unlist[,,sampleVec], 1:2, median)
+  A_bar_robust = medianlist(A_all[sampleVec])
   P_bar = (A_sum - A_bar)/(M - m)
   #   P_bar = A_sum/M
   A_bar = A_bar/m
