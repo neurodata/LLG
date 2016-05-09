@@ -11,6 +11,9 @@
 
 \usepackage{hyperref}
 
+\usepackage{caption}
+\usepackage{subcaption}
+
 \newenvironment{proof}{{\bf Proof:  }}{\hfill\rule{2mm}{2mm}}
 
 \newtheorem{fact}{Fact}[section]
@@ -90,6 +93,21 @@ However, contradict to the general intuition, arithmetic average should not be o
 \item Now if we consider the SBM as a random dot product graph, all vertices in the same block would have identical latent positions.
 \end{itemize}
 
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=1.2\linewidth]{SBM_P.png}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=1.2\linewidth]{SBM_A.png}
+\end{subfigure}
+\caption{Example illustrating the SBM. (a) Probability matrix that follows a SBM with K = 7 blocks; (b) Adjacency matrix for 1000 vertices generated from the SBM with probability matrix in (a).}
+\label{fig:SBM_example}
+\end{figure}
+
+
 
 \section{Results}
 
@@ -152,14 +170,14 @@ B = \begin{bmatrix}
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width=12cm]{RE.png}
+	\includegraphics[width=.8\textwidth]{RE.png}
 	\caption{Scaled relative efficiency in average with different $N$ and fixed $M$ based on 1000 Monte Carlo replicates. Different types of dashed lines denote the simulated scaled RE associated with the edges we are averaging over. Solid line represents the theoretical value for scaled RE. Observe that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t$ as expected.}
 	\label{fig:RE}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=12cm]{Rho.png}
+\includegraphics[width=.8\textwidth]{Rho.png}
 \caption{Simulated results for scaled RE, i.e. $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ with $N = 500$ and $M = 100$ of 1000 Monte Carlo replicates while changing $\rho_1$ from 0.1 to 0.9. Scaled relative efficiency in average with different $N$ and fixed $M$ based on 1000 Monte Carlo replicates. Different types of lines denote the simulated values associated with the edges we are averaging over. Notice that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Figure \ref{fig:RE} as expected.}
 \label{fig:RErho}
 \end{figure}
@@ -176,21 +194,21 @@ B = \begin{bmatrix}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=12cm]{JHU.png}
+\includegraphics[width=1\textwidth]{JHU.png}
 \caption{Comparison of MSE between $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for JHU dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted in triangle, and chosen by USVT with threshold equals 0.7 is denoted in square. Vertical intervals represent the 95\% confidence interval. When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
 \label{fig:JHU}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=12cm]{desikan.png}
+\includegraphics[width=1\textwidth]{desikan.png}
 \caption{Comparison of MSE between $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for desikan dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted in triangle, and chosen by USVT with threshold equals 0.7 is denoted in square.  Vertical intervals represent the 95\% confidence interval.  When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
 \label{fig:desikan}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=12cm]{CPAC200.png}
+\includegraphics[width=1\textwidth]{CPAC200.png}
 \caption{Comparison of MSE between $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for CPAC200 dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted in triangle, and chosen by USVT with threshold equals 0.7 is denoted in square.  Vertical intervals represent the 95\% confidence interval.  When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
 \label{fig:CPAC200}
 \end{figure}
