@@ -3,9 +3,9 @@ rm(list = ls())
 setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
-# dataName = "CPAC200"
+dataName = "CPAC200"
 # dataName = "desikan"
-dataName = "JHU"
+# dataName = "JHU"
 # dataName = "slab907"
 # dataName = "slab1068"
 # dataName = "Talairach"
@@ -129,13 +129,23 @@ for (iM in 1:length(mVec)) {
   
 }
 
-dim_selection_df <- rbind(
-  #data.frame(mean=dZG2Mean,lci= dZG2L, uci=dZG2U,which="ZG 2nd",m=mVec),
-  data.frame(mean=dZG3Mean,lci= dZG3L, uci=dZG3U,which="ZG 3rd",m=mVec),
-  #data.frame(mean=dUSVT1Mean,lci= dUSVT1L, uci=dUSVT1U,which="USVT c=1",m=mVec),
-  data.frame(mean=dUSVT07Mean,lci= dUSVT07L, uci=dUSVT07U,which="USVT c=0.7",m=mVec)) %>% 
-  melt(id.vars=c("which","m")) %>%
-  mutate(m=factor(paste0("m=",m),c("m=1","m=2","m=5","m=10")))
+errorPhatUSVT07 = rep(0, length(mVec))
+errorPhatZG3 = rep(0, length(mVec))
+for (iM in 1:length(mVec)) {
+  x = dUSVT07Mean[iM]
+  x1 = floor(x)
+  y1 = errorPhatEIGMean[iM, x1]
+  x2 = ceiling(x)
+  y2 = errorPhatEIGMean[iM, x2]
+  errorPhatUSVT07[iM] = (y2-y1)/(x2-x1)*(x-x1)+y1
+  
+  x = dZG3Mean[iM]
+  x1 = floor(x)
+  y1 = errorPhatEIGMean[iM, x1]
+  x2 = ceiling(x)
+  y2 = errorPhatEIGMean[iM, x2]
+  errorPhatZG3[iM] = (y2-y1)/(x2-x1)*(x-x1)+y1
+}
 
 error_by_dim_df <- rbind(
   data.frame(mse=errorAbarMean,lci=errorAbarLower,uci=errorAbarUpper,
@@ -144,22 +154,45 @@ error_by_dim_df <- rbind(
              which="Abar",m=mVec,d=1),
   data.frame(mse=c(errorPhatEIGMean),lci=c(errorPhatEIGLower),uci=c(errorPhatEIGUpper),
              which="Phat",m=rep(mVec,n),d=rep(1:n,each=4))) %>%
-  mutate(m=factor(paste0("m=",m),c("m=1","m=2","m=5","m=10")))
+  mutate(m=factor(paste0("M=",m),c("M=1","M=2","M=5","M=10")))
+
+dim_selection_df <- rbind(
+  data.frame(mse=errorPhatZG3,lci=errorPhatZG3,uci=errorPhatZG3,
+             which="ZG 3rd",m=mVec,d=dZG3Mean),
+  data.frame(mse=errorPhatUSVT07,lci=errorPhatUSVT07,uci=errorPhatUSVT07,
+             which="USVT c=0.7",m=mVec,d=dUSVT07Mean)) %>%
+  mutate(m=factor(paste0("M=",m),c("M=1","M=2","M=5","M=10")))
+
 
 label_y <- with(error_by_dim_df, .75*max(mse)+.25*min(mse))
 
-gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which)))+
+gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which),shape=factor(which)))+
   facet_wrap(~m)+
-  geom_line(alpha=.75,size=.5)+
+#   geom_point(data=subset(dim_selection_df,which=="ZG 3rd"),size=2,colour="red")+
+#   geom_point(data=subset(dim_selection_df,which=="USVT c=0.7"),size=2,colour="blue")+
+  geom_point(data=dim_selection_df,size=3)+
+  scale_linetype_manual(name="",values=c(1,2,0,0))+
+  scale_shape_manual(name="",values=c(-1,-1,15,17))+
+#   geom_point(dim_selection_df,aes(shape=which))+
+  geom_line(alpha=1,size=.5)+
   geom_linerange(aes(ymin=lci,ymax=uci),alpha=.5,size=1)+
-  geom_vline(data=dim_selection_df,
-             aes(xintercept=value,color=which,linetype=variable))+
-  scale_linetype_manual(name="",values=c(2,2,1,1,2),guide=FALSE)+
-  geom_text(data=dim_selection_df %>% filter(variable=="mean"),
-            aes(x=value+n/30,y=label_y,linetype=variable,label=which,color=which),angle=90)+
-  scale_color_discrete(guide=FALSE)+
-  #facet_wrap(~m)+
-  xlab("Dimension")+ylab("Mean Squared Error")
+#   geom_vline(data=dim_selection_df,
+#              aes(xintercept=value,color=which,linetype=variable))+
+#   scale_linetype_manual(name="",values=c(1,2,3,4))+
+#   geom_text(data=dim_selection_df %>% filter(variable=="mean"),
+#             aes(x=value+n/30,y=label_y,linetype=variable,label=which,color=which),angle=90)+
+#   scale_color_discrete(guide=FALSE)+
+  xlab("Dimension")+ylab("Mean Squared Error")+
+  theme(strip.text.x = element_text(size=20,face="bold"))+
+  theme(axis.text=element_text(size=15),
+        axis.title=element_text(size=20,face="bold"))+
+  theme(panel.grid.major = element_line(colour="grey95"),
+        panel.grid.minor = element_blank())+
+  theme(panel.background = element_rect(fill = 'white', colour = 'grey70'))+
+  theme(legend.text=element_text(size=20,face="bold"))+
+  theme(legend.position="bottom")+
+  ggtitle(paste0(dataName, ", N=", n, ", ", M, " graphs"))+
+  theme(plot.title=element_text(lineheight=.8,size=20,face="bold"))
 print(gg)
 
 
