@@ -5,6 +5,7 @@ setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
 require(Matrix)
+require(igraph)
 
 B = array(c(0.9,0.27,0.05,0.1,0.3,
             0.27,0.67,0.02,0.26,0.14,
@@ -21,13 +22,13 @@ tau = rep(1:5,round(n*rho))
 P = B[tau,tau]
 diag(P) = 0
 
-par(mfrow=c(1,2))
-image(Matrix(P), lwd=0, add="T", main="P", xlab="", ylab="", sub="")
-
+image(Matrix(P),main=list(label="P",cex=2),sub="",xlab=list(cex=0),ylab=list(cex=0),
+      scales=list(x=list(draw=FALSE),y=list(draw=FALSE)))
 
 g = sample_sbm(n, B, round(n*rho), directed=F, loops=F)
 A = as_adj(g, type="both", sparse=FALSE)
-image(Matrix(A), lwd=0, main="A", xlab="", ylab="", sub="")
 
-
-
+# image(Matrix(A),main=list(label="A",cex=2),sub="",xlab=list(cex=0),ylab=list(cex=0),
+#       scales=list(x=list(cex=2),y=list(cex=2)))
+image(Matrix(A),main=list(label="A",cex=2),sub="",xlab=list(cex=0),ylab=list(cex=0),
+      scales=list(x=list(draw=FALSE),y=list(draw=FALSE)))
