@@ -97,8 +97,6 @@ library(plyr)
 library(dplyr)
 library(reshape2)
 
-mVec = c(1,2,5,10)
-
 for (iM in 1:length(mVec)) {
   m = mVec[iM]
   
@@ -194,10 +192,6 @@ gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which),shape=factor(w
   ggtitle(paste0(dataName, ", N=", n, ", ", M, " graphs"))+
   theme(plot.title=element_text(lineheight=.8,size=20,face="bold"))
 print(gg)
-
-
-
-
 
 
 ## --- Previous Plots --- ##
