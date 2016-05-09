@@ -145,22 +145,22 @@ B = \begin{bmatrix}
 \end{itemize}
 \subsubsection{Simulation Results}
 \begin{itemize}
-\item Figure \ref{fig:RE} plots the scaled average RE with different $N$ and fixed $M$ of 1000 Monte Carlo replicates. Blue lines denote the simulated scaled RE associated with the edges we are averaging over. Solid line in black represents the theoretical value for scaled RE. From the figure, we see that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t$ represented as the black solid line, as suggested in Lemma \ref{thm:ARE}. Notice that this means $\mathrm{RE}_{st}(\bar{A}, \hat{P})$ is decreasing at rate $1/N$.
-\item To verify Theorem \ref{thm:ARE} and Lemma \ref{lm:VarPhat} hold with different $\rho$, Figure \ref{fig:RErho} shows the average MSE and average RE with $N = 500$ and $M = 100$ while changing $\rho_1$ from 0.1 to 0.9. 
-\item By checking the averaging MSE and RE of the two estimates $\hat{P}$ and $\bar{A}$ over 1000 Monte Carlo replicates, we demonstrate that the theoretical results in Section 3.1.
+\item Figure \ref{fig:RE} plots the scaled RE in average with different $N$ and fixed $M$ based on 1000 Monte Carlo replicates. Different types of dashed lines denote the simulated scaled RE associated with the edges we are averaging over. Solid line represents the theoretical value for scaled RE. From the figure, we see that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t$ represented as the black solid line, as suggested in Lemma \ref{thm:ARE}. Notice that this means $\mathrm{RE}_{st}(\bar{A}, \hat{P})$ is decreasing at rate $1/N$.
+\item To verify Theorem \ref{thm:ARE} holds with different $\rho$, Figure \ref{fig:RErho} shows the scaled RE with $N = 500$ and $M = 100$ while changing $\rho_1$ from 0.1 to 0.9. The simulated values agree with the theoretical values perfectly.
+\item By checking the RE of the two estimates $\hat{P}$ and $\bar{A}$ over 1000 Monte Carlo replicates, we demonstrate that the theoretical results in Section 3.1.
 \end{itemize}
 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=12cm]{RE.png}
-	\caption{Scaled average RE with different $N$ and fixed $M$ of 1000 Monte Carlo replicates. Blue lines denote the simulated scaled RE associated with the edges we are averaging over. Dashed lines represent the 95\% confidence interval. Solid line in black represents the theoretical value for scaled RE. Observe that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t$ as expected.}
+	\caption{Scaled relative efficiency in average with different $N$ and fixed $M$ based on 1000 Monte Carlo replicates. Different types of dashed lines denote the simulated scaled RE associated with the edges we are averaging over. Solid line represents the theoretical value for scaled RE. Observe that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t$ as expected.}
 	\label{fig:RE}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=12cm]{Rho.png}
-\caption{Simulated results for (a) $\mathrm{MSE}_{st}(\hat{P})$ and (b) $\mathrm{RE}_{st}(\bar{A}, \hat{P})$ with $N = 500$ and $M = 100$ of 1000 Monte Carlo replicates while changing $\rho_1$ from 0.1 to 0.9. Dashed lines represent the 95\% confidence interval. The simulated values for the average MSE and average RE measurements match perfectly with the theoretical values.}
+\caption{Simulated results for scaled RE, i.e. $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ with $N = 500$ and $M = 100$ of 1000 Monte Carlo replicates while changing $\rho_1$ from 0.1 to 0.9. Scaled relative efficiency in average with different $N$ and fixed $M$ based on 1000 Monte Carlo replicates. Different types of lines denote the simulated values associated with the edges we are averaging over. Notice that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Figure \ref{fig:RE} as expected.}
 \label{fig:RErho}
 \end{figure}
 
@@ -176,22 +176,22 @@ B = \begin{bmatrix}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=14cm]{JHU.png}
-\caption{Comparison of MSE between $\bar{A}$ (red) and $\hat{P}$ (blue) for JHU dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted in purple, and chosen by USVT with threshold equals 0.7 is denoted in green. Dashed lines represent the 95\% confidence interval. When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
+\includegraphics[width=12cm]{JHU.png}
+\caption{Comparison of MSE between $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for JHU dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted in triangle, and chosen by USVT with threshold equals 0.7 is denoted in square. Vertical intervals represent the 95\% confidence interval. When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
 \label{fig:JHU}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=14cm]{desikan.png}
-\caption{Comparison of MSE between $\bar{A}$ (red) and $\hat{P}$ (blue) for desikan dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted in purple, and chosen by USVT with threshold equals 0.7 is denoted in green.  Dashed lines represent the 95\% confidence interval.  When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
+\includegraphics[width=12cm]{desikan.png}
+\caption{Comparison of MSE between $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for desikan dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted in triangle, and chosen by USVT with threshold equals 0.7 is denoted in square.  Vertical intervals represent the 95\% confidence interval.  When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
 \label{fig:desikan}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=14cm]{CPAC200.png}
-\caption{Comparison of MSE between $\bar{A}$ (red) and $\hat{P}$ (blue) for CPAC200 dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted in purple, and chosen by USVT with threshold equals 0.7 is denoted in green.  Dashed lines represent the 95\% confidence interval.  When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
+\includegraphics[width=12cm]{CPAC200.png}
+\caption{Comparison of MSE between $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for CPAC200 dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted in triangle, and chosen by USVT with threshold equals 0.7 is denoted in square.  Vertical intervals represent the 95\% confidence interval.  When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
 \label{fig:CPAC200}
 \end{figure}
 
