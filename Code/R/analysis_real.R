@@ -120,6 +120,3 @@ levelplot(Diff_P_hat[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
           ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
           main=list(label=TeX('$|\\hat{P} - P|$ for desikan with M=5'),cex=2.5),
           colorkey=TRUE)
-
-
-
