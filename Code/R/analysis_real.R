@@ -4,15 +4,15 @@ setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
 # dataName = "CPAC200"
-# dataName = "desikan"
-dataName = "JHU"
+dataName = "desikan"
+# dataName = "JHU"
 # dataName = "slab907"
 # dataName = "slab1068"
 # dataName = "Talairach"
 
 set.seed(12345)
 
-m = 10
+m = 5
 isSVD = 0
 
 require(Matrix)
@@ -26,13 +26,20 @@ rm(tmpList)
 
 add <- function(x) Reduce("+", x)
 P = add(A_all)/M
-image(Matrix(P),main=list(label=TeX('$P$ for JHU'),cex=2),sub="",xlab=list(cex=0),ylab=list(cex=0),
-      scales=list(x=list(draw=FALSE),y=list(draw=FALSE)))
+# image(Matrix(P),main=list(label=TeX('$P$ for desikan'),cex=2),sub="",xlab=list(cex=0),
+#       ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0)
+print(image(Matrix(P),main=list(label=TeX('$P$ for desikan'),cex=2),sub="",xlab=list(cex=0),
+      ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0),
+      split=c(x=1,y=1,nx=3,ny=1),more=TRUE)
 
 sampleVec = sample.int(M, m)
 A_bar = add(A_all[sampleVec])/m
-image(Matrix(A_bar),main=list(label=TeX('$\\bar{A}$ for JHU with M=10'),cex=2),sub="",
-      xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)))
+# image(Matrix(A_bar),main=list(label=TeX('$\\bar{A}$ for desikan with M=5'),cex=2),sub="",
+#       xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
+#       lwd=0)
+print(image(Matrix(A_bar),main=list(label=TeX('$\\bar{A}$ for desikan with M=5'),cex=2),sub="",
+      xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
+      lwd=0),split=c(x=2,y=1,nx=3,ny=1),more=TRUE)
 
 ####### Estimate dimensions ######
 source("getElbows.R")
@@ -50,35 +57,69 @@ if (dHat == 1) {
 }
 P_hat = regularize(Ahat)
 
-image(Matrix(P_hat),main=list(label=TeX('$\\hat{P}$ for JHU with M=10'),cex=2),sub="",
-      xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)))
-
-####### Plot the difference ######
-Diff = A_bar - P_hat
-Diff_abs = abs(Diff)
-library(lattice)
-
-
-# levelplot(Diff[1:n,n:1])
-
-# new.palette=colorRampPalette(c("black","red"),space="rgb") 
-# levelplot(Diff[1:n,n:1],col.regions=new.palette(20))
-
-valLow = sort(Diff_abs, decreasing=T)[0.01*n^2]
-nv = (Diff_abs<valLow)
-nv[upper.tri(nv,diag=T)] = FALSE
-Diff_abs[nv] = 0
-new.palette=colorRampPalette(c("white","black"),space="rgb") 
-# levelplot(Diff_abs[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
-#           ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
-#           main=list(label="|Abar-Phat|",cex=2))
-# levelplot(Diff_abs[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
-#           ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
-#           main=list(label=expression(bgroup("|",bar(A)-hat(P),"|"),"for ","CPAC200 with m=2"),cex=2))
-
-levelplot(Diff_abs[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
-          ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
-          main=list(label=TeX('$|\\bar{A} - \\hat{P}|$ for JHU with M=10'),cex=2))
-
+# image(Matrix(P_hat),main=list(label=TeX('$\\hat{P}$ for desikan with M=5'),cex=2),sub="",
+#       xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
+#       lwd=0)
+print(image(Matrix(P_hat),main=list(label=TeX('$\\hat{P}$ for desikan with M=5'),cex=2),sub="",
+      xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
+      lwd=0),split=c(x=3,y=1,nx=3,ny=1))
 
 dHat
+
+####### Plot the difference ######
+Diff_between = abs(A_bar - P_hat)
+Diff_A_bar = abs(A_bar - P)
+Diff_P_hat = abs(P_hat - P)
+
+library(lattice)
+
+valLow = sort(Diff_between, decreasing=T)[0.01*n^2]
+nv = (Diff_between<valLow)
+nv[upper.tri(nv,diag=T)] = FALSE
+Diff_between[nv] = 0
+new.palette=colorRampPalette(c("white","black"),space="rgb") 
+print(levelplot(Diff_between[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
+                ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
+                main=list(label=TeX('$|\\bar{A} - \\hat{P}|$ for desikan with M=5'),cex=2),
+                colorkey=FALSE),split=c(x=1,y=1,nx=3,ny=1),more=TRUE)
+
+valLow = sort(Diff_A_bar, decreasing=T)[0.01*n^2]
+nv = (Diff_A_bar<valLow)
+nv[upper.tri(nv,diag=T)] = FALSE
+Diff_A_bar[nv] = 0
+new.palette=colorRampPalette(c("white","black"),space="rgb") 
+print(levelplot(Diff_A_bar[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
+                ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
+                main=list(label=TeX('$|\\bar{A} - P|$ for desikan with M=5'),cex=2),
+                colorkey=FALSE),split=c(x=2,y=1,nx=3,ny=1),more=TRUE)
+
+valLow = sort(Diff_P_hat, decreasing=T)[0.01*n^2]
+nv = (Diff_P_hat<valLow)
+nv[upper.tri(nv,diag=T)] = FALSE
+Diff_P_hat[nv] = 0
+new.palette=colorRampPalette(c("white","black"),space="rgb") 
+print(levelplot(Diff_P_hat[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
+                ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
+                main=list(label=TeX('$|\\hat{P} - P|$ for desikan with M=5'),cex=2),
+                colorkey=FALSE),split=c(x=3,y=1,nx=3,ny=1))
+
+
+
+
+levelplot(Diff_between[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
+          ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
+          main=list(label=TeX('$|\\bar{A} - \\hat{P}|$ for desikan with M=5'),cex=2.5),
+          colorkey=FALSE)
+
+levelplot(Diff_A_bar[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
+          ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
+          main=list(label=TeX('$|\\bar{A} - P|$ for desikan with M=5'),cex=2.5),
+          colorkey=FALSE)
+
+levelplot(Diff_P_hat[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
+          ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
+          main=list(label=TeX('$|\\hat{P} - P|$ for desikan with M=5'),cex=2.5),
+          colorkey=TRUE)
+
+
+

@@ -214,136 +214,49 @@ B = \begin{bmatrix}
 \end{figure}
 
 
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=1\textwidth]{Matrix_desikan_m5.png}
+\caption{Comparison between the mean of 454 graphs $P$ and two estimates $\bar{A}$ and $\hat{P}$ derived from a sample of size $M=5$ from desikan dataset while embedding the graphs into dimension $d=11$ selected by the 3rd elbow of ZG method.}
+\label{fig:Matrix_desikan_m5}
+\end{figure}
+
+%\begin{figure}
+%\centering
+%\begin{subfigure}{.33\textwidth}
+%  \centering
+%  \includegraphics[width=1.2\linewidth]{P_JHU.png}
+%\end{subfigure}%
+%\begin{subfigure}{.33\textwidth}
+%  \centering
+%  \includegraphics[width=1.2\linewidth]{Abar_JHU_m5.png}
+%\end{subfigure}
+%\begin{subfigure}{.33\textwidth}
+%  \centering
+%  \includegraphics[width=1.2\linewidth]{Phat_JHU_m5.png}
+%\end{subfigure}
+%\caption{Comparison between the mean of 454 graphs $P$ and two estimates $\bar{A}$ and $\hat{P}$ derived from a sample of size $M=5$ from JHU dataset while embedding the graphs into dimension $d=15$ selected by the 3rd elbow of ZG method.}
+%\label{fig:adj_JHU_m5}
+%\end{figure}
+
 
 \begin{figure}
 \centering
 \begin{subfigure}{.33\textwidth}
   \centering
-  \includegraphics[width=1.2\linewidth]{P_JHU.png}
+  \includegraphics[width=1.2\linewidth]{Diff1_desikan_m5.png}
 \end{subfigure}%
 \begin{subfigure}{.33\textwidth}
   \centering
-  \includegraphics[width=1.2\linewidth]{Abar_JHU_m1.png}
+  \includegraphics[width=1.2\linewidth]{Diff2_desikan_m5.png}
 \end{subfigure}
 \begin{subfigure}{.33\textwidth}
   \centering
-  \includegraphics[width=1.2\linewidth]{Phat_JHU_m1.png}
+  \includegraphics[width=1.2\linewidth]{Diff3_desikan_m5.png}
 \end{subfigure}
-\caption{Comparison between the mean of 454 graphs $P$ and two estimates $\bar{A}$ and $\hat{P}$ derived from a sample of size $M=1$ from JHU dataset while embedding the graphs into dimension $d=16$ selected by the 3rd elbow of ZG method.}
-\label{fig:adj_JHU_m1}
+\caption{Heat plot of the absolute differences $|\bar{A} - \hat{P}|$, $|\bar{A} - P|$ and $|\hat{P} - P|$ for a sample of size $M=5$ from desikan dataset while embedding the graphs into dimension $d=11$ selected by the 3rd elbow of ZG method. The lower triangular matrix shows the complete difference, while the upper triangular matrix only highlights the edges with largest 1\% differences.}
+\label{fig:Diff_desikan_m5}
 \end{figure}
-
-\begin{figure}[!htb]
-\centering
-\includegraphics[width=1\textwidth]{Diff_JHU_m1.png}
-\caption{Heat plot of the absolute difference between $\bar{A}$ and $\hat{P}$ for a sample of size $M=1$ from JHU dataset while embedding the graphs into dimension $d=16$ selected by the 3rd elbow of ZG method. The lower triangular matrix shows the complete difference, while the upper triangular matrix only highlights the edges with largest 1\% differences.}
-\label{fig:Diff_JHU_m1}
-\end{figure}
-
-\begin{figure}
-\centering
-\begin{subfigure}{.33\textwidth}
-  \centering
-  \includegraphics[width=1.2\linewidth]{P_JHU.png}
-\end{subfigure}%
-\begin{subfigure}{.33\textwidth}
-  \centering
-  \includegraphics[width=1.2\linewidth]{Abar_JHU_m2.png}
-\end{subfigure}
-\begin{subfigure}{.33\textwidth}
-  \centering
-  \includegraphics[width=1.2\linewidth]{Phat_JHU_m2.png}
-\end{subfigure}
-\caption{Comparison between the mean of 454 graphs $P$ and two estimates $\bar{A}$ and $\hat{P}$ derived from a sample of size $M=2$ from JHU dataset while embedding the graphs into dimension $d=12$ selected by the 3rd elbow of ZG method.}
-\label{fig:adj_JHU_m2}
-\end{figure}
-
-\begin{figure}[!htb]
-\centering
-\includegraphics[width=1\textwidth]{Diff_JHU_m2.png}
-\caption{Heat plot of the absolute difference between $\bar{A}$ and $\hat{P}$ for a sample of size $M=1$ from JHU dataset while embedding the graphs into dimension $d=12$ selected by the 3rd elbow of ZG method. The lower triangular matrix shows the complete difference, while the upper triangular matrix only highlights the edges with largest 1\% differences.}
-\label{fig:Diff_JHU_m2}
-\end{figure}
-
-\begin{figure}
-\centering
-\begin{subfigure}{.33\textwidth}
-  \centering
-  \includegraphics[width=1.2\linewidth]{P_JHU.png}
-\end{subfigure}%
-\begin{subfigure}{.33\textwidth}
-  \centering
-  \includegraphics[width=1.2\linewidth]{Abar_JHU_m5.png}
-\end{subfigure}
-\begin{subfigure}{.33\textwidth}
-  \centering
-  \includegraphics[width=1.2\linewidth]{Phat_JHU_m5.png}
-\end{subfigure}
-\caption{Comparison between the mean of 454 graphs $P$ and two estimates $\bar{A}$ and $\hat{P}$ derived from a sample of size $M=5$ from JHU dataset while embedding the graphs into dimension $d=15$ selected by the 3rd elbow of ZG method.}
-\label{fig:adj_JHU_m5}
-\end{figure}
-
-\begin{figure}[!htb]
-\centering
-\includegraphics[width=1\textwidth]{Diff_JHU_m5.png}
-\caption{Heat plot of the absolute difference between $\bar{A}$ and $\hat{P}$ for a sample of size $M=1$ from JHU dataset while embedding the graphs into dimension $d=15$ selected by the 3rd elbow of ZG method. The lower triangular matrix shows the complete difference, while the upper triangular matrix only highlights the edges with largest 1\% differences.}
-\label{fig:Diff_JHU_m5}
-\end{figure}
-
-\begin{figure}
-\centering
-\begin{subfigure}{.33\textwidth}
-  \centering
-  \includegraphics[width=1.2\linewidth]{P_JHU.png}
-\end{subfigure}%
-\begin{subfigure}{.33\textwidth}
-  \centering
-  \includegraphics[width=1.2\linewidth]{Abar_JHU_m10.png}
-\end{subfigure}
-\begin{subfigure}{.33\textwidth}
-  \centering
-  \includegraphics[width=1.2\linewidth]{Phat_JHU_m10.png}
-\end{subfigure}
-\caption{Comparison between the mean of 454 graphs $P$ and two estimates $\bar{A}$ and $\hat{P}$ derived from a sample of size $M=10$ from JHU dataset while embedding the graphs into dimension $d=12$ selected by the 3rd elbow of ZG method.}
-\label{fig:adj_JHU_m10}
-\end{figure}
-
-\begin{figure}[!htb]
-\centering
-\includegraphics[width=1\textwidth]{Diff_JHU_m10.png}
-\caption{Heat plot of the absolute difference between $\bar{A}$ and $\hat{P}$ for a sample of size $M=1$ from JHU dataset while embedding the graphs into dimension $d=12$ selected by the 3rd elbow of ZG method. The lower triangular matrix shows the complete difference, while the upper triangular matrix only highlights the edges with largest 1\% differences.}
-\label{fig:Diff_JHU_m10}
-\end{figure}
-
-
-\begin{figure}[!htb]
-\centering
-\includegraphics[width=1\textwidth]{Diff_CPAC200_m1.png}
-\caption{Heat plot of the absolute difference between $\bar{A}$ and $\hat{P}$ for a sample of size $M=1$ from CPAC200 dataset while embedding the graphs into dimension $d=60$ selected by the 3rd elbow of ZG method. The lower triangular matrix shows the complete difference, while the upper triangular matrix only highlights the edges with largest 1\% differences.}
-\label{fig:Diff_CPAC200_m1}
-\end{figure}
-
-\begin{figure}[!htb]
-\centering
-\includegraphics[width=1\textwidth]{Diff_CPAC200_m2.png}
-\caption{Heat plot of the absolute difference between $\bar{A}$ and $\hat{P}$ for a sample of size $M=2$ from CPAC200 dataset while embedding the graphs into dimension $d=44$ selected by the 3rd elbow of ZG method. The lower triangular matrix shows the complete difference, while the upper triangular matrix only highlights the edges with largest 1\% differences.}
-\label{fig:Diff_CPAC200_m2}
-\end{figure}
-
-\begin{figure}[!htb]
-\centering
-\includegraphics[width=1\textwidth]{Diff_CPAC200_m5.png}
-\caption{Heat plot of the absolute difference between $\bar{A}$ and $\hat{P}$ for a sample of size $M=5$ from CPAC200 dataset while embedding the graphs into dimension $d=46$ selected by the 3rd elbow of ZG method. The lower triangular matrix shows the complete difference, while the upper triangular matrix only highlights the edges with largest 1\% differences.}
-\label{fig:Diff_CPAC200_m5}
-\end{figure}
-
-\begin{figure}[!htb]
-\centering
-\includegraphics[width=1\textwidth]{Diff_CPAC200_m10.png}
-\caption{Heat plot of the absolute difference between $\bar{A}$ and $\hat{P}$ for a sample of size $M=10$ from CPAC200 dataset while embedding the graphs into dimension $d=45$ selected by the 3rd elbow of ZG method. The lower triangular matrix shows the complete difference, while the upper triangular matrix only highlights the edges with largest 1\% differences.}
-\label{fig:Diff_CPAC200_m10}
-\end{figure}
-
 
 
 
