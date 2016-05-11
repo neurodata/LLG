@@ -5,14 +5,14 @@ setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("E:/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
-mVec = c(1,2,5,10)
+mVec = c(1,5,10)
 isSVD = 0
 
-nIter = 10
+nIter = 1000
 nCores = 2
 
-dataName = "CPAC200"
-# dataName = "desikan"
+# dataName = "CPAC200"
+dataName = "desikan"
 # dataName = "JHU"
 # dataName = "slab907"
 # dataName = "slab1068"
