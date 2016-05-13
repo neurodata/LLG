@@ -31,6 +31,9 @@ vignettes/*.pdf
 # Reference
 Reference/
 
+# Matlab Library
+Code/MATLAB/BrainVis
+
 # Tex
 Draft/*.bak
 Draft/*.aux
