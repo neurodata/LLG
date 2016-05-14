@@ -192,26 +192,36 @@ B = \begin{bmatrix}
 \item Simulation with $P$ being the mean graph of the real data shows that $\hat{P}$ still does a good job when the low rank assumption is violated.
 \end{itemize}
 
-\begin{figure}[!htb]
-\centering
-\includegraphics[width=1\textwidth]{JHU.png}
-\caption{Comparison of MSE between $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for JHU dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted in triangle, and chosen by USVT with threshold equals 0.7 is denoted in square. Vertical intervals represent the 95\% confidence interval. When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
-\label{fig:JHU}
-\end{figure}
+%\begin{figure}[!htb]
+%\centering
+%\includegraphics[width=1\textwidth]{JHU.png}
+%\caption{Comparison of MSE between $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for JHU dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted in triangle, and chosen by USVT with threshold equals 0.7 is denoted in square. Vertical intervals represent the 95\% confidence interval. When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
+%\label{fig:JHU}
+%\end{figure}
+%
+%\begin{figure}[!htb]
+%\centering
+%\includegraphics[width=1\textwidth]{desikan.png}
+%\caption{Comparison of MSE between $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for desikan dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted in triangle, and chosen by USVT with threshold equals 0.7 is denoted in square.  Vertical intervals represent the 95\% confidence interval.  When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
+%\label{fig:desikan}
+%\end{figure}
+%
+%\begin{figure}[!htb]
+%\centering
+%\includegraphics[width=1\textwidth]{CPAC200.png}
+%\caption{Comparison of MSE between $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for CPAC200 dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted in triangle, and chosen by USVT with threshold equals 0.7 is denoted in square.  Vertical intervals represent the 95\% confidence interval.  When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
+%\label{fig:CPAC200}
+%\end{figure}
+
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=1\textwidth]{desikan.png}
-\caption{Comparison of MSE between $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for desikan dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted in triangle, and chosen by USVT with threshold equals 0.7 is denoted in square.  Vertical intervals represent the 95\% confidence interval.  When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
-\label{fig:desikan}
-\end{figure}
-
-\begin{figure}[!htb]
-\centering
-\includegraphics[width=1\textwidth]{CPAC200.png}
+\includegraphics[width=1\textwidth]{realdata.png}
 \caption{Comparison of MSE between $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for CPAC200 dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted in triangle, and chosen by USVT with threshold equals 0.7 is denoted in square.  Vertical intervals represent the 95\% confidence interval.  When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
-\label{fig:CPAC200}
+\label{fig:realdata}
 \end{figure}
+
+
 
 
 \begin{figure}[!htb]
@@ -242,15 +252,11 @@ B = \begin{bmatrix}
 
 \begin{figure}
 \centering
-\begin{subfigure}{.33\textwidth}
-  \centering
-  \includegraphics[width=1.2\linewidth]{Diff1_desikan_m5.png}
-\end{subfigure}%
-\begin{subfigure}{.33\textwidth}
+\begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=1.2\linewidth]{Diff2_desikan_m5.png}
-\end{subfigure}
-\begin{subfigure}{.33\textwidth}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=1.2\linewidth]{Diff3_desikan_m5.png}
 \end{subfigure}
