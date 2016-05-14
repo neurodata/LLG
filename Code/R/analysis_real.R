@@ -120,3 +120,94 @@ levelplot(Diff_P_hat[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
           ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
           main=list(label=TeX('$|\\hat{P} - P|$ for desikan with M=5'),cex=2.5),
           colorkey=TRUE)
+
+
+
+###### Write to files ######
+
+Diff_between = abs(A_bar - P_hat)
+Diff_A_bar = abs(A_bar - P)
+Diff_P_hat = abs(P_hat - P)
+
+# valLow = sort(Diff_between, decreasing=T)[0.01*n^2]
+# nv = (Diff_between<valLow)
+# s = ""
+# for (i in 1:(n-1)) {
+#   for (j in (i+1):n) {
+#     if (nv[i,j]==F) {
+#       s = paste0(s,",",i,",",j)
+#     }
+#   }
+# }
+# s = substr(s,2,nchar(s))
+# write(s,file="../../Result/Edge_Diff_Between_desikan.csv")
+# 
+# 
+# valLow = sort(Diff_A_bar, decreasing=T)[0.01*n^2]
+# nv = (Diff_A_bar<valLow)
+# s = ""
+# for (i in 1:(n-1)) {
+#   for (j in (i+1):n) {
+#     if (nv[i,j]==F) {
+#       s = paste0(s,",",i,",",j)
+#     }
+#   }
+# }
+# s = substr(s,2,nchar(s))
+# write(s,file="../../Result/Edge_Diff_Abar_desikan.csv")
+
+valLow = sort(Diff_P_hat, decreasing=T)[0.01*n^2]
+nv = (Diff_P_hat<valLow)
+s = ""
+for (i in 1:(n-1)) {
+  for (j in (i+1):n) {
+    if (nv[i,j]==F) {
+      s = paste0(s,",",i,",",j,",",Phat[i,j]-P[i,j])
+    }
+  }
+}
+s = substr(s,2,nchar(s))
+write(s,file="../../Result/Edge_Diff_Phat_desikan.csv")
+
+
+
+
+rowSumDiffBetween = rowSums(Diff_between)
+rowSumDiffABar = rowSums(Diff_A_bar)
+rowSumDiffPhat = rowSums(Diff_P_hat)
+
+valLow = sort(rowSumDiffBetween, decreasing=T)[5]
+nv = (rowSumDiffBetween<valLow)
+s = ""
+for (i in 1:n) {
+  if (nv[i]==F) {
+    s = paste0(s,",",i)
+  }
+}
+s = substr(s,2,nchar(s))
+write(s,file="../../Result/Vertex_Diff_Between_desikan.csv")
+
+valLow = sort(rowSumDiffABar, decreasing=T)[5]
+nv = (rowSumDiffABar<valLow)
+s = ""
+for (i in 1:n) {
+  if (nv[i]==F) {
+    s = paste0(s,",",i)
+  }
+}
+s = substr(s,2,nchar(s))
+write(s,file="../../Result/Vertex_Diff_Abar_desikan.csv")
+
+valLow = sort(rowSumDiffPhat, decreasing=T)[5]
+nv = (rowSumDiffPhat<valLow)
+s = ""
+for (i in 1:n) {
+  if (nv[i]==F) {
+    s = paste0(s,",",i)
+  }
+}
+s = substr(s,2,nchar(s))
+write(s,file="../../Result/Vertex_Diff_Phat_desikan.csv")
+
+
+
