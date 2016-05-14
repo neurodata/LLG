@@ -162,7 +162,7 @@ s = ""
 for (i in 1:(n-1)) {
   for (j in (i+1):n) {
     if (nv[i,j]==F) {
-      s = paste0(s,",",i,",",j,",",Phat[i,j]-P[i,j])
+      s = paste0(s,",",i,",",j,",",P_hat[i,j]-P[i,j])
     }
   }
 }
