@@ -6,6 +6,7 @@ setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 pp <- list()
 
 lSize = .8
+legendSize = 1.5
 
 ################## JHU #########################
 dataName = "JHU"
@@ -142,6 +143,7 @@ gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which),shape=factor(w
   theme(legend.text=element_text(size=20,face="bold"))+
   theme(legend.position="bottom")+
   ggtitle(paste0(dataName, ", N=", n, ", ", M, " graphs"))+
+  theme(legend.key.size=unit(legendSize,"line"))+
   theme(plot.title=element_text(lineheight=.8,size=20,face="bold"))
 
 pp[[1]]=gg
@@ -284,6 +286,7 @@ gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which),shape=factor(w
   theme(legend.text=element_text(size=20,face="bold"))+
   theme(legend.position="bottom")+
   ggtitle(paste0(dataName, ", N=", n, ", ", M, " graphs"))+
+  theme(legend.key.size=unit(legendSize,"line"))+
   theme(plot.title=element_text(lineheight=.8,size=20,face="bold"))
 
 pp[[2]]=gg
@@ -425,6 +428,7 @@ gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which),shape=factor(w
   theme(legend.text=element_text(size=20,face="bold"))+
   theme(legend.position="bottom")+
   ggtitle(paste0(dataName, ", N=", n, ", ", M, " graphs"))+
+  theme(legend.key.size=unit(legendSize,"line"))+
   theme(plot.title=element_text(lineheight=.8,size=20,face="bold"))
 
 pp[[3]]=gg

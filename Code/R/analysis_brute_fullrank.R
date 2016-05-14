@@ -3,6 +3,9 @@ rm(list = ls())
 setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
+lSize = .8
+legendSize = 1.5
+
 # dataName = "CPAC200"
 dataName = "desikan"
 # dataName = "JHU"
@@ -68,7 +71,7 @@ gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which),shape=factor(w
   facet_wrap(~m)+
   scale_linetype_manual(name="",values=c(1,2,0,0))+
   scale_shape_manual(name="",values=c(-1,-1,15,17))+
-  geom_line(alpha=1,size=.5)+
+  geom_line(alpha=1,size=lSize)+
   geom_linerange(aes(ymin=lci,ymax=uci),alpha=.5,size=1)+
   xlab("Dimension")+ylab("Mean Squared Error")+
   theme(strip.text.x = element_text(size=20,face="bold"))+
@@ -80,6 +83,7 @@ gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which),shape=factor(w
   theme(legend.text=element_text(size=20,face="bold"))+
   theme(legend.position="bottom")+
   ggtitle(paste0("Simulation based on ", dataName, ", N=", n, ", M=", m))+
+  theme(legend.key.size=unit(legendSize,"line"))+
   theme(plot.title=element_text(lineheight=.8,size=20,face="bold"))
 print(gg)
 

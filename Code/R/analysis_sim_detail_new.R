@@ -3,6 +3,8 @@ rm(list = ls())
 setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
+lSize = 0.8
+
 ###### Fix m ######
 maxIter = 10000
 m = 100
@@ -113,10 +115,10 @@ label_y <- with(df, .75*max(re)+.25*min(re))
 p <- ggplot(df,aes(x=n,y=re,linetype=factor(which)))+
   facet_wrap(~m)+
 #   geom_point()+
-  geom_line(alpha=1,size=.5)+
+  geom_line(alpha=1,size=lSize)+
 #   geom_linerange(aes(ymin=lci,ymax=uci),alpha=.5,size=1)+
 #   geom_vline(data=dim_selection_df,
-#              aes(xintercept=value,color=which,linetype=variable))+
+#              aes(xintercept=value,color=which,linetyRpe=variable))+
   scale_linetype_manual(name="",values=c("solid","longdash","dotted","dotdash"))+
 #   scale_color_discrete(guide=FALSE)+
   xlab("N") + ylab("Scaled Relative Efficiency")+
@@ -127,6 +129,7 @@ p <- ggplot(df,aes(x=n,y=re,linetype=factor(which)))+
         panel.grid.minor = element_blank())+
   theme(panel.background = element_rect(fill = 'white', colour = 'grey70'))+
   theme(legend.text=element_text(size=20,face="bold"))+
+  theme(legend.key.size=unit(2,"line"))+
   theme(legend.position="bottom")
 print(p)
 
@@ -172,7 +175,7 @@ label_y <- with(df, .75*max(re)+.25*min(re))
 p <- ggplot(df,aes(x=rho,y=re,linetype=factor(which)))+
   facet_wrap(~m)+
   #   geom_point()+
-  geom_line(alpha=1,size=.5)+
+  geom_line(alpha=1,size=lSize)+
   #   geom_linerange(aes(ymin=lci,ymax=uci),alpha=.5,size=1)+
   #   geom_vline(data=dim_selection_df,
   #              aes(xintercept=value,color=which,linetype=variable))+
@@ -188,6 +191,7 @@ p <- ggplot(df,aes(x=rho,y=re,linetype=factor(which)))+
         panel.grid.minor = element_blank())+
   theme(panel.background = element_rect(fill = 'white', colour = 'grey70'))+
   theme(legend.text=element_text(size=20,face="bold"))+
+  theme(legend.key.size=unit(2,"line"))+
   theme(legend.position="bottom")
 print(p)
 
