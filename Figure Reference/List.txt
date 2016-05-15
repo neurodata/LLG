@@ -1,0 +1,17 @@
+journal.pcbi.1002619
+	Figure 1, 4
+
+journal.pcbi.1003529
+	Figure 1, 2, 3, 4, 5
+
+journal.pcbi.1003557
+	Figure 2, 5, 6
+
+journal.pcbi.1004642
+	Figure 2, 6, 7
+
+journal.pcbi.1004692
+	Figure 1, 6, 7
+
+journal.pcbi.1004762
+	Figure 10
