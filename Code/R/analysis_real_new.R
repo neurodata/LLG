@@ -26,8 +26,6 @@ rm(tmpList)
 
 add <- function(x) Reduce("+", x)
 P = add(A_all)/M
-# image(Matrix(P),main=list(label=TeX('$P$ for desikan'),cex=2),sub="",xlab=list(cex=0),
-#       ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0)
 print(image(Matrix(P),main=list(label=TeX('$P$ for desikan'),cex=3),sub="",
             xlab=list(cex=0),ylab=list(cex=0),
             scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0),
@@ -35,9 +33,6 @@ print(image(Matrix(P),main=list(label=TeX('$P$ for desikan'),cex=3),sub="",
 
 sampleVec = sample.int(M, m)
 A_bar = add(A_all[sampleVec])/m
-# image(Matrix(A_bar),main=list(label=TeX('$\\bar{A}$ for desikan with M=5'),cex=2),sub="",
-#       xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
-#       lwd=0)
 print(image(Matrix(A_bar),main=list(label=TeX('$\\bar{A}$ for desikan with M=5'),cex=3),
             sub="",xlab=list(cex=0),ylab=list(cex=0),
             scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0),
@@ -59,15 +54,12 @@ if (dHat == 1) {
 }
 P_hat = regularize(Ahat)
 
-# image(Matrix(P_hat),main=list(label=TeX('$\\hat{P}$ for desikan with M=5'),cex=2),sub="",
-#       xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
-#       lwd=0)
 print(image(Matrix(P_hat),main=list(label=TeX('$\\hat{P}$ for desikan with M=5'),cex=3),
             sub="",xlab=list(cex=0),ylab=list(cex=0),
             scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0),
       split=c(x=3,y=1,nx=3,ny=1))
 
-dHat
+print(dHat)
 
 ####### Plot the difference ######
 Diff_A_bar = abs(A_bar - P)
@@ -78,67 +70,47 @@ library(lattice)
 # valLow = 0.35
 valLow = 0.4
 
+# nv = (Diff_A_bar<valLow)
+# nv[upper.tri(nv,diag=T)] = FALSE
+# Diff_A_bar[nv] = 0
+# new.palette=colorRampPalette(c("white","black"),space="rgb") 
+# print(levelplot(Diff_A_bar[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
+#                 ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
+#                 main=list(label=TeX('$|\\bar{A} - P|$ for desikan with M=5'),cex=2),
+#                 colorkey=FALSE),split=c(x=2,y=1,nx=3,ny=1),more=TRUE)
+# 
+# nv = (Diff_P_hat<valLow)
+# nv[upper.tri(nv,diag=T)] = FALSE
+# Diff_P_hat[nv] = 0
+# new.palette=colorRampPalette(c("white","black"),space="rgb") 
+# print(levelplot(Diff_P_hat[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
+#                 ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
+#                 main=list(label=TeX('$|\\hat{P} - P|$ for desikan with M=5'),cex=2),
+#                 colorkey=FALSE),split=c(x=3,y=1,nx=3,ny=1))
+
+new.palette=colorRampPalette(c("white","black"),space="rgb")
+
 nv = (Diff_A_bar<valLow)
 nv[upper.tri(nv,diag=T)] = FALSE
 Diff_A_bar[nv] = 0
-new.palette=colorRampPalette(c("white","black"),space="rgb") 
-print(levelplot(Diff_A_bar[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
-                ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
-                main=list(label=TeX('$|\\bar{A} - P|$ for desikan with M=5'),cex=2),
-                colorkey=FALSE),split=c(x=2,y=1,nx=3,ny=1),more=TRUE)
-
-nv = (Diff_P_hat<valLow)
-nv[upper.tri(nv,diag=T)] = FALSE
-Diff_P_hat[nv] = 0
-new.palette=colorRampPalette(c("white","black"),space="rgb") 
-print(levelplot(Diff_P_hat[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
-                ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
-                main=list(label=TeX('$|\\hat{P} - P|$ for desikan with M=5'),cex=2),
-                colorkey=FALSE),split=c(x=3,y=1,nx=3,ny=1))
-
-
 levelplot(Diff_A_bar[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
           ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
           main=list(label=TeX('$|\\bar{A} - P|$ for desikan with M=5'),cex=2.5),
           colorkey=FALSE)
 
+nv = (Diff_P_hat<valLow)
+nv[upper.tri(nv,diag=T)] = FALSE
+Diff_P_hat[nv] = 0
 levelplot(Diff_P_hat[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
           ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
           main=list(label=TeX('$|\\hat{P} - P|$ for desikan with M=5'),cex=2.5),
-          colorkey=TRUE)
+          colorkey=list(labels=list(cex=2)))
 
 ###### Write to files ######
 
 Diff_between = abs(A_bar - P_hat)
 Diff_A_bar = abs(A_bar - P)
 Diff_P_hat = abs(P_hat - P)
-
-# valLow = sort(Diff_between, decreasing=T)[0.01*n^2]
-# nv = (Diff_between<valLow)
-# s = ""
-# for (i in 1:(n-1)) {
-#   for (j in (i+1):n) {
-#     if (nv[i,j]==F) {
-#       s = paste0(s,",",i,",",j)
-#     }
-#   }
-# }
-# s = substr(s,2,nchar(s))
-# write(s,file="../../Result/Edge_Diff_Between_desikan.csv")
-# 
-# 
-# valLow = sort(Diff_A_bar, decreasing=T)[0.01*n^2]
-# nv = (Diff_A_bar<valLow)
-# s = ""
-# for (i in 1:(n-1)) {
-#   for (j in (i+1):n) {
-#     if (nv[i,j]==F) {
-#       s = paste0(s,",",i,",",j)
-#     }
-#   }
-# }
-# s = substr(s,2,nchar(s))
-# write(s,file="../../Result/Edge_Diff_Abar_desikan.csv")
 
 valLow = sort(Diff_P_hat, decreasing=T)[0.01*n^2]
 nv = (Diff_P_hat<valLow)
