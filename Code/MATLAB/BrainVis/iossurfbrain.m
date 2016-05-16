@@ -1,10 +1,10 @@
 clear all
-addpath('/Users/Runze/Documents/GitHub/LLG/Code/MATLAB/BrainVis/NII')
+addpath('E:/GitHub/LLG/Code/MATLAB/BrainVis/NII')
 
 % model = 1; Between
 % model = 2; Abar
 % model = 3; Phat
-model = 3;
+model = 1;
 
 % Vertices to visualize
 if (model == 1)
@@ -279,7 +279,7 @@ hold off
 
 hL = legend([pp1,pp2], {'Overestimate','Underestimate'}, ...
     'Location','South');
-set(hL,'FontSize',15)
+set(hL,'FontSize',20)
 
 p1Pos = get(p1,'position');
 p2Pos = get(p2,'position');
