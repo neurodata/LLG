@@ -133,7 +133,7 @@ gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which),shape=factor(w
   #   geom_text(data=dim_selection_df %>% filter(variable=="mean"),
   #             aes(x=value+n/30,y=label_y,linetype=variable,label=which,color=which),angle=90)+
   #   scale_color_discrete(guide=FALSE)+
-  xlab("Dimension")+ylab("Mean Squared Error")+
+  xlab("")+ylab("MSE")+
   theme(strip.text.x = element_text(size=20,face="bold"))+
   theme(axis.text=element_text(size=15),
         axis.title=element_text(size=20,face="bold"))+
@@ -276,7 +276,7 @@ gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which),shape=factor(w
   #   geom_text(data=dim_selection_df %>% filter(variable=="mean"),
   #             aes(x=value+n/30,y=label_y,linetype=variable,label=which,color=which),angle=90)+
   #   scale_color_discrete(guide=FALSE)+
-  xlab("Dimension")+ylab("Mean Squared Error")+
+  xlab("")+ylab("MSE")+
   theme(strip.text.x = element_text(size=20,face="bold"))+
   theme(axis.text=element_text(size=15),
         axis.title=element_text(size=20,face="bold"))+
@@ -418,7 +418,7 @@ gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which),shape=factor(w
   #   geom_text(data=dim_selection_df %>% filter(variable=="mean"),
   #             aes(x=value+n/30,y=label_y,linetype=variable,label=which,color=which),angle=90)+
   #   scale_color_discrete(guide=FALSE)+
-  xlab("Dimension")+ylab("Mean Squared Error")+
+  xlab("Dimension")+ylab("MSE")+
   theme(strip.text.x = element_text(size=20,face="bold"))+
   theme(axis.text=element_text(size=15),
         axis.title=element_text(size=20,face="bold"))+
