@@ -28,8 +28,9 @@ add <- function(x) Reduce("+", x)
 P = add(A_all)/M
 # image(Matrix(P),main=list(label=TeX('$P$ for desikan'),cex=2),sub="",xlab=list(cex=0),
 #       ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0)
-print(image(Matrix(P),main=list(label=TeX('$P$ for desikan'),cex=2),sub="",xlab=list(cex=0),
-            ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0),
+print(image(Matrix(P),main=list(label=TeX('$P$ for desikan'),cex=3),sub="",
+            xlab=list(cex=0),ylab=list(cex=0),
+            scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0),
       split=c(x=1,y=1,nx=3,ny=1),more=TRUE)
 
 sampleVec = sample.int(M, m)
@@ -37,9 +38,10 @@ A_bar = add(A_all[sampleVec])/m
 # image(Matrix(A_bar),main=list(label=TeX('$\\bar{A}$ for desikan with M=5'),cex=2),sub="",
 #       xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
 #       lwd=0)
-print(image(Matrix(A_bar),main=list(label=TeX('$\\bar{A}$ for desikan with M=5'),cex=2),sub="",
-            xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
-            lwd=0),split=c(x=2,y=1,nx=3,ny=1),more=TRUE)
+print(image(Matrix(A_bar),main=list(label=TeX('$\\bar{A}$ for desikan with M=5'),cex=3),
+            sub="",xlab=list(cex=0),ylab=list(cex=0),
+            scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0),
+      split=c(x=2,y=1,nx=3,ny=1),more=TRUE)
 
 ####### Estimate dimensions ######
 source("getElbows.R")
@@ -60,9 +62,10 @@ P_hat = regularize(Ahat)
 # image(Matrix(P_hat),main=list(label=TeX('$\\hat{P}$ for desikan with M=5'),cex=2),sub="",
 #       xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
 #       lwd=0)
-print(image(Matrix(P_hat),main=list(label=TeX('$\\hat{P}$ for desikan with M=5'),cex=2),sub="",
-            xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
-            lwd=0),split=c(x=3,y=1,nx=3,ny=1))
+print(image(Matrix(P_hat),main=list(label=TeX('$\\hat{P}$ for desikan with M=5'),cex=3),
+            sub="",xlab=list(cex=0),ylab=list(cex=0),
+            scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0),
+      split=c(x=3,y=1,nx=3,ny=1))
 
 dHat
 
