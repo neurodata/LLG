@@ -108,7 +108,8 @@ df <- rbind(
              which="B22",m=m,n=nVec),
   data.frame(re=re3MeanM,lci=re3LowerM,uci=re3UpperM,
              which="B12",m=m,n=nVec)) %>%
-  mutate(m=factor(paste0("M=",m),c("M=100")))
+  mutate(m=factor(paste0("Simulation based on SBM, M=",m),
+                  c("Simulation based on SBM, M=100")))
 
 label_y <- with(df, .75*max(re)+.25*min(re))
 
@@ -168,7 +169,8 @@ df <- rbind(
   data.frame(re=re1Expectrho,which="B11",m=m,rho=rhoVec),
   data.frame(re=re2Expectrho,which="B22",m=m,rho=rhoVec),
   data.frame(re=re3Expectrho,which="B12",m=m,rho=rhoVec)) %>%
-  mutate(m=factor(paste0("M=",m,", N=",n),c("M=100, N=500")))
+  mutate(m=factor(paste0("Simulation based on SBM, M=",m,", N=",n),
+                  c("Simulation based on SBM, M=100, N=500")))
 
 label_y <- with(df, .75*max(re)+.25*min(re))
 
