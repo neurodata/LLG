@@ -122,17 +122,17 @@ for i = 1:length(vertexVec)
 end
 hold off
 
-if (model == 1)
-    figureName = '../../../Result/Vertex_Diff_Between_desikan.png';
-elseif (model == 2)
-    figureName = '../../../Result/Vertex_Diff_Abar_desikan.png';
-else
-    figureName = '../../../Result/Vertex_Diff_Phat_desikan.png';
-end
-
-r = 150; % pixels per inch
-set(gcf, 'PaperUnits', 'inches', 'PaperPosition', [0 0 1080 480]/r);
-print(gcf,'-dpng',sprintf('-r%d',r), figureName);
+% if (model == 1)
+%     figureName = '../../../Result/Vertex_Diff_Between_desikan.png';
+% elseif (model == 2)
+%     figureName = '../../../Result/Vertex_Diff_Abar_desikan.png';
+% else
+%     figureName = '../../../Result/Vertex_Diff_Phat_desikan.png';
+% end
+% 
+% r = 150; % pixels per inch
+% set(gcf, 'PaperUnits', 'inches', 'PaperPosition', [0 0 1080 480]/r);
+% print(gcf,'-dpng',sprintf('-r%d',r), figureName);
 
 %%
 
@@ -286,22 +286,14 @@ p2Pos = get(p2,'position');
 p2Pos(2:4) = p1Pos(2:4);
 set(p2, 'position', p2Pos);
 
-% hL = legend([pp3,pp4], {'Overestimate','Underestimate'}, ...
-%     'Location','EastOutside');
+% if (model == 1)
+%     figureName = '../../../Result/Edge_Diff_Between_desikan.png';
+% elseif (model == 2)
+%     figureName = '../../../Result/Edge_Diff_Abar_desikan.png';
+% else
+%     figureName = '../../../Result/Edge_Diff_Phat_desikan.png';
+% end
 % 
-% p1Pos = get(p1,'position');
-% p3Pos = get(p3,'position');
-% p3Pos(2:4) = p1Pos(2:4);
-% set(p3, 'position', p3Pos);
-
-if (model == 1)
-    figureName = '../../../Result/Edge_Diff_Between_desikan.png';
-elseif (model == 2)
-    figureName = '../../../Result/Edge_Diff_Abar_desikan.png';
-else
-    figureName = '../../../Result/Edge_Diff_Phat_desikan.png';
-end
-
-r = 150; % pixels per inch
-set(gcf, 'PaperUnits', 'inches', 'PaperPosition', [0 0 1080 480]/r);
-print(gcf,'-dpng',sprintf('-r%d',r), figureName);
+% r = 150; % pixels per inch
+% set(gcf, 'PaperUnits', 'inches', 'PaperPosition', [0 0 1080 480]/r);
+% print(gcf,'-dpng',sprintf('-r%d',r), figureName);
