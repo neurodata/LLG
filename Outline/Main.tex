@@ -266,21 +266,35 @@ B = \begin{bmatrix}
 
 
 
-\begin{figure}[!htb]
-\centering
-\includegraphics[width=1\textwidth]{Vertex_Diff_Phat_desikan.png}
-\caption{Top 5 regions of the brain (vertices in graphs) with largest absolute difference $|\hat{P} - P|$.}
-\label{fig:Vertex_Diff_Phat_desikan}
-\end{figure}
+%\begin{figure}[!htb]
+%\centering
+%\includegraphics[width=1\textwidth]{Vertex_Diff_Phat_desikan.png}
+%\caption{Top 5 regions of the brain (vertices in graphs) with largest absolute difference $|\hat{P} - P|$.}
+%\label{fig:Vertex_Diff_Phat_desikan}
+%\end{figure}
+%
+%\begin{figure}[!htb]
+%\centering
+%\includegraphics[width=1\textwidth]{Edge_Diff_Phat_desikan.png}
+%\caption{Top 1\% (49) connections between regions (edges in graphs) with largest absolute difference $|\hat{P} - P|$.}
+%\label{fig:Vertex_Diff_Phat_desikan}
+%\end{figure}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=1\textwidth]{Edge_Diff_Phat_desikan.png}
-\caption{Top 1\% (49) connections between regions (edges in graphs) with largest absolute difference $|\hat{P} - P|$.}
-\label{fig:Vertex_Diff_Phat_desikan}
+\includegraphics[width=1\textwidth]{Diff_between_desikan.png}
+\caption{Top 5 regions of the brain (vertices in graphs) and top 50 connections between regions (edges in graphs) with largest difference $|\bar{A} - P| - |\hat{P} - P|$. Red indicates that $\hat{P}$ overestimate $P$ while blue means that $\hat{P}$ underestimate $P$. The edge width is determined by the estimation error. Connections with larger estimation error are represented by thicker lines. This figure shows the regions and connections of the brain where $\hat{P}$ outperforms $\bar{A}$ mostly for estimate $P$.}
+\label{fig:Diff_between_desikan}
 \end{figure}
 
 
+
+
+\subsection{Simulation under the Full Rank Independent Edge Model}
+\begin{itemize}
+\item While the theory we have is based on the low rank assumption, $\hat{P}$ sometimes wins the bias-variance tradeoff even when the graphs have full rank structure. To illustrate this point, instead of the low rank SBM, we run simulations under the full rank independent edge model with the probability matrix $P$ to be the sample mean of the 454 graphs in the desikan dataset.
+\item Figure \ref{fig:sim_desikan} compare the MSE between $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for simulated data based on the full rank probability matrix $P$ as the sample mean in desikan dataset while embedding the graphs into different dimensions with different size $M$ of the subsamples. Vertical intervals represent the 95\% confidence interval. When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.
+\end{itemize}
 
 \begin{figure}[!htb]
 \centering
