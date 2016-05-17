@@ -61,6 +61,49 @@ print(image(Matrix(P_hat),main=list(label=TeX('$\\hat{P}$ for desikan with M=5')
 
 print(dHat)
 
+
+###### Scatter Plot ######
+p <- ggplot(mtcars, aes(wt, mpg))
+p + geom_point()
+
+plot(abs(A_bar-P),abs(P_hat-P))
+
+err_Abar = abs(A_bar-P)[lower.tri(abs(A_bar-P))]
+err_Phat = abs(P_hat-P)[lower.tri(abs(P_hat-P))]
+nv = (err_Abar < err_Phat)
+plot(err_Abar[nv],err_Phat[nv],pch=".",col="blue",cex=2,
+     xlim=c(0,0.5), ylim=c(0,0.5),xlab="|Abar-P|",ylab="|Phat-P|")
+points(err_Abar[!nv],err_Phat[!nv],pch=".",col="red",cex=2)
+
+sum(err_Abar)
+sum(err_Phat)
+
+sum(err_Abar^2)
+sum(err_Phat^2)
+
+
+# scatter_df <- rbind(data.frame(err_Abar=err_Abar,
+#                                err_Phat=err_Phat,which="desikan")) %>%
+#   mutate(which=factor(paste0("desikan"),c("desikan")))
+# 
+# gg <- ggplot(scatter_df,aes(x=err_Abar,y=err_Phat,linetype=factor(which),shape=factor(which)))+
+#   facet_wrap(~m)+
+#   geom_point(data=scatter_df,size=3)+
+#   scale_shape_manual(name="",values=c(-1,-1,15,17))+
+#   xlab("")+ylab("MSE")+
+#   theme(strip.text.x = element_text(size=20,face="bold"))+
+#   theme(axis.text=element_text(size=15),
+#         axis.title=element_text(size=20,face="bold"))+
+#   theme(panel.grid.major = element_line(colour="grey95"),
+#         panel.grid.minor = element_blank())+
+#   theme(panel.background = element_rect(fill = 'white', colour = 'grey70'))+
+#   theme(legend.text=element_text(size=20,face="bold"))+
+#   theme(legend.position="bottom")+
+#   ggtitle(paste0(dataName, ", N=", n, ", ", M, " graphs"))+
+#   theme(legend.key.size=unit(legendSize,"line"))+
+#   theme(plot.title=element_text(lineheight=.8,size=20,face="bold"))
+
+
 ####### Plot the difference ######
 Diff_A_bar = abs(A_bar - P)
 Diff_P_hat = abs(P_hat - P)
