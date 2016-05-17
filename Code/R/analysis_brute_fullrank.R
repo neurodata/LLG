@@ -73,7 +73,7 @@ gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which),shape=factor(w
   scale_shape_manual(name="",values=c(-1,-1,15,17))+
   geom_line(alpha=1,size=lSize)+
   geom_linerange(aes(ymin=lci,ymax=uci),alpha=.5,size=1)+
-  xlab("Dimension")+ylab("Mean Squared Error")+
+  xlab("Dimension")+ylab("MSE")+
   theme(strip.text.x = element_text(size=20,face="bold"))+
   theme(axis.text=element_text(size=15),
         axis.title=element_text(size=20,face="bold"))+
