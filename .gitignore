@@ -10,7 +10,7 @@ Code/Shell/
 
 # Session Data files
 .RData
-
+Result/Unused/
 
 # Example code in package build process
 *-Ex.R
