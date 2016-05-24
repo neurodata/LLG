@@ -1,9 +1,6 @@
 # Data
 Data/*
 
-# Copy
-Copy/*
-
 # Shell
 Code/Shell/
 
@@ -13,7 +10,7 @@ Code/Shell/
 
 # Session Data files
 .RData
-Result/*.RData
+Result/Unused
 
 # Example code in package build process
 *-Ex.R
@@ -31,9 +28,6 @@ vignettes/*.pdf
 # Reference
 Reference/
 
-# Matlab Library
-Code/MATLAB/BrainVis
-
 # Tex
 Draft/*.bak
 Draft/*.aux
@@ -49,5 +43,3 @@ Outline/*.blg
 Outline/*.log
 Outline/*.out
 Outline/*.gz
-
-Draft/Old
