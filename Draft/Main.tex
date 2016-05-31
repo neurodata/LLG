@@ -51,7 +51,7 @@
 
 Mean is one of the most important and basic concept in statistics. Motivated by the law of large numbers, sample mean is always considered to be the best estimate of the population mean. Nowadays we take averages almost everywhere, from the fundamental elements in Euclidean space to more general objects, like shapes, documents and graphs.
 
-However, contradict to the general intuition, arithmetic average should not be our first choice all the time. In 1955, Stein's paradox \cite{efron1977stein} shows the inadmissibility of the sample mean when there are more than three normal distributions. The fact that James-Stein estimator dominates the sample mean makes it less preferable to take the average in that situation. 27 years later, Gutmann proved that this cannot occur when the sample spaces are finite \cite{gutmann1982stein}. But even when sample mean is admissible, it doesn't close the door of other estimators to be better in some cases. So in a specific situation, for instance a collection of graphs considered in this paper, there is always a chance to have a better estimator compared to the sample mean.
+However, contradicting to the general intuition, arithmetic average should not be our first choice all the time. In 1955, Stein's paradox \cite{efron1977stein} shows the inadmissibility of the sample mean when there are more than three normal distributions. The fact that James-Stein estimator dominates the sample mean makes it less preferable to take the average in that situation. 27 years later, Gutmann proved that this cannot occur when the sample spaces are finite \cite{gutmann1982stein}. But even when sample mean is admissible, it doesn't close the door of other estimators to be better in some cases. So in a specific situation, for instance a collection of graphs considered in this paper, there is always a chance to have a better estimator compared to the sample mean.
 
 Before introducing the new estimator other than the sample mean for graphs, we need to know what the mean of a collection of graphs is. Although it can be defined in various ways, we pick the natural definition as the proportions of the existence of an edge between any pair of vertices. Estimating the mean of a population of graphs based on a sample is becoming more and more important both in statistical inference and in various applications like connectomics, social networks, etc.
 
@@ -233,7 +233,7 @@ B = \begin{bmatrix}
 And when calculating $\hat{P}$, we embed $\bar{A}$ into dimension $d = \mathrm{rank}(B) = 2$.
 
 %\subsubsection{Simulation Results}
-In order to verify the approximated formula for the relative efficiency in Theorem \ref{thm:ARE}, we first run 1000 Monte Carlo replicates based on the above SBM setting with different $N$ and fixed $M$. Based on the result, the scaled relative efficiency $N \cdot \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ can be calculated since $P$ is known in this simulation. Moreover, the scaled RE in theory should converge to $1/\rho_{\tau_i}+1/\rho_{\tau_j}$ as $N$ goes to infinity. Since the limit only depends on different blocks rather than different vertices, we combine the result within the same block and define
+In order to validate the approximated formula for the relative efficiency in Theorem \ref{thm:ARE}, we first run 1000 Monte Carlo replicates based on the above SBM setting with different $N$ and fixed $M$. Based on the result, the scaled relative efficiency $N \cdot \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ can be calculated since $P$ is known in this simulation. Moreover, the scaled RE in theory should converge to $1/\rho_{\tau_i}+1/\rho_{\tau_j}$ as $N$ goes to infinity. Since the limit only depends on different blocks rather than different vertices, we combine the result within the same block and define
 \[
 	\mathrm{RE}_{st}(\bar{A},\hat{P}) = \frac{\sum_{\tau_i=s,\tau_j=t,i \ne j} MSE(\hat{P}_{ij})}{\sum_{\tau_i=s,\tau_j=t,i \ne j} MSE(\bar{A}_{ij})}
 \]
@@ -247,7 +247,7 @@ We plot the scaled relative efficiency $N \cdot \mathrm{RE}_{st}(\bar{A},\hat{P}
 	\label{fig:RE}
 \end{figure}
 
-To verify that Theorem \ref{thm:ARE} holds with different $\rho$, we fix $N=500$, $M=100$ and run simulations with $\rho_1$ varying from $0.01$ to $0.50$. Figure \ref{fig:RErho} shows $1/\rho_s + 1/\rho_t$, the limit of scaled RE in theory. And the simulated values agree with their corresponding theoretical values perfectly. Notice that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Figure \ref{fig:RE} as expected.
+To validate that Theorem \ref{thm:ARE} holds with different $\rho$, we fix $N=500$, $M=100$ and run simulations with $\rho_1$ varying from $0.01$ to $0.50$. Figure \ref{fig:RErho} shows $1/\rho_s + 1/\rho_t$, the limit of scaled RE in theory. And the simulated values agree with their corresponding theoretical values perfectly. Notice that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Figure \ref{fig:RE} as expected.
 
 \begin{figure}[!htb]
 \centering
