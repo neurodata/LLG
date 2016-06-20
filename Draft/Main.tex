@@ -9,10 +9,11 @@
 \usepackage{theorem}
 \usepackage{amssymb}
 
-\usepackage{hyperref}
+\usepackage[colorlinks=TRUE,linkcolor=olive,citecolor=brown]{hyperref}
 
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{natbib}
 
 \newenvironment{proof}{{\bf Proof:  }}{\hfill\rule{2mm}{2mm}}
 
@@ -40,6 +41,10 @@
 
 \newcommand{\RT}[1]{\marginpar{\footnotesize\color{red}RT: #1}}
 
+\newcommand{\Ex}{\mathbb{E}}
+
+\bibliographystyle{plainnat}
+
 \title{Law of Large Graphs}
 
 \date{\today}
@@ -49,42 +54,68 @@
 
 \section{Introduction}
 
-Mean is one of the most important and basic concept in statistics. Motivated by the law of large numbers, sample mean is always considered to be the best estimate of the population mean. Nowadays we take averages almost everywhere, from the fundamental elements in Euclidean space to more general objects, like shapes, documents and graphs.
+Estimation of the mean of a population based on a sample is at the core of statistics.
+The sample mean, motivated by the law of large numbers and the central limit theorem, has its place as one of the most important statistics for this task.
+Nowadays we take averages almost everywhere, from data in Euclidean space to more complex objects, like shapes, documents and graphs.
 
-However, contradict to the general intuition, arithmetic average should not be our first choice all the time. In 1955, Stein's paradox \cite{efron1977stein} shows the inadmissibility of the sample mean when there are more than three normal distributions. The fact that James-Stein estimator dominates the sample mean makes it less preferable to take the average in that situation. 27 years later, Gutmann proved that this cannot occur when the sample spaces are finite \cite{gutmann1982stein}. But even when sample mean is admissible, it doesn't close the door of other estimators to be better in some cases. So in a specific situation, for instance a collection of graphs considered in this paper, there is always a chance to have a better estimator compared to the sample mean.
+However, in a striking result, \citet{stein1956inadmissibility} and \citet{james1961estimation} showed the arithmetic average should not always be the first choice and is inadmissable in even simple settings by todays standards. 
+Twenty-seven years later, \citet{gutmann1982stein} proved that this phenomenon cannot occur when the sample spaces are finite.
+But even when  the sample mean is admissible, it doesn't close the door to other estimators in all cases.
+In many situations where other structural information is hypothesized, for instance a collection of graphs as considered in this paper, other estimators may be preferable.
 
-Before introducing the new estimator other than the sample mean for graphs, we need to know what the mean of a collection of graphs is. Although it can be defined in various ways, we pick the natural definition as the proportions of the existence of an edge between any pair of vertices. Estimating the mean of a population of graphs based on a sample is becoming more and more important both in statistical inference and in various applications like connectomics, social networks, etc.
+In complex data settings such as shape data, language data or graph data, we also must take care in how we define the mean.
+As with real valued data, one may want to define the mean of a graph to itself be a graph such as for the median graph \citep{jiang2001median}.
+However, this may be too restrictive for populations of graphs where there is high variation in which edges appear. 
+Instead, we define the mean graph as the weigted adjacency matrix with weights given by the proportion of times the corresponding edge appears in the population. 
+This population mean is becoming more and more important both in statistical inference and in various applications like connectomics, social networks, and computational biology.
 
-Element-wise maximum likelihood estimate (MLE), which happens to be the sample mean in many situations, is a reasonable estimator if we only consider the independent edge model (IEM) \cite{bollobas2007phase} without taking any graph structure into account. However, it does not perform very well especially when only a few observations are available, which happens a lot in practice.
 
-Intuitively, an estimator incorporating the graph structure is preferable than the entry-wise MLE. But we don't have any knowledge about the structure of the graphs in general. So it is hard to take advantage of the unknown graph structure.
+% Nowadays, people care about information that can be extracted from the networks through different ways in neuroscience.
+\citet{ginestet2014hypothesis} proposed a way to test if there is a difference between the networks of two groups of subjects. 
+While hypothesis testing is the goal of their work, estimation is a key stepping which may be improved by accounting for underlying structure in the mean matrix. 
+Thus improving the estimation procedures for the mean graph is not only important by itself, but also can be applied to help improve other statistical inference procedures.
 
-One of the most important structures is the community structure in which vertices are clustered into different communities and the ones of the same community behave similarly. The stochastic blockmodel (SBM) \cite{holland1983stochastic} captures such structural property and is widely used in modeling networks.
+The element-wise sample mean in many situations, is a reasonable estimator if we consider the general independent edge model (IEM) \cite{bollobas2007phase} without taking any additional structure into account. 
+However, it does not perform very well especially when only a small sample size is available.
+Intuitively, an estimator incorporating the mean-graph structure is preferable to the entry-wise MLE. 
+In general, we don't have any knowledge about this structure so it is hard to take advantage of in practice.
 
-Meanwhile, the latent positions model (LPM) \cite{hoff2002latent}, a much more general model compared to SBM, proposes a way to parameterize the graph structure by latent positions associated with each vertex. The random dot product graph (RDPG) \cite{young2007random, nickel2007random} which is a special case of LPM stays in between and motivates our estimator. In this paper, we analyze our estimator in terms of RDPG specifically.
 
-Using the estimates of the latent positions in an RDPG setting based on a truncated eigen-decomposition of the adjacency matrix, we consider a new estimator for the mean of the collection of graphs which captures the low-rank structure. In this study, we prove via theory, simulations and real data analysis that it is better than element-wise MLE.
 
-Nowadays, people care about information that can be extracted from the networks through different ways in neuroscience.
-For instance, Ginestet et al. \cite{ginestet2014hypothesis} proposed a way to test if there is a difference between the networks of two groups of subjects. While hypothesis testing is the final goal, estimation as a stepping stone could be improved by our method. Thus the estimator in this study is not only useful in estimation, but also can be applied to help improve other statistical inferences.
+One of the most important structures in graphs is the community structure in which vertices are clustered into groups that share similar connectivity structure. The stochastic blockmodel (SBM) \cite{holland1983stochastic} captures this structural property and is widely used in modeling networks.
+More generally, the latent positions model (LPM) \cite{hoff2002latent}, provides a way to parameterize the graph structure by latent positions associated with each vertex. 
+Latent position models can capture strong community structure like the stochastic blockmodel, but may also allow for more variance within communities and other structures.
+One example of a LPM which captures this middle ground is the random dot product graph (RDPG) \cite{young2007random, nickel2007random} which motivates our estimator. 
+In this paper, we analyze our estimator in terms of RDPG specifically.
 
-(Future work) Robust estimation, dimension selection, diagonal augmentation, etc.
+Using the estimates of the latent positions based on a truncated eigen-decomposition of the adjacency matrix,  in the RDPG setting we consider an estimator for the mean of the collection of graphs which captures the low-rank structure of the RDPG model. In this study, we show via theory, simulations and real data analysis that it frequently outperforms the element-wise MLE, especially in small sample sizes.
+
+
+% (Future work) Robust estimation, dimension selection, diagonal augmentation, etc.
 
 
 
 \section{Models and Estimators}
 \label{section:model_estimator}
-This work considers the scenario of having $M$ graphs represented as adjacency matrices, $\{A^{(m)}\}$ ($m = 1, \cdots, M$), each having $N$ vertices with known correspondence. The graphs we consider are undirected and unweighted with no self-loops, i.e. each $A^{(m)}$ is a binary symmetric matrix with zeros along the diagonal. An example application of this arises in the field of connectomics, where functional brain imaging data for each subject can be represented as a graph, with each vertex having a defined anatomical correspondence, and an edge between two regions is defined to exist if correlation in activity between the regions reaches a certain threshold.
+This work considers the scenario of having $M$ graphs represented as adjacency matrices, $\{A^{(m)}\}$ ($m = 1, \cdots, M$), each having $N$ vertices with known correspondence. The graphs we consider are undirected and unweighted with no self-loops, so each $A^{(m)}$ is a binary symmetric matrix with zeros along the diagonal. An example application of this arises in the field of connectomics, where functional brain imaging data for each subject can be represented as a graph.
+Each vertex represent a well defined anatomical region, and an edge between two regions is defined to exist if correlation in activity between the regions surpasses a certain threshold.
+
+We will also assume that the graphs are sampled independently and identically from some distribution.
+We consider three nested models for these distributions, the independent edge model, the random dot product model, and the stochastic blockmodel, and two estimators motivated by these models.
 
 
 
 \subsection{Independent Edge Model}
-The first basic model we consider is the independent edge model (IEM) with parameter $P \in [0,1]^{N\times N}$\cite{bollobas2007phase}, where each edge between vertex $i$ and vertex $j$ exists with probability $P_{ij}$ independently of all other edges. In this case, we aim to estimate the mean, i.e. probability matrix $P$, with our observations of the adjacency matrices $\{A^{(m)}\}$ of $M$ graphs.
+The first model we consider is the independent edge model (IEM) with parameter $P \in [0,1]^{N\times N}$ \citep{bollobas2007phase}.
+An edge exists between vertex $i$ and vertex $j$ with probability $P_{ij}$ and each edge is present independently of all other edges. 
+For this case, the mean graph is the 
+For this case, we aim to estimate the mean matrix $P=\Ex[A^{(m)}]$ base on the observed adjacency matrices $A^{(1)},\dotsc,A^{(M)}$.
 
 
 
 \subsection{Estimator $\bar{A}$}
-Under the IEM, element-wise sample mean of the adjacency matrices $\bar{A}$ is the MLE as well as the least squared estimate for $P$. It is unbiased with entry-wise variance $\mathrm{Var}(\bar{A}_{ij}) = P_{ij} (1-P_{ij})/M$. Moreover, $\bar{A}$ is the uniformly minimum-variance unbiased estimator (UMVUE), i.e. it has the smallest variance among all unbiased estimators.
+Under the IEM, element-wise sample mean of the adjacency matrices $\bar{A}$ is the MLE for the mean graph $P$.
+It is an unbiased with entry-wise variance $\mathrm{Var}(\bar{A}_{ij}) = P_{ij} (1-P_{ij})/M$. Moreover, $\bar{A}$ is the uniformly minimum-variance unbiased estimator, so it has the smallest variance among all unbiased estimators.
 
 However, $\bar{A}$ doesn't exploit any graph structure, and sometimes the performance is not very good especially when $M$ is small. For example, when $M=1$, $\bar{A}$ is exactly the binary graph we observe, which is an inaccurate estimate for an arbitrary $P$.
 
@@ -435,8 +466,8 @@ Since $\hat{P}_{ij} = \hat{X}_i^T \hat{X}_j$ is a noisy version of the dot produ
 The (relative) full proof is provided here: \\
 https://www.overleaf.com/2776898cydwhv. Feel free to edit it.
 
-\bibliography{Bib}{}
-\bibliographystyle{plain}
+\bibliography{Bib}
+% \bibliographystyle{plain}
 
 
 \end{document}
