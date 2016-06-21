@@ -229,47 +229,53 @@ We consider a 5-block SBM and plot the corresponding probability matrix and one 
 \subsection{Theoretical Results}
 \label{section:theoretical_result}
 To estimate the mean of a collection of graphs, we consider the two estimators from Section \ref{section:model_estimator}: the entry-wise sample mean $\bar{A}$ and the low-rank $\hat{P}$ motivated by the RDPG.
-In this section, we analyze the performance of these two estimators under the SBM which also has a low-rank structure. 
-Specifically, we compare them by checking the entry-wise relative efficiency (RE), defined as $\mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) = \frac{\mathrm{MSE}(\hat{P}_{ij})}{\mathrm{MSE}(\bar{A}_{ij})}$.
+In this section, we analyze the performance of these two estimators under the SBM by computing the entry-wise relative efficiency (RE), defined as $\mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) = \frac{\mathrm{MSE}(\hat{P}_{ij})}{\mathrm{MSE}(\bar{A}_{ij})}$.
+Specifically, we consider the asymptotic relative efficiency as the number of vertices $N\to\infty$ but with the number of graphs $M$ fixed.
 
-Consider a SBM with block proportion vector $\rho$ and block probability matrix $B = \nu \nu^T$. First sample $\tau$ from a multinomial distribution with parameter $\rho$. By definition, the mean of the collection of graphs generated from this SBM is $P$, where $P_{ij} = B_{\tau_i, \tau_j}$. After observing $M$ graphs on $N$ vertices $A^{(1)}, \cdots, A^{(M)}$ sampled independently from the SBM conditioned on $\tau$, we can calculate the two estimators $\bar{A}$ and $\hat{P}$.
+For this asymptotic framework, we assume where the block memberships $\tau_i$ are drawn iid from a multinomial distribution with block membership probabilities given by $\rho\in[0,1]^K$.
+We will also assume that for a given $N$, the block membership probability are fixed for all graphs.
+Denote block probability matrix $B = \nu \nu^T$. 
+By definition, the mean of the collection of graphs generated from this SBM is $P$, where $P_{ij} = B_{\tau_i, \tau_j}$. After observing $M$ graphs on $N$ vertices $A^{(1)}, \cdots, A^{(M)}$ sampled independently from the SBM conditioned on $\tau$, we can calculate the two estimators $\bar{A}$ and $\hat{P}$.
 
 \begin{lemma}
 \label{lm:VarPhat}
-Based on the above setting, for any $i, j$, conditioned on $X_i = \nu_{\tau_i}$ and $X_j = \nu_{\tau_j}$, we have
+For the above setting, for any $i, j$, if $\mathrm{rank}(B)=K=d$, we have
 \[
-	\lim_{n \to \infty} N \cdot \mathrm{Var}(\hat{P}_{ij}) =
-    \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{M} P_{ij} (1 - P_{ij}).
+	\lim_{N \to \infty} N \cdot \mathrm{Var}(\hat{P}_{ij}) =
+    \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{M} P_{ij} (1 - P_{ij}),
 \]
-And for large enough $N$, conditioned on $X_i = \nu_{\tau_i}$ and $X_j = \nu_{\tau_j}$, we have
+and for large enough $N$, we have
 \[
-	E[(\hat{P}_{ij} - P_{ij})^2] \approx
+	\Ex[(\hat{P}_{ij} - P_{ij})^2] \approx
     \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{M N} P_{ij}(1-P_{ij}).
 \]
 \end{lemma}
 
-The proof of this lemma is outlined in Section \ref{section:outline_proof}. From the result, we can see that the MSE of $\hat{P}_{ij}$ is of order $O(M^{-1}N^{-1})$ approximately.
+The proof of this lemma is outlined in Section \ref{section:outline_proof} and is based on results for the variance of the adjacency spectral embedding from \citet{athreya2013limit}. From the result, we can see that the MSE of $\hat{P}_{ij}$ is of order $O(M^{-1}N^{-1})$ approximately.
 
-Moreover, noticing that $\bar{A}_{ij}$ is the sample mean of $M$ independent Bernoulli random variables with parameter $P_{ij}$, we have
+Moreover, since $\bar{A}_{ij}$ is the sample mean of $M$ independent Bernoulli random variables with parameter $P_{ij}$, we have
 \[
-	E[(\bar{A}_{ij} - P_{ij})^2] = \mathrm{Bias}^2(\bar{A}_{ij}) + \mathrm{Var}(\bar{A}_{ij}) = \frac{P_{ij}(1-P_{ij})}{M}.
+	\Ex[(\bar{A}_{ij} - P_{ij})^2] = \frac{P_{ij}(1-P_{ij})}{M}.
 \]
-Then we have a direct result as following:
-
+This yields the following result.
 \begin{theorem}
 \label{thm:ARE}
-In the same setting as in Lemma \ref{lm:VarPhat}, for any $i$ and $j$, conditioned on $X_i = \nu_{\tau_i}$ and $X_j = \nu_{\tau_j}$, the asymptotic relative efficiency (ARE) is 
+In the same setting as in Lemma \ref{lm:VarPhat}, for any $i$ and $j$, if $\mathrm{rank}(B)=K=d$, the asymptotic relative efficiency (ARE) is 
 \[
 	\mathrm{ARE}(\bar{A}_{ij}, \hat{P}_{ij}) = \lim_{N \to \infty} \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) = 0.
 \]
-And for large enough $N$, conditioned on $X_i = \nu_{\tau_i}$ and $X_j = \nu_{\tau_j}$, we have
+and for large enough $N$, we have
 \[
 	\mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) \approx
     \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{N}.
 \]
 \end{theorem}
 
-This theorem implicates that $\hat{P}$ is a much better estimates of the mean of the collection of graphs $P$ than $\bar{A}$ in the MSE sense. From the result, we see that the relative efficiency is of order $O(N^{-1})$ approximately. Literally, $N \cdot \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ converges to $1/\rho_{\tau_i}+1/\rho_{\tau_j}$ when $N$ goes to infinity. Also it does not depend on the number of graphs $M$. So the larger the graphs are, the better $\hat{P}$ is relative to $\bar{A}$, regardless of $M$, the number of graphs observed. As $N$ goes to infinity, the RE between two estimators goes to 0, which concludes the result of ARE.
+This theorem indicates that under the SBM, $\hat{P}$ is a much better estimate of the mean of the collection of graphs $P$ than $\bar{A}$. 
+From the result, we see that the relative efficiency is of order $O(N^{-1})$ and $N \cdot \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ converges to $1/\rho_{\tau_i}+1/\rho_{\tau_j}$ when $N$ goes to infinity.
+Also, the ARE does not depend on the number of graphs $M$, so the larger the graphs are, the better $\hat{P}$ is relative to $\bar{A}$, regardless of $M$.
+
+{\color{red} RESULT FOR RDPG}
 
 
 \subsection{Validation with Simulations}
