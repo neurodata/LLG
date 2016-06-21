@@ -166,7 +166,7 @@ Details are discussed in Section \ref{section:diag_aug}.
 
 
 \begin{algorithm}[H]
-\caption{}
+\caption{Algorithm to compute $\hat{P}$}
 \label{algo:basic}
 \begin{algorithmic}[1]
 \STATE \textbf{Input:} $A^{(1)}, A^{(2)}, \cdots, A^{(M)}$, each $A^{(m)} \in \{0,1\}^{N \times N}$, $k_max$
@@ -181,23 +181,32 @@ Details are discussed in Section \ref{section:diag_aug}.
 \end{algorithmic}
 \end{algorithm}
 
+
+Algorithm~\ref{algo:basic} gives the steps involved to compute the low-rank estimate $\hat{P}$.
 As we will see in the proceeding sections, this procedure will frequently yield improvements in estimation as compared to using the sample mean $\bar{A}$.
 While this is unsurprising for random dot product graphs, where we are able to show theoretical results to this effect, we also see this effect for connectome data and more general independent edge graphs.
 In the next sections, we explore this estimator in the context of the stochastic blockmodel.
 
 \subsection{Stochastic Block Model as an Random Dot Product Graph}
 \label{section:sbm_rdpg}
-One of the most important structures is the community structure in which vertices are clustered into different communities such that vertices of the same community behave similarly. Such structural property is captured by the stochastic blockmodel (SBM) \cite{holland1983stochastic}, where each vertex is assigned to a block and the probability that an edge exists between two vertices depends only on their respective block memberships.
+One of the most important structures for graphs is the community structure in which vertices are clustered into different communities such that vertices of the same community behave similarly. This structural property is captured by the stochastic blockmodel (SBM) \cite{holland1983stochastic}, where each vertex is assigned to a block and the probability that an edge exists between two vertices depends only on their respective block memberships.
 
-Formally, the SBM is parameterized by the number of blocks $K$ (generally way less than the number of vertices $N$), block probability matrix $B \in [0,1]^{K \times K}$ and block proportion vector $\rho \in (0,1)^K$ with $\sum_{k=1}^K \rho_k = 1$. Let $\tau$ represent the block memberships, then for any $i \in [n]$ and $k \in [K]$, $\tau(i) = k$ means vertex $i$ is assigned to block $k$. And each vertex is assigned independently with probability vector $\rho$, i.e. $P(\tau(i) = k) = \rho_k$. Conditioned on $\tau$, each entry of the adjacency matrix $A_{ij}$ is independently sampled from the Bernoulli distribution with parameter $B_{\tau_i,\tau_j}$.
+The SBM is parameterized by the number of blocks $K$ (generally much less than the number of vertices $N$), the block probability matrix $B \in [0,1]^{K \times K}$, and the vector of block memberships
+ % and block proportion vector $\rho \in (0,1)^K$ with $\sum_{k=1}^K \rho_k = 1$. 
+$\tau\in\{1,\dotsc,K\}^n$, where for each $i \in [n]$, $\tau_i = k$ means vertex $i$ is a member of block $k$.
+% We will assume each vertex is assigned its block independently according to the probability vector $\rho$, so $\Pr[tau_i = k] = \rho_k$. 
+Conditioned on $\tau$, each entry of the adjacency matrix $A_{ij}$ is independently sampled from the Bernoulli distribution with parameter $B_{\tau_i,\tau_j}$.
 
-In order to analyze the estimator $\hat{P}$ motivated by RDPG, we move to another representation of SBM based on RDPG. Consider a positive semi-definite $K$-block SBM with a rank $d (\le K)$ block probability matrix $B$, we can always decompose $B$ into $\nu \nu^T$, where $\nu \in \mathbb{R}^{K \times d}$ and each row $\nu_k$ is the shared latent position for all vertices assigned to block $k$. Let $X \in \mathbb{R}^{N \times d}$ with each row to be $X_i = \nu_{\tau_i}$, then we have
+In order to analyze the estimator $\hat{P}$ motivated by RDPG, we move to another representation of SBM based on RDPG. 
+Consider a positive semi-definite $K$-block SBM with a rank $d\le K$ block probability matrix $B$, we can always decompose $B$ into $\nu \nu^T$, where $\nu \in \mathbb{R}^{K \times d}$ and each row $\nu_k$ is the shared latent position for all vertices assigned to block $k$. 
+For $X \in \mathbb{R}^{N \times d}$ with rows given by $X_i = \nu_{\tau_i}$, we have
 \[
-	P(A_{ij} = 1|\tau) = B_{\tau_i, \tau_j} = \nu_{\tau_i}^T \nu_{\tau_j}.
+	\Pr[A_{ij} = 1|\tau] = B_{\tau_i, \tau_j} = \nu_{\tau_i}^T \nu_{\tau_j}.
 \]
-Note that the SBM can be seen as an RDPG with $X_i \distas{iid} \sum_{k=1}^K \rho_k \delta_{\nu_k}$, i.e. all vertices in the same block will have identical latent positions.
+In this way, the SBM can be seen as an RDPG where all vertices in the same block will have identical latent positions.
 
-To better illustrating what an SBM actually looks like, in Figure \ref{fig:SBM_example} we consider a 5-block SBM and plot the corresponding probability matrix and one adjacency matrix generated from it with 200 vertices. From the figure, we can clearly see the structure of 25 blocks in both the probability matrix and the adjacency matrix as a result of 5 different blocks among vertices.
+An example SBM is illustrated in Figure \ref{fig:SBM_example}.
+We consider a 5-block SBM and plot the corresponding probability matrix and one adjacency matrix generated from it with 200 vertices. From the figure, we can clearly see the structure of 25 blocks in both the probability matrix and the adjacency matrix as a result of 5 different blocks among vertices.
 
 \begin{figure}
 \centering
@@ -209,7 +218,7 @@ To better illustrating what an SBM actually looks like, in Figure \ref{fig:SBM_e
   \centering
   \includegraphics[width=1.2\linewidth]{SBM_A.png}
 \end{subfigure}
-\caption{Example illustrating the SBM. The figure on the left is the probability matrix $P$ that follows a SBM with $K = 5$ blocks; The other figure shows the adjacency matrix $A$ for 200 vertices generated from the SBM with probability matrix $P$.}
+\caption{Example illustrating the stochastic blockmodel. The left figure shows the mean graph $P$ with $K = 5$ blocks and $N=200$ vertices and the right figure shows an adjacency matrix $A$ sampled according to the probabilities from $P$.}
 \label{fig:SBM_example}
 \end{figure}
 
@@ -219,8 +228,9 @@ To better illustrating what an SBM actually looks like, in Figure \ref{fig:SBM_e
 
 \subsection{Theoretical Results}
 \label{section:theoretical_result}
-To estimate the mean of a collection of graphs, we consider the two estimators proposed in Section \ref{section:model_estimator}: the intuitive entry-wise sample mean $\bar{A}$, and $\hat{P}$ based on ASE motivated by the RDPG.
-In this section, we analyze the performance of these two estimators under the SBM in an RDPG setting mentioned in Section \ref{section:sbm_rdpg}. Specifically, we compare them by checking the entry-wise relative efficiency (RE), defined as $\mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) = \frac{\mathrm{MSE}(\hat{P}_{ij})}{\mathrm{MSE}(\bar{A}_{ij})}$.
+To estimate the mean of a collection of graphs, we consider the two estimators from Section \ref{section:model_estimator}: the entry-wise sample mean $\bar{A}$ and the low-rank $\hat{P}$ motivated by the RDPG.
+In this section, we analyze the performance of these two estimators under the SBM which also has a low-rank structure. 
+Specifically, we compare them by checking the entry-wise relative efficiency (RE), defined as $\mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) = \frac{\mathrm{MSE}(\hat{P}_{ij})}{\mathrm{MSE}(\bar{A}_{ij})}$.
 
 Consider a SBM with block proportion vector $\rho$ and block probability matrix $B = \nu \nu^T$. First sample $\tau$ from a multinomial distribution with parameter $\rho$. By definition, the mean of the collection of graphs generated from this SBM is $P$, where $P_{ij} = B_{\tau_i, \tau_j}$. After observing $M$ graphs on $N$ vertices $A^{(1)}, \cdots, A^{(M)}$ sampled independently from the SBM conditioned on $\tau$, we can calculate the two estimators $\bar{A}$ and $\hat{P}$.
 
