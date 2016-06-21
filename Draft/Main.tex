@@ -279,7 +279,7 @@ Also, the ARE does not depend on the number of graphs $M$, so the larger the gra
 
 
 \subsection{Validation with Simulations}
-In this part, we will demonstrate the theoretical results in Section 3.1, the relative efficiency between $\bar{A}$ and $\hat{P}$, via various Monte Carlo simulation experiments.
+In this section, we will illustrate the theoretical results from Section 3.1, the relative efficiency between $\bar{A}$ and $\hat{P}$, via Monte Carlo simulation experiments.
 
 %\subsubsection{Simulation Setting}
 Here we consider a 2-block SBM parameterized by
@@ -292,15 +292,15 @@ B = \begin{bmatrix}
 0.5 & 0.5
 \end{bmatrix}.
 \end{equation*}
-And when calculating $\hat{P}$, we embed $\bar{A}$ into dimension $d = \mathrm{rank}(B) = 2$.
+When calculating $\hat{P}$, we omit the dimension selection step from Algorithm~\ref{algo:basic} and instead using the true dimension $d = \mathrm{rank}(B) = 2$.
 
 %\subsubsection{Simulation Results}
-In order to verify the approximated formula for the relative efficiency in Theorem \ref{thm:ARE}, we first run 1000 Monte Carlo replicates based on the above SBM setting with different $N$ and fixed $M$. Based on the result, the scaled relative efficiency $N \cdot \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ can be calculated since $P$ is known in this simulation. Moreover, the scaled RE in theory should converge to $1/\rho_{\tau_i}+1/\rho_{\tau_j}$ as $N$ goes to infinity. Since the limit only depends on different blocks rather than different vertices, we combine the result within the same block and define
+In order to verify the formula for the relative efficiency in Theorem \ref{thm:ARE}, we first sample 1000 Monte Carlo replicates from the above SBM setting with different $N$ and fixed $M$. Based on the result, the scaled relative efficiency $N \cdot \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ can be calculated since $P$ is known in this simulation. Moreover, the scaled RE in theory should converge to $1/\rho_{\tau_i}+1/\rho_{\tau_j}$ as $N$ goes to infinity. Since the limit only depends on different blocks rather than different vertices, we combine the result within the same block and define
 \[
 	\mathrm{RE}_{st}(\bar{A},\hat{P}) = \frac{\sum_{\tau_i=s,\tau_j=t,i \ne j} MSE(\hat{P}_{ij})}{\sum_{\tau_i=s,\tau_j=t,i \ne j} MSE(\bar{A}_{ij})}
 \]
-for simplicity.
-We plot the scaled relative efficiency $N \cdot \mathrm{RE}_{st}(\bar{A},\hat{P})$ in Figure \ref{fig:RE}. Different types of dashed lines denote the simulated scaled RE associated with different blocks. Solid line represents the theoretical value for scaled RE, which happens to be 4 in all cases since $\rho$ is defined to be equal weighted. From the figure, we see that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t$ represented as the solid line, as suggested in Theorem \ref{thm:ARE}. Notice that this means $\mathrm{RE}_{st}(\bar{A}, \hat{P})$ is decreasing at rate $O(N^{-1})$.
+for $s,t\in\{1,2\}$.
+We plot the scaled relative efficiency $N \cdot \mathrm{RE}_{st}(\bar{A},\hat{P})$ in Figure \ref{fig:RE}. Different types of dashed lines denote the simulated scaled RE associated with different blocks. Solid line represents the theoretical value for scaled RE, which is $1/\rho_t+1/\rho_s=4$ in all cases since $\rho_1=\rho_2=1/2$. From the figure, we see that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t$ represented as the solid line, as suggested in Theorem \ref{thm:ARE}. Notice that this means $\mathrm{RE}_{st}(\bar{A}, \hat{P})$ is decreasing at a rate of $O(N^{-1})$.
 
 \begin{figure}[!htb]
 	\centering
@@ -309,7 +309,7 @@ We plot the scaled relative efficiency $N \cdot \mathrm{RE}_{st}(\bar{A},\hat{P}
 	\label{fig:RE}
 \end{figure}
 
-To verify that Theorem \ref{thm:ARE} holds with different $\rho$, we fix $N=500$, $M=100$ and run simulations with $\rho_1$ varying from $0.01$ to $0.50$. Figure \ref{fig:RErho} shows $1/\rho_s + 1/\rho_t$, the limit of scaled RE in theory. And the simulated values agree with their corresponding theoretical values perfectly. Notice that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Figure \ref{fig:RE} as expected.
+To illustrate Theorem \ref{thm:ARE} with different $\rho$, we fix $N=500$, $M=100$ and run simulations with $\rho_1$ varying from $0.01$ to $0.50$. Figure \ref{fig:RErho} shows $1/\rho_s + 1/\rho_t$, the limit of scaled RE in theory and the simulated values agree with their corresponding theoretical values very closely. Notice that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Figure \ref{fig:RE}.
 
 \begin{figure}[!htb]
 \centering
