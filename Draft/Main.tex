@@ -8,6 +8,7 @@
 
 \usepackage{theorem}
 \usepackage{amssymb}
+\usepackage{bm}
 
 \usepackage[colorlinks=TRUE,linkcolor=olive,citecolor=brown]{hyperref}
 
@@ -114,61 +115,75 @@ For this case, we aim to estimate the mean matrix $P=\Ex[A^{(m)}]$ base on the o
 
 
 \subsection{Estimator $\bar{A}$}
-Under the IEM, element-wise sample mean of the adjacency matrices $\bar{A}$ is the MLE for the mean graph $P$.
-It is an unbiased with entry-wise variance $\mathrm{Var}(\bar{A}_{ij}) = P_{ij} (1-P_{ij})/M$. Moreover, $\bar{A}$ is the uniformly minimum-variance unbiased estimator, so it has the smallest variance among all unbiased estimators.
+Under the IEM, the element-wise sample mean of the adjacency matrices $\bar{A}=\frac{1}{M}\sum_{m=1}^M A^{(m)}$ is the MLE for the mean graph $P$.
+It is an unbiased with entry-wise variance $\mathrm{Var}(\bar{A}_{ij}) = P_{ij} (1-P_{ij})/M$. Moreover, $\bar{A}$ is the uniformly minimum-variance unbiased estimator, so it has the smallest variance among all unbiased estimators and enjoys the many asymptotic properties of the MLE as $M\to \infty$.
 
-However, $\bar{A}$ doesn't exploit any graph structure, and sometimes the performance is not very good especially when $M$ is small. For example, when $M=1$, $\bar{A}$ is exactly the binary graph we observe, which is an inaccurate estimate for an arbitrary $P$.
+However, $\bar{A}$ doesn't exploit any graph structure, and sometimes the performance is not very good especially when $M$ is small. 
+For example, when $M=1$, $\bar{A}$ is exactly the binary graph we observe, which is an inaccurate estimate for an arbitrary $P$ compared to estimates which exploit underlying structure.
 
 
 
 \subsection{Random Dot Product Graph}
-In graphs, the adjacencies always depends on the unobserved properties of the corresponding vertices. For example, in a connectomics setting, the two brain regions with similar (some properties?) will have stronger connections.
-The latent positions graph model (LPG) proposed by Hoff et. al. (2002) \cite{hoff2002latent} captures such structure. where each vertex is associated with a latent positions that influences the adjacencies for that vertex.
-In this model, each vertex $i$ has an associated latent vector $X_i \in \mathbb{R}^d$ sampled from distribution $\mathcal{F}$. Based on those latent positions, the existence of edges are conditionally independent with probability only depends on the latent vectors of the incident vertices through a link function. Generally $d$ is much smaller than the number of vertices $N$, so it is a much more succinct model compared to IEM.
+In graphs, the adjacencies between vertices always depend on the unobserved properties of the corresponding vertices. For example, in a connectomics setting, the two brain regions with similar properties will have similar connectivity patterns to other regions of the brain.
+The latent positions graph model (LPG) proposed by Hoff et. al. (2002) \cite{hoff2002latent} captures such structure, where each vertex is associated with a latent positions that influences the adjacencies for that vertex.
+In this model, each vertex $i$ has an associated latent vector $X_i \in \mathbb{R}^d$.
+Based on those latent positions, the existence of edges are conditionally independent with probability that only depends on the latent vectors of the incident vertices through a link function. If $d$ is much smaller than the number of vertices $N$ and the link function is known, LPMs are more parsimonious models compared to IEM, requiring only $dN$ parameters rather then $\binom{N}{2}$.
 
-A specific instance of the LPG that we examine in this work is the random dot product graph model (RDPG) \cite{young2007random, nickel2007random} where the link function is the dot product, i.e. the probability of an edge being present between two nodes is the dot product of their latent vectors.
+A specific instance of a LPM that we examine in this work is the random dot product graph model (RDPG) \cite{young2007random, nickel2007random} where the link function is the dot product, so the probability of an edge being present between two nodes is the dot product of their latent vectors.
 
-Formally, let $\mathcal{X} \subset \mathbb{R}^d$ be a set such that $x, y \in \mathcal{X}$ implies $\left \langle  x,y \right \rangle \in [0, 1]$, let $X_i\distas{iid} F$ on $\mathcal{X}$, and write $X = [X_1|\cdots|X_N]^T \in \mathbb{R}^{N \times d}$.
+Formally, let $\mathcal{X} \subset \mathbb{R}^d$ be a set such that $x, y \in \mathcal{X}$ implies $\left \langle  x,y \right \rangle \in [0, 1]$.
+Let $X_1,\dotsc,X_n\in \mathcal{X}$ and write $X = [X_1|\cdots|X_N]^T \in \mathbb{R}^{N \times d}$.
 A random graph $G$ with adjacency matrix $A$ is said to be an RDPG if
 \[
-	P(A|X) = \prod_{i<j} \left \langle X_i, X_j \right \rangle^{A_{ij}} \left( 1 - \left \langle X_i, X_j \right \rangle \right)^{1 - A_{ij}}.
+	\Pr(A|X) = \prod_{i<j} \left \langle X_i, X_j \right \rangle^{A_{ij}} \left( 1 - \left \langle X_i, X_j \right \rangle \right)^{1 - A_{ij}}.
 \]
-In the RDPG model,each vertex $i$ is associated with a latent position $X_i$. Conditioned on the latent positions $X$, the edges $A_{ij} \distas{iid} \text{Bern}(\left \langle X_i, X_j \right \rangle)$.
-Note that the probability matrix is the out product of the latent positions, i.e. $P = X X^T$.
+In the RDPG model, each vertex $i$ is associated with a latent position $X_i$. Conditioned on the latent positions $X$, the edges $A_{ij} \distas{iid} \text{Bern}(\left \langle X_i, X_j \right \rangle)$.
+Note that the probability matrix is the outter product of the latent position matrix with itself, $P = X X^T$.
+This imposes two properties on $P$, namely that $P$ is positive-semidefinite and $\mathrm{rank}(P)=\mathrm{rank}(X)\leq d$.
 %Note that $\mathrm{rank}(P) = \mathrm{rank}(X)$.
 
 
 
 
-\subsection{Estimator $\hat{P}$ Based on Adjacency Spectral Embedding}
+\subsection{Low-Rank Estimator $\hat{P}$}
 
-Motivated by the RDPG, we consider a new estimator $\hat{P}$ based on the adjacency spectral embedding (ASE) which enforce a low rank approximation on the entry-wise sample mean $\bar{A}$.
+Motivated by the low-rank structure of the RDPG mean matrix, we consider the estimator $\hat{P}$ based on the spectral decomposition of $\bar{A}$ which yields a low rank approximation of $\bar{A}$.
+This estiamtor is similar to the estimator proposed by \citet{chatterjee2015matrix} but we analyze its performance more specifically in the random graph setting.
 
-Since the graphs are symmetric, we can get $\hat{U} \hat{S} \hat{U}^T$ as the eigen-decomposition of $\bar{A}$, where $\hat{S}$ is a diagonal matrix with non-increasing entries along the diagonal. Then the $d$-dimensional ASE of $\bar{A}$ is the first $d$ columns of $\hat{U} |\hat{S}|^{1/2}$, denoted by $\hat{X} \in \mathbb{R}^{N \times d}$. The rows of $\hat{X}$ represent the estimated latent vectors for each vertex. 
-Based on the low rank approximated RDPG representation of the sample mean matrix constructed by ASE, we define our new estimator as $\hat{P} = \hat{X} \hat{X}^T$.
+For a given dimension $d$ we consider the estimator $\hat{P}$ defined as the best rank-$d$ positive-semidefinite approximation of $\bar{A}$.
+Since the graphs are symmetric, we can compute the eigendecomposition of $\bar{A}$ as $\hat{U} \hat{S} \hat{U}^T + \tilde{U}\tilde{S}\tilde{U}^T$, where $\hat{S}$ is a diagonal matrix with non-increasing entries along the diagonal corresponding to the largest $d$ eigenvalues of $A$ and $\hat{U}$ has columns given by the corresponding eigenvectors.
+The $d$-dimensional adjacency spectral embedding (ASE) of $\bar{A}$ is given by $\hat{X}=\hat{U} \hat{S}^{1/2}\in \mathbb{R}^{N \times d}$.
+For an RDPG, the rows of $\hat{X}$ are estimates of the latent vectors for each vertex \citep{sussman2014consistent}.
+Using the adjacency spectral embedding, we have that $\hat{P} = \hat{X} \hat{X}^T=\hat{U}\hat{S}\hat{U}^T$.
 
-To get $\hat{P}$, we need to specify what dimension $d$ that ASE uses. There are varies ways dealing with dimension selection. In this paper, we consider Zhu and Ghodsi's elbow selection method \cite{zhu2006automatic} and the universal singular value thresholding (USVT) method \cite{chatterjee2015matrix}. Details are discussed in Section \ref{section:dim_select}.
+To compute $\hat{P}$, we need to specify what rank $d$ to use and there are various ways of dealing with dimension selection. 
+In this paper, we use Zhu and Ghodsi's elbow selection method \cite{zhu2006automatic} and the universal singular value thresholding (USVT) method \cite{chatterjee2015matrix}. 
+Details are discussed in Section \ref{section:dim_select}.
 
-Moreover, since the graphs are hollow, i.e. with zeros along the diagonal, applying ASE directly will lead to a bias in calculating the eigenvalues. To compensate such bias, we use an iterative method developed by Scheinerman and Tucker \cite{scheinerman2010modeling}. Details are discussed in Section \ref{section:diag_aug}.
+Moreover, since the adjacency matrices are hollow, with zeros along the diagonal, there is a missing data problem that leads to inaccuracies if we compute $\hat{P}$ based only on $\bar{A}$. 
+To compensate for this issue, we use an iterative method developed by Scheinerman and Tucker \cite{scheinerman2010modeling}. 
+Details are discussed in Section \ref{section:diag_aug}.
 
 
 \begin{algorithm}[H]
 \caption{}
 \label{algo:basic}
 \begin{algorithmic}[1]
-\STATE \textbf{Input:} $A^{(1)}, A^{(2)}, \cdots, A^{(M)}$, each $A^{(m)} \in \{0,1\}^{N \times N}$ is symmetric and hollow, with known vertex correspondence;
-\STATE Calculate the sample mean graph $\bar{A} = \frac{1}{M}\sum\limits_{m = 1}^M A^{(m)}$;
-\STATE Augmented the diagonal of $\bar{A}$ to get $\bar{A} + D$ (see Section \ref{section:diag_aug});
-\STATE Select the dimension $d$ to which we are going to embed $\bar{A} + D$ (see Section \ref{section:dim_select});
-\STATE Calculate the eigen-decomposition, $\bar{A} + D = \hat{U} \hat{S} \hat{U}^T$;
-\STATE Obtain $d$-dimensional ASE $\hat{X} \in \mathbb{R}^{N \times d}$ by the first $d$ columns of $\hat{U} |\hat{S}|^{1/2}$;
-\STATE $\hat{P} = \hat{X} \hat{X}^{T}$ is our estimator.
+\STATE \textbf{Input:} $A^{(1)}, A^{(2)}, \cdots, A^{(M)}$, each $A^{(m)} \in \{0,1\}^{N \times N}$, $k_max$
+\STATE Calculate the sample mean adjacency $\bar{A} = \frac{1}{M}\sum\limits_{m = 1}^M A^{(m)}$;
+\STATE Calculate the degree matrix $D^{(0)} = \mathrm{diag}(\bar{A} \bm{1})$;
+\STATE Select the dimension $d$  using $\bar{A} + \bar{D}/(n-1)$ (see Section \ref{section:dim_select});
+\FOR{$k=0$; $k++$; $k\leq k_{max}$}
+\STATE Calculate the rank-$d$ approximation $\hat{U} \hat{S} \hat{U}^T$ for $\bar{A} + D^{(k)}$;
+\STATE $D^{(k+1)} \leftarrow \mathrm{diag}(\hat{U} \hat{S} \hat{U}^T)$ (see Section \ref{section:diag_aug}); 
+\ENDFOR
+\STATE \textbf{Output:} Rank-$d$ approximation $\hat{P}=\hat{U} \hat{S} \hat{U}^T$ of $\bar{A} + D^{(k_{max})}$.
 \end{algorithmic}
 \end{algorithm}
 
-
-
-In order to take advantage of the underlying low rank structure of the RDPG, we use the adjacency spectral embedding (ASE) studied by Sussman et. al. to enforce a low rank approximation on the entry-wise mean matrix $\bar{A}$, which will decrease the variance without losing much in bias if we embed it into the right dimension.
+As we will see in the proceeding sections, this procedure will frequently yield improvements in estimation as compared to using the sample mean $\bar{A}$.
+While this is unsurprising for random dot product graphs, where we are able to show theoretical results to this effect, we also see this effect for connectome data and more general independent edge graphs.
+In the next sections, we explore this estimator in the context of the stochastic blockmodel.
 
 \subsection{Stochastic Block Model as an Random Dot Product Graph}
 \label{section:sbm_rdpg}
