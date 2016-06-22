@@ -1,6 +1,6 @@
 rm(list = ls())
 # setwd("E:/GitHub/LLG/Code/R")
-setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
+# setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
 lSize = 0.8
@@ -113,28 +113,35 @@ df <- rbind(
 
 label_y <- with(df, .75*max(re)+.25*min(re))
 
-p <- ggplot(df,aes(x=n,y=re,linetype=factor(which)))+
-  facet_wrap(~m)+
+p <- ggplot(df,aes(x=n,y=re,linetype=factor(which),alpha=factor(which)))+
+  # facet_wrap(~m)+
 #   geom_point()+
-  geom_line(alpha=1,size=lSize)+
+  geom_line()+
 #   geom_linerange(aes(ymin=lci,ymax=uci),alpha=.5,size=1)+
 #   geom_vline(data=dim_selection_df,
 #              aes(xintercept=value,color=which,linetyRpe=variable))+
   scale_linetype_manual(name="",values=c("solid","longdash","dotted","dotdash"))+
+  scale_alpha_manual(name="",values=c(.5,1,1,1))+
 #   scale_color_discrete(guide=FALSE)+
-  xlab("N") + ylab("Scaled Relative Efficiency")+
-  theme(strip.text.x = element_text(size=20,face="bold"))+
-  theme(axis.text=element_text(size=20),
-        axis.title=element_text(size=20,face="bold"))+
+  xlab("number of vertices") + ylab("scaled relative efficiency")+
+  # theme(strip.text.x = element_text(size=20,face="bold"))+
+  # theme(axis.text=element_text(size=20),
+        # axis.title=element_text(size=20,face="bold"))+
   theme(panel.grid.major = element_line(colour="grey95"),
         panel.grid.minor = element_blank())+
   theme(panel.background = element_rect(fill = 'white', colour = 'grey70'))+
-  theme(legend.text=element_text(size=20,face="bold"))+
-  theme(legend.key.size=unit(2,"line"))+
+  # theme(legend.text=element_text(size=20,face="bold"))+
+  # theme(legend.key.size=unit(2,"line"))+
   theme(legend.position="bottom")
 print(p)
 
+ggplot(df,aes(x=n,y=n*(re-4),linetype=factor(which),alpha=factor(which)))+
+  geom_line()
 
+
+ggsave("../../Draft/RE.pdf",
+    p+theme(text=element_text(size=10,family="CM Roman")),
+      width=5, height=3)
 
 
 
@@ -167,35 +174,39 @@ for (iRho in 1:nRho) {
 
 df <- rbind(
   data.frame(re=re1Expectrho,which="B11",m=m,rho=rhoVec),
-  data.frame(re=re2Expectrho,which="B22",m=m,rho=rhoVec),
-  data.frame(re=re3Expectrho,which="B12",m=m,rho=rhoVec)) %>%
+  data.frame(re=re3Expectrho,which="B12",m=m,rho=rhoVec),
+  data.frame(re=re2Expectrho,which="B22",m=m,rho=rhoVec)) %>%
   mutate(m=factor(paste0("Simulation based on SBM, M=",m,", N=",n),
                   c("Simulation based on SBM, M=100, N=500")))
 
 label_y <- with(df, .75*max(re)+.25*min(re))
 
 p <- ggplot(df,aes(x=rho,y=re,linetype=factor(which)))+
-  facet_wrap(~m)+
+  # facet_wrap(~m)+
   #   geom_point()+
-  geom_line(alpha=1,size=lSize)+
+  geom_line(alpha=1)+
   #   geom_linerange(aes(ymin=lci,ymax=uci),alpha=.5,size=1)+
   #   geom_vline(data=dim_selection_df,
   #              aes(xintercept=value,color=which,linetype=variable))+
   scale_linetype_manual(name="",values=c("solid","longdash","dotted"))+
   #   scale_color_discrete(guide=FALSE)+
 #   xlab("N") + ylab("Normalized Relative Efficiency")+
-  scale_x_continuous(name=expression(rho[1]))+
-  scale_y_continuous(name="Scaled Relative Efficiency")+
-  theme(strip.text.x = element_text(size=20,face="bold"))+
-  theme(axis.text=element_text(size=20),
-        axis.title=element_text(size=20,face="bold"))+
+  scale_x_continuous(name="block one proportion")+
+  scale_y_continuous(name="scaled relative efficiency")+
+  # theme(strip.text.x = element_text(size=20,face="bold"))+
+  # theme(axis.text=element_text(size=20),
+        # axis.title=element_text(size=20,face="bold"))+
   theme(panel.grid.major = element_line(colour="grey95"),
         panel.grid.minor = element_blank())+
-  theme(panel.background = element_rect(fill = 'white', colour = 'grey70'))+
-  theme(legend.text=element_text(size=20,face="bold"))+
-  theme(legend.key.size=unit(2,"line"))+
-  theme(legend.position="bottom")
+  theme(panel.background = element_rect(fill = 'white', colour = 'grey70')) +
+  # theme(legend.text=element_text(size=20,face="bold"))+
+  # theme(legend.key.size=unit(2,"line"))+
+  theme(legend.position=c(.82,.75))
 print(p)
+
+ggsave("../../Draft/rho.pdf",
+    p+theme(text=element_text(size=10,family="CM Roman")),
+      width=5, height=2.5)
 
 
 
