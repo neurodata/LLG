@@ -1,6 +1,6 @@
 rm(list = ls())
 # setwd("E:/GitHub/LLG/Code/R")
-setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
+# setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
 # dataName = "CPAC200"
@@ -26,14 +26,15 @@ rm(tmpList)
 
 add <- function(x) Reduce("+", x)
 P = add(A_all)/M
-print(image(Matrix(P),main=list(label=TeX('$P$ for desikan'),cex=3),sub="",
+pdf("../../Draft/Matrix_desikan_m5.pdf", family="CM Roman", width=8, height=2.75)
+print(image(Matrix(P),main=list(label=TeX('$P$ for Desikan')),sub="",
             xlab=list(cex=0),ylab=list(cex=0),
             scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0),
       split=c(x=1,y=1,nx=3,ny=1),more=TRUE)
 
 sampleVec = sample.int(M, m)
 A_bar = add(A_all[sampleVec])/m
-print(image(Matrix(A_bar),main=list(label=TeX('$\\bar{A}$ for desikan with M=5'),cex=3),
+print(image(Matrix(A_bar),main=list(label=TeX('$\\bar{A}$ for Desikan with M=5')),
             sub="",xlab=list(cex=0),ylab=list(cex=0),
             scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0),
       split=c(x=2,y=1,nx=3,ny=1),more=TRUE)
@@ -54,11 +55,11 @@ if (dHat == 1) {
 }
 P_hat = regularize(Ahat)
 
-print(image(Matrix(P_hat),main=list(label=TeX('$\\hat{P}$ for desikan with M=5'),cex=3),
+print(image(Matrix(P_hat),main=list(label=TeX('$\\hat{P}$ for Desikan with M=5')),
             sub="",xlab=list(cex=0),ylab=list(cex=0),
             scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0),
       split=c(x=3,y=1,nx=3,ny=1))
-
+dev.off()
 print(dHat)
 
 
@@ -95,18 +96,22 @@ new.palette=colorRampPalette(c("white","black"),space="rgb")
 nv = (Diff_A_bar<valLow)
 nv[upper.tri(nv,diag=T)] = FALSE
 Diff_A_bar[nv] = 0
+pdf("../../Draft/Diff2_desikan_m5.pdf", family="CM Roman", width=4, height=3.5)
 levelplot(Diff_A_bar[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
           ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
-          main=list(label=TeX('$|\\bar{A} - P|$ for desikan with M=5'),cex=2.5),
+          main=list(label=TeX('$|\\bar{A} - P|$ for Desikan with M=5')),
           colorkey=FALSE)
+dev.off()
 
 nv = (Diff_P_hat<valLow)
 nv[upper.tri(nv,diag=T)] = FALSE
 Diff_P_hat[nv] = 0
+pdf("../../Draft/Diff3_desikan_m5.pdf", family="CM Roman", width=4.5, height=3.5)
 levelplot(Diff_P_hat[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
           ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
-          main=list(label=TeX('$|\\hat{P} - P|$ for desikan with M=5'),cex=2.5),
-          colorkey=list(labels=list(cex=2)))
+          main=list(label=TeX('$|\\hat{P} - P|$ for Desikan with M=5')),
+          colorkey=list(labels=list()))
+dev.off()
 
 ###### Write to files, for MATLAB use ######
 

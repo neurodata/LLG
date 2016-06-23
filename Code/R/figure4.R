@@ -1,6 +1,6 @@
 rm(list = ls())
 # setwd("E:/GitHub/LLG/Code/R")
-setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
+# setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
 pp <- list()
@@ -18,7 +18,7 @@ if (dataName == "JHU") {
   dZG3Mean = c(15.81, 13.59, 12.95)
   dZG3L = c(15.41929, 13.25443, 12.6837)
   dZG3U = c(16.20071, 13.92557, 13.2163)
-} else if (dataName == "desikan") {
+} else if (dataName == "Desikan") {
   dZG3Mean = c(15.95, 11.09, 9.87)
   dZG3L = c(15.34967, 10.70389, 9.629296)
   dZG3U = c(16.55033, 11.47611, 10.110704)
@@ -34,7 +34,7 @@ if (dataName == "JHU") {
   dUSVT07Mean = c(4.61, 11.61, 18.18)
   dUSVT07L = c(4.465526, 11.39987, 17.95997)
   dUSVT07U = c(4.754474, 11.82013, 18.40003)
-} else if (dataName == "desikan") {
+} else if (dataName == "Desikan") {
   dUSVT07Mean = c(6.36, 12.68, 19.55)
   dUSVT07L = c(6.198711, 12.47551, 19.35032)
   dUSVT07U = c(6.521289, 12.88449, 19.74968)
@@ -121,12 +121,12 @@ gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which),shape=factor(w
   facet_wrap(~m)+
   #   geom_point(data=subset(dim_selection_df,which=="ZG 3rd"),size=2,colour="red")+
   #   geom_point(data=subset(dim_selection_df,which=="USVT c=0.7"),size=2,colour="blue")+
-  geom_point(data=dim_selection_df,size=3)+
+  geom_point(data=dim_selection_df,size=1.5)+
   scale_linetype_manual(name="",values=c(1,2,0,0))+
   scale_shape_manual(name="",values=c(-1,-1,15,17))+
   #   geom_point(dim_selection_df,aes(shape=which))+
-  geom_line(alpha=1,size=lSize)+
-  geom_linerange(aes(ymin=lci,ymax=uci),alpha=.5,size=1)+
+  geom_line()+
+  geom_linerange(aes(ymin=lci,ymax=uci),linetype=1,alpha=.5,size=.5)+
   #   geom_vline(data=dim_selection_df,
   #              aes(xintercept=value,color=which,linetype=variable))+
   #   scale_linetype_manual(name="",values=c(1,2,3,4))+
@@ -134,24 +134,25 @@ gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which),shape=factor(w
   #             aes(x=value+n/30,y=label_y,linetype=variable,label=which,color=which),angle=90)+
   #   scale_color_discrete(guide=FALSE)+
   xlab("")+ylab("MSE")+
-  theme(strip.text.x = element_text(size=20,face="bold"))+
-  theme(axis.text=element_text(size=15),
-        axis.title=element_text(size=20,face="bold"))+
+  # theme(strip.text.x = element_text(size=20,face="bold"))+
+  # theme(axis.text=element_text(size=15),
+  #       axis.title=element_text(size=20,face="bold"))+
   theme(panel.grid.major = element_line(colour="grey95"),
         panel.grid.minor = element_blank())+
   theme(panel.background = element_rect(fill = 'white', colour = 'grey70'))+
-  theme(legend.text=element_text(size=20,face="bold"))+
-  theme(legend.position="bottom")+
-  ggtitle(paste0(dataName, ", N=", n, ", ", M, " graphs"))+
-  theme(legend.key.size=unit(legendSize,"line"))+
-  theme(plot.title=element_text(lineheight=.8,size=20,face="bold"))
+  theme(legend.position="none")+
+  ggtitle(paste0(dataName, ", N=", n))
 
 pp[[1]]=gg
 
+ggsave("../../Draft/corr_data_MSE_jhu.pdf",
+  plot=gg+theme(text=element_text(size=10,family="CM Roman")),
+    width=5.5,height=2)
 
-################## desikan #########################
+
+################## Desikan #########################
 # dataName = "CPAC200"
-dataName = "desikan"
+dataName = "Desikan"
 # dataName = "JHU"
 
 mVec = c(1, 5, 10)
@@ -161,7 +162,7 @@ if (dataName == "JHU") {
   dZG3Mean = c(15.81, 13.59, 12.95)
   dZG3L = c(15.41929, 13.25443, 12.6837)
   dZG3U = c(16.20071, 13.92557, 13.2163)
-} else if (dataName == "desikan") {
+} else if (dataName == "Desikan") {
   dZG3Mean = c(15.95, 11.09, 9.87)
   dZG3L = c(15.34967, 10.70389, 9.629296)
   dZG3U = c(16.55033, 11.47611, 10.110704)
@@ -177,7 +178,7 @@ if (dataName == "JHU") {
   dUSVT07Mean = c(4.61, 11.61, 18.18)
   dUSVT07L = c(4.465526, 11.39987, 17.95997)
   dUSVT07U = c(4.754474, 11.82013, 18.40003)
-} else if (dataName == "desikan") {
+} else if (dataName == "Desikan") {
   dUSVT07Mean = c(6.36, 12.68, 19.55)
   dUSVT07L = c(6.198711, 12.47551, 19.35032)
   dUSVT07U = c(6.521289, 12.88449, 19.74968)
@@ -264,12 +265,12 @@ gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which),shape=factor(w
   facet_wrap(~m)+
   #   geom_point(data=subset(dim_selection_df,which=="ZG 3rd"),size=2,colour="red")+
   #   geom_point(data=subset(dim_selection_df,which=="USVT c=0.7"),size=2,colour="blue")+
-  geom_point(data=dim_selection_df,size=3)+
+  geom_point(data=dim_selection_df,size=1.5)+
   scale_linetype_manual(name="",values=c(1,2,0,0))+
   scale_shape_manual(name="",values=c(-1,-1,15,17))+
   #   geom_point(dim_selection_df,aes(shape=which))+
-  geom_line(alpha=1,size=lSize)+
-  geom_linerange(aes(ymin=lci,ymax=uci),alpha=.5,size=1)+
+  geom_line()+
+  geom_linerange(aes(ymin=lci,ymax=uci),linetype=1,alpha=.5,size=.5)+
   #   geom_vline(data=dim_selection_df,
   #              aes(xintercept=value,color=which,linetype=variable))+
   #   scale_linetype_manual(name="",values=c(1,2,3,4))+
@@ -277,23 +278,24 @@ gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which),shape=factor(w
   #             aes(x=value+n/30,y=label_y,linetype=variable,label=which,color=which),angle=90)+
   #   scale_color_discrete(guide=FALSE)+
   xlab("")+ylab("MSE")+
-  theme(strip.text.x = element_text(size=20,face="bold"))+
-  theme(axis.text=element_text(size=15),
-        axis.title=element_text(size=20,face="bold"))+
+  # theme(strip.text.x = element_text(size=20,face="bold"))+
+  # theme(axis.text=element_text(size=15),
+  #       axis.title=element_text(size=20,face="bold"))+
   theme(panel.grid.major = element_line(colour="grey95"),
         panel.grid.minor = element_blank())+
   theme(panel.background = element_rect(fill = 'white', colour = 'grey70'))+
-  theme(legend.text=element_text(size=20,face="bold"))+
-  theme(legend.position="bottom")+
-  ggtitle(paste0(dataName, ", N=", n, ", ", M, " graphs"))+
-  theme(legend.key.size=unit(legendSize,"line"))+
-  theme(plot.title=element_text(lineheight=.8,size=20,face="bold"))
+  theme(legend.position="none")+
+  ggtitle(paste0(dataName, ", N=", n))
 
 pp[[2]]=gg
 
+ggsave("../../Draft/corr_data_MSE_desikan.pdf",
+  plot=gg+theme(text=element_text(size=10,family="CM Roman")),
+    width=5.5,height=2)
+
 ################## CPAC200 #########################
 dataName = "CPAC200"
-# dataName = "desikan"
+# dataName = "Desikan"
 # dataName = "JHU"
 
 mVec = c(1, 5, 10)
@@ -303,7 +305,7 @@ if (dataName == "JHU") {
   dZG3Mean = c(15.81, 13.59, 12.95)
   dZG3L = c(15.41929, 13.25443, 12.6837)
   dZG3U = c(16.20071, 13.92557, 13.2163)
-} else if (dataName == "desikan") {
+} else if (dataName == "Desikan") {
   dZG3Mean = c(15.95, 11.09, 9.87)
   dZG3L = c(15.34967, 10.70389, 9.629296)
   dZG3U = c(16.55033, 11.47611, 10.110704)
@@ -319,7 +321,7 @@ if (dataName == "JHU") {
   dUSVT07Mean = c(4.61, 11.61, 18.18)
   dUSVT07L = c(4.465526, 11.39987, 17.95997)
   dUSVT07U = c(4.754474, 11.82013, 18.40003)
-} else if (dataName == "desikan") {
+} else if (dataName == "Desikan") {
   dUSVT07Mean = c(6.36, 12.68, 19.55)
   dUSVT07L = c(6.198711, 12.47551, 19.35032)
   dUSVT07U = c(6.521289, 12.88449, 19.74968)
@@ -406,32 +408,33 @@ gg <- ggplot(error_by_dim_df,aes(x=d,y=mse,linetype=factor(which),shape=factor(w
   facet_wrap(~m)+
   #   geom_point(data=subset(dim_selection_df,which=="ZG 3rd"),size=2,colour="red")+
   #   geom_point(data=subset(dim_selection_df,which=="USVT c=0.7"),size=2,colour="blue")+
-  geom_point(data=dim_selection_df,size=3)+
+  geom_point(data=dim_selection_df,size=1.5)+
   scale_linetype_manual(name="",values=c(1,2,0,0))+
   scale_shape_manual(name="",values=c(-1,-1,15,17))+
   #   geom_point(dim_selection_df,aes(shape=which))+
-  geom_line(alpha=1,size=lSize)+
-  geom_linerange(aes(ymin=lci,ymax=uci),alpha=.5,size=1)+
+  geom_line()+
+  geom_linerange(aes(ymin=lci,ymax=uci),linetype=1,alpha=.5,size=.5)+
   #   geom_vline(data=dim_selection_df,
   #              aes(xintercept=value,color=which,linetype=variable))+
   #   scale_linetype_manual(name="",values=c(1,2,3,4))+
   #   geom_text(data=dim_selection_df %>% filter(variable=="mean"),
   #             aes(x=value+n/30,y=label_y,linetype=variable,label=which,color=which),angle=90)+
   #   scale_color_discrete(guide=FALSE)+
-  xlab("Dimension")+ylab("MSE")+
-  theme(strip.text.x = element_text(size=20,face="bold"))+
-  theme(axis.text=element_text(size=15),
-        axis.title=element_text(size=20,face="bold"))+
+  xlab("dimension")+ylab("MSE")+
+  # theme(strip.text.x = element_text(size=20,face="bold"))+
+  # theme(axis.text=element_text(size=15),
+  #       axis.title=element_text(size=20,face="bold"))+
   theme(panel.grid.major = element_line(colour="grey95"),
         panel.grid.minor = element_blank())+
   theme(panel.background = element_rect(fill = 'white', colour = 'grey70'))+
-  theme(legend.text=element_text(size=20,face="bold"))+
   theme(legend.position="bottom")+
-  ggtitle(paste0(dataName, ", N=", n, ", ", M, " graphs"))+
-  theme(legend.key.size=unit(legendSize,"line"))+
-  theme(plot.title=element_text(lineheight=.8,size=20,face="bold"))
+  ggtitle(paste0(dataName, ", N=", n))
 
 pp[[3]]=gg
+
+ggsave("../../Draft/corr_data_MSE_CPAC200.pdf",
+  plot=gg+theme(text=element_text(size=10,family="CM Roman")),
+    width=5.5,height=2.5)
 
 source("function_collection.R")
 
