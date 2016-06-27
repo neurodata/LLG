@@ -1,6 +1,6 @@
 rm(list = ls())
 
-setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
+# setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # setwd("E:/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
@@ -20,8 +20,8 @@ tau = rep(1:5,round(n*rho))
 P = B[tau,tau]
 diag(P) = 0
 
-pdf("SBM_P.pdf", family="CM Roman", width=5, height=5.5)
-image(Matrix(P),main=list(label="Probability Matrix",cex=2),sub="",
+pdf("../../Draft/SBM_P.pdf", family="CM Roman", width=4, height=4.4)
+image(Matrix(P),main=list(label="Probability Matrix"),sub="",
       xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
       lwd=0)
 dev.off()
@@ -29,8 +29,8 @@ dev.off()
 g = sample_sbm(n, B, round(n*rho), directed=F, loops=F)
 A = as_adj(g, type="both", sparse=FALSE)
 
-pdf("SBM_P.pdf", family="CM Roman", width=5, height=5.5)
-image(Matrix(A),main=list(label="Adjacency Matrix",cex=2),sub="",
+pdf("../../Draft/SBM_A.pdf", family="CM Roman", width=4, height=4.4)
+image(Matrix(A),main=list(label="Adjacency Matrix"),sub="",
       xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
       lwd=0)
 dev.off()
