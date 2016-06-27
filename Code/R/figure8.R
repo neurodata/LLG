@@ -17,6 +17,10 @@ library(plyr)
 library(dplyr)
 library(reshape2)
 
+fileName = paste("../../Result/result_", dataName, "_brute_fullrank1_",
+                 "_eig_dim.RData", sep="")
+load(fileName)
+
 for (iM in 1:length(mVec)) {
   m = mVec[iM]
   
@@ -51,7 +55,23 @@ for (iM in 1:length(mVec)) {
 
 
 
-
+errorPhatUSVT = rep(0, length(mVec))
+errorPhatZG = rep(0, length(mVec))
+for (iM in 1:length(mVec)) {
+  x = dUSVTMean[iM]
+  x1 = floor(x)
+  y1 = errorPhatEIGMean[iM, x1]
+  x2 = ceiling(x)
+  y2 = errorPhatEIGMean[iM, x2]
+  errorPhatUSVT[iM] = (y2-y1)/(x2-x1)*(x-x1)+y1
+  
+  x = dZGMean[iM]
+  x1 = floor(x)
+  y1 = errorPhatEIGMean[iM, x1]
+  x2 = ceiling(x)
+  y2 = errorPhatEIGMean[iM, x2]
+  errorPhatZG[iM] = (y2-y1)/(x2-x1)*(x-x1)+y1
+}
 
 
 
@@ -65,15 +85,23 @@ error_by_dim_df <- rbind(
              which="Phat",m=rep(mVec,n),d=rep(1:n,each=3))) %>%
   mutate(m=factor(paste0("M=",m),c("M=1","M=5","M=10")))
 
+dim_selection_df <- rbind(
+  data.frame(mse=errorPhatZG,lci=errorPhatZG,uci=errorPhatZG,
+             which="ZG 3rd",m=mVec,d=dZGMean),
+  data.frame(mse=errorPhatUSVT,lci=errorPhatUSVT,uci=errorPhatUSVT,
+             which="USVT c=0.7",m=mVec,d=dUSVTMean)) %>%
+  mutate(m=factor(paste0("M=",m),c("M=1","M=5","M=10")))
+
 label_y <- with(error_by_dim_df, .75*max(mse)+.25*min(mse))
 
 
 gg <- ggplot(error_by_dim_df[error_by_dim_df$d>1,],
     aes(x=d,y=mse,linetype=factor(which),shape=factor(which)))+
   facet_wrap(~m)+
+  geom_point(data=dim_selection_df)+
   scale_linetype_manual(name="",values=c(1,2,0,0))+
   scale_shape_manual(name="",values=c(-1,-1,15,17))+
-  geom_line(alpha=1,size=lSize)+
+  geom_line()+
   # geom_linerange(aes(ymin=lci,ymax=uci),alpha=.5,size=1)+
   xlab("Dimension")+ylab("MSE")+
   # theme(strip.text.x = element_text(size=20,face="bold"))+

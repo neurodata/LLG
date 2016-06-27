@@ -4,6 +4,8 @@ rm(list = ls())
 # setwd("E:/GitHub/LLG/Code/R")
 # setwd("/cis/home/rtang/LLG/Code/R")
 
+set.seed(12345)
+
 require(Matrix)
 require(igraph)
 
