@@ -71,22 +71,22 @@ Instead, we define the mean graph as the weigted adjacency matrix with weights g
 This population mean is becoming more and more important both in statistical inference and in various applications like connectomics, social networks, and computational biology.
 
 % Nowadays, people care about information that can be extracted from the networks through different ways in neuroscience.
-\citet{ginestet2014hypothesis} proposed a way to test if there is a difference between the networks of two groups of subjects. 
-While hypothesis testing is the goal of their work, estimation is a key stepping which may be improved by accounting for underlying structure in the mean matrix. 
+\citet{ginestet2014hypothesis} proposed a way to test if there is a difference between the distributions for two groups of networks.  
+While hypothesis testing is the end goal of their work, estimation is a key intermediate step which may be improved by accounting for underlying structure in the mean matrix. 
 Thus improving the estimation procedures for the mean graph is not only important by itself, but also can be applied to help improve other statistical inference procedures.
 
-The element-wise sample mean in many situations, is a reasonable estimator if we consider the general independent edge model (IEM) \cite{bollobas2007phase} without taking any additional structure into account. 
+The element-wise sample mean is a reasonable estimator if we consider the general independent edge model (IEM) \cite{bollobas2007phase} without taking any additional structure into account. 
 However, it does not perform very well especially when only a small sample size is available.
 Intuitively, an estimator incorporating the mean-graph structure is preferable to the entry-wise MLE. 
-In general, we don't have any knowledge about this structure so it is hard to take advantage of in practice.
+In general, we don't have any knowledge about this structure so it can be hard to take advantage of in practice.
 
 
 
-One of the most important structures in graphs is the community structure in which vertices are clustered into groups that share similar connectivity structure. The stochastic blockmodel (SBM) \cite{holland1983stochastic} captures this structural property and is widely used in modeling networks.
+One of the most important structures in graphs is the community structure in which vertices are clustered into groups that share similar connectivity structure. The stochastic blockmodel (SBM) \cite{holland1983stochastic} is one model that captures this structural property and is widely used in modeling networks.
 More generally, the latent positions model (LPM) \cite{hoff2002latent}, provides a way to parameterize the graph structure by latent positions associated with each vertex. 
 Latent position models can capture strong community structure like the stochastic blockmodel, but may also allow for more variance within communities and other structures.
 One example of a LPM which captures this middle ground is the random dot product graph (RDPG) \cite{young2007random, nickel2007random} which motivates our estimator. 
-In this paper, we analyze our estimator in terms of RDPG specifically.
+% In this paper, we analyze our estimator in terms of RDPG specifically.
 
 Using the estimates of the latent positions based on a truncated eigen-decomposition of the adjacency matrix,  in the RDPG setting we consider an estimator for the mean of the collection of graphs which captures the low-rank structure of the RDPG model. In this study, we show via theory, simulations and real data analysis that it frequently outperforms the element-wise MLE, especially in small sample sizes.
 
@@ -97,10 +97,13 @@ Using the estimates of the latent positions based on a truncated eigen-decomposi
 
 \section{Models and Estimators}
 \label{section:model_estimator}
-This work considers the scenario of having $M$ graphs represented as adjacency matrices, $\{A^{(m)}\}$ ($m = 1, \cdots, M$), each having $N$ vertices with known correspondence. The graphs we consider are undirected and unweighted with no self-loops, so each $A^{(m)}$ is a binary symmetric matrix with zeros along the diagonal. An example application of this arises in the field of connectomics, where functional brain imaging data for each subject can be represented as a graph.
-Each vertex represent a well defined anatomical region, and an edge between two regions is defined to exist if correlation in activity between the regions surpasses a certain threshold.
+This work considers the scenario of having $M$ graphs represented as adjacency matrices, $\{A^{(m)}\}$ ($m = 1, \cdots, M$), each having $N$ vertices.
+We assume there is a known correspondence for vertices in different graphs, so that vertex $i$ in graph $m$ corresponds to vertex $i$ in graph $m'$ for any $i$, $m$, $m'$.
+The graphs we consider are undirected and unweighted with no self-loops, so each $A^{(m)}$ is a binary symmetric matrix with zeros along the diagonal. An example application of this arises in the field of connectomics, where functional brain imaging data for each subject can be represented as a graph.
+Each vertex represent a well defined anatomical region present in each subject, and an edge between two regions is defined to exist if correlation in activity between the regions surpasses a certain threshold.
+Similarly, for structural brain imaging an edge may represent the presence of anatomical connections between the two regions.
 
-We will also assume that the graphs are sampled independently and identically from some distribution.
+For the purpose of this paper, we will also assume that the graphs are sampled independently and identically from some distribution.
 We consider three nested models for these distributions, the independent edge model, the random dot product model, and the stochastic blockmodel, and two estimators motivated by these models.
 
 
@@ -114,31 +117,33 @@ For this case, we aim to estimate the mean matrix $P=\Ex[A^{(m)}]$ base on the o
 
 
 \subsection{Estimator $\bar{A}$}
-Under the IEM, the element-wise sample mean of the adjacency matrices $\bar{A}=\frac{1}{M}\sum_{m=1}^M A^{(m)}$ is the MLE for the mean graph $P$.
-It is an unbiased with entry-wise variance $\mathrm{Var}(\bar{A}_{ij}) = P_{ij} (1-P_{ij})/M$. Moreover, $\bar{A}$ is the uniformly minimum-variance unbiased estimator, so it has the smallest variance among all unbiased estimators and enjoys the many asymptotic properties of the MLE as $M\to \infty$.
+Under the IEM, the MLE for the mean graph $P$ is the element-wise sample mean of the adjacency matrices $\bar{A}=\frac{1}{M}\sum_{m=1}^M A^{(m)}$.
+It is unbiased with entry-wise variance $\mathrm{Var}(\bar{A}_{ij}) = P_{ij} (1-P_{ij})/M$. Moreover, $\bar{A}$ is the uniformly minimum-variance unbiased estimator, so it has the smallest variance among all unbiased estimators and enjoys the many asymptotic properties of the MLE as $M\to \infty$.
 
 However, $\bar{A}$ doesn't exploit any graph structure, and sometimes the performance is not very good especially when $M$ is small. 
 For example, when $M=1$, $\bar{A}$ is exactly the binary graph we observe, which is an inaccurate estimate for an arbitrary $P$ compared to estimates which exploit underlying structure.
+Additionally, there are no useful asymptotic properties for $\bar{A}$ as the number of vertices $N$ becomes large.
 
 
 
 \subsection{Random Dot Product Graph}
-In graphs, the adjacencies between vertices always depend on the unobserved properties of the corresponding vertices. For example, in a connectomics setting, the two brain regions with similar properties will have similar connectivity patterns to other regions of the brain.
-The latent positions graph model (LPG) proposed by Hoff et. al. (2002) \cite{hoff2002latent} captures such structure, where each vertex is associated with a latent positions that influences the adjacencies for that vertex.
+In graphs, the adjacencies between vertices generally depend on unobserved properties of the corresponding vertices. For example, in a connectomics setting, the two brain regions with similar properties will have similar connectivity patterns to other regions of the brain.
+The latent positions graph (LPG) model proposed by Hoff et. al. (2002) \cite{hoff2002latent} captures such structure, where each vertex is associated with a latent position that influences the adjacencies for that vertex.
 In this model, each vertex $i$ has an associated latent vector $X_i \in \mathbb{R}^d$.
-Based on those latent positions, the existence of edges are conditionally independent with probability that only depends on the latent vectors of the incident vertices through a link function. If $d$ is much smaller than the number of vertices $N$ and the link function is known, LPMs are more parsimonious models compared to IEM, requiring only $dN$ parameters rather then $\binom{N}{2}$.
+Based on the latent positions, the existence of edges are conditionally independent with probability that only depends on the latent vectors of the incident vertices through a link function. If $d$ is much smaller than the number of vertices $N$ and the link function is known, LPMs are more parsimonious models compared to IEM, requiring only $dN$ parameters rather then $\binom{N}{2}$.
 
 A specific instance of a LPM that we examine in this work is the random dot product graph model (RDPG) \cite{young2007random, nickel2007random} where the link function is the dot product, so the probability of an edge being present between two nodes is the dot product of their latent vectors.
 
-Formally, let $\mathcal{X} \subset \mathbb{R}^d$ be a set such that $x, y \in \mathcal{X}$ implies $\left \langle  x,y \right \rangle \in [0, 1]$.
+Formally, let $\mathcal{X} \subset \mathbb{R}^d$ be a set such that $x, y \in \mathcal{X}$ implies $\left \langle  x,y \right \rangle =\sum_i x_i y_i \in [0, 1]$.
 Let $X_1,\dotsc,X_n\in \mathcal{X}$ and write $X = [X_1|\cdots|X_N]^T \in \mathbb{R}^{N \times d}$.
 A random graph $G$ with adjacency matrix $A$ is said to be an RDPG if
 \[
-	\Pr(A|X) = \prod_{i<j} \left \langle X_i, X_j \right \rangle^{A_{ij}} \left( 1 - \left \langle X_i, X_j \right \rangle \right)^{1 - A_{ij}}.
+	\Pr[A|X] = \prod_{i<j} \left \langle X_i, X_j \right \rangle^{A_{ij}} \left( 1 - \left \langle X_i, X_j \right \rangle \right)^{1 - A_{ij}}.
 \]
-In the RDPG model, each vertex $i$ is associated with a latent position $X_i$. Conditioned on the latent positions $X$, the edges $A_{ij} \distas{iid} \text{Bern}(\left \langle X_i, X_j \right \rangle)$.
+In the RDPG model, each vertex $i$ is associated with latent position $X_i$ and  conditioned on the latent positions $X$, the edges $A_{ij} \distas{iid} \text{Bern}(\left \langle X_i, X_j \right \rangle)$.
 Note that the probability matrix is the outter product of the latent position matrix with itself, $P = X X^T$.
 This imposes two properties on $P$, namely that $P$ is positive-semidefinite and $\mathrm{rank}(P)=\mathrm{rank}(X)\leq d$.
+These properties lead us to our proposed estimator.
 %Note that $\mathrm{rank}(P) = \mathrm{rank}(X)$.
 
 
@@ -147,7 +152,7 @@ This imposes two properties on $P$, namely that $P$ is positive-semidefinite and
 \subsection{Low-Rank Estimator $\hat{P}$}
 
 Motivated by the low-rank structure of the RDPG mean matrix, we consider the estimator $\hat{P}$ based on the spectral decomposition of $\bar{A}$ which yields a low rank approximation of $\bar{A}$.
-This estiamtor is similar to the estimator proposed by \citet{chatterjee2015matrix} but we analyze its performance more specifically in the random graph setting.
+This estimator is similar to the estimator proposed by \citet{chatterjee2015matrix} but we analyze its performance more specifically in the random graph setting.
 
 For a given dimension $d$ we consider the estimator $\hat{P}$ defined as the best rank-$d$ positive-semidefinite approximation of $\bar{A}$.
 Since the graphs are symmetric, we can compute the eigendecomposition of $\bar{A}$ as $\hat{U} \hat{S} \hat{U}^T + \tilde{U}\tilde{S}\tilde{U}^T$, where $\hat{S}$ is a diagonal matrix with non-increasing entries along the diagonal corresponding to the largest $d$ eigenvalues of $A$ and $\hat{U}$ has columns given by the corresponding eigenvectors.
@@ -170,8 +175,8 @@ Details are discussed in Section \ref{section:diag_aug}.
 \begin{algorithmic}[1]
 \STATE \textbf{Input:} $A^{(1)}, A^{(2)}, \cdots, A^{(M)}$, each $A^{(m)} \in \{0,1\}^{N \times N}$, $k_max$
 \STATE Calculate the sample mean $\bar{A} = \frac{1}{M}\sum\limits_{m = 1}^M A^{(m)}$;
-\STATE Calculate the degree matrix $D^{(0)} = \mathrm{diag}(\bar{A} \bm{1})$;
-\STATE Select the dimension $d$  using $\bar{A} + D^{(0)}/(n-1)$ (see Section \ref{section:dim_select});
+\STATE Calculate the scaled degree matrix $D^{(0)} = \mathrm{diag}(\bar{A} \bm{1})/(n-1)$;
+\STATE Select the dimension $d$  using $\bar{A} + D^{(0)}$ (see Section \ref{section:dim_select});
 \STATE Calculate the rank-$d$ approximation $\hat{U} \hat{S} \hat{U}^T$ for $\bar{A} + D^{(0)}$;
 \STATE Update the diagonal to $D^{(1)} \leftarrow \mathrm{diag}(\hat{U} \hat{S} \hat{U}^T)$ (see Section \ref{section:diag_aug}); 
 \STATE Set $\tilde{P}\rightarrow\hat{U} \hat{S} \hat{U}^T$, the rank-$d$ approximation for $\bar{A} + D^{(1)}$;
@@ -273,8 +278,8 @@ This theorem indicates that under the SBM, $\hat{P}$ is a much better estimate o
 From the result, we see that the relative efficiency is of order $O(N^{-1})$ and $N \cdot \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ converges to $1/\rho_{\tau_i}+1/\rho_{\tau_j}$ when $N$ goes to infinity.
 Also, the ARE does not depend on the number of graphs $M$, so the larger the graphs are, the better $\hat{P}$ is relative to $\bar{A}$, regardless of $M$.
 
-{\color{red} RESULT FOR RDPG}
-
+If instead of assuming that the graphs follow a SBM distribution we assume the graphs are distributed according to a RDPG distribution, similar gains in relative efficiency can be realized.
+While there is no compact analytical formula for the relative efficiency of $\hat{P}$ versus $\bar{A}$ in the general RDPG case, using the same ideas as in Theorem~\ref{thm:ARE}, we can show that $\mathrm{RE}(\bar{A}_{ij},\hat{P}_{ij}) = O(1/N)$.
 
 \subsection{Validation with Simulations}\label{sec:sbm_sim}
 
@@ -286,9 +291,6 @@ Also, the ARE does not depend on the number of graphs $M$, so the larger the gra
     % Different types of dashed lines denote the simulated scaled RE associated with different blocks. Solid line represents the theoretical value for scaled RE. Observe that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t = 4$ as expected.}
     \label{fig:RE}
 \end{figure}
-
-To illustrate Theorem \ref{thm:ARE} as $\rho$ changes, Figure~\ref{fig:RErho} shows $1/\rho_s + 1/\rho_t$, the scaled asympotic RE, as $\rho$ changes from $0.01$ to $0.50$, for fixed $N=500$ and $M=100$.
-For $N=500$ and $M=100$, estimates of the scaled RE based on simulations agree very closely with their corresponding theoretical values. Notice that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Figure \ref{fig:RE}.
 
 \begin{figure}[!t]
 \centering
@@ -302,7 +304,7 @@ For $N=500$ and $M=100$, estimates of the scaled RE based on simulations agree v
 In this section, we will illustrate the theoretical results from Section 3.1 regarding the relative efficiency between $\bar{A}$ and $\hat{P}$ via Monte Carlo simulation experiments.
 
 %\subsubsection{Simulation Setting}
-Here we consider a 2-block SBM with parameters
+Here, we consider a 2-block SBM with parameters
 \begin{equation*}
 B = \begin{bmatrix}
 0.42 & 0.2 \\
@@ -315,9 +317,9 @@ B = \begin{bmatrix}
 When calculating $\hat{P}$, we omit the dimension selection step from Algorithm~\ref{algo:basic} and instead using the true dimension $d = \mathrm{rank}(B) = 2$.
 
 %\subsubsection{Simulation Results}
-To investigate the finite sample relative efficiency, we first sample 1000 Monte Carlo replicates from the above SBM distribution with different number of vertices $N$ and fixed number of graphs $M$. The scaled relative efficiency $N \cdot \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ can be estimated since $P$ is known for this simulation. Since the relative efficiency only depends on the blocks memberships of the pair $i,j$, we combine the relative estimates and compute
+To investigate the finite sample relative efficiency, we first sample 1000 Monte Carlo replicates from the above SBM distribution with different number of vertices $N$ and fixed number of graphs $M$. The scaled relative efficiency $N \cdot \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ can be estimated since $P$ is known for this simulation. Since the relative efficiency only depends on the blocks memberships of the pair $i,j$, we estimate the relative efficiency for each block pair using
 \[
-	\mathrm{RE}_{st}(\bar{A},\hat{P}) = \frac{\sum_{\tau_i=s,\tau_j=t,i \ne j} \hat{MSE}(\hat{P}_{ij})}{\sum_{\tau_i=s,\tau_j=t,i \ne j} \hat{MSE}(\bar{A}_{ij})}
+	\mathrm{RE}_{st}(\bar{A},\hat{P}) = \frac{\sum_{\tau_i=s,\tau_j=t,i \ne j} \widehat{MSE}(\hat{P}_{ij})}{\sum_{\tau_i=s,\tau_j=t,i \ne j} \widehat{MSE}(\bar{A}_{ij})}
 \]
 for $s,t\in\{1,2\}$, where $\hat{MSE}$ denotes the estimated mean square error based on the Monte Carlo replicates.
 
@@ -326,20 +328,26 @@ Based on the Theorem~\ref{thm:ARE}, we have that the scaled RE converges to $1/\
 This is plotted as a solid line.
 The different dashed lines denote the estimated scaled RE associated with different block pairs, either $B_{11}$, $B_{12}$ or $B_{22}$. 
 From the figure, we see that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to scaled asymptotic RE quite rapidly.
-We omit error bars as the standard errors are very small for the estimates.
-{\color{red} Say something about why $B_{11}, B_{22}>4$ and $B_{12}<4$}
+We omit error bars as the standard errors are very small for these estimates.
+% {\color{red} Say something about why $B_{11}, B_{22}>4$ and $B_{12}<4$}
+
+
+
+To further illustrate Theorem \ref{thm:ARE}, Figure~\ref{fig:RErho} shows $1/\rho_s + 1/\rho_t$, the scaled asymptotic RE, as $\rho$ changes from $0.01$ to $0.50$, for fixed $N=500$ and $M=100$.
+For $N=500$ and $M=100$, estimates of the scaled RE based on simulations agree very closely with their corresponding theoretical values. Note that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Figure \ref{fig:RE}.
+
 
 
 \subsection{CoRR Brain Graphs: Cross-Validation}\label{sec:corr_data}
 
-In practice, graphs do not follow the independent edge model, let alone an RDPG or SBM, but we are still interested in the mean of a collection of graphs.
-To demonstrate that the estimator $\hat{P}$ is still useful in such cases, we test its performance on strcutural connectomic data. 
+In practice, graphs do not follow the independent edge model, let alone an RDPG or SBM, but the mean of a collection of graphs is still of interest for these cases.
+To demonstrate that the estimator $\hat{P}$ is still useful in such cases, we test its performance on structural connectomic data. 
 The graphs are based on diffusion tensor MR images collected and available at the Consortium for Reliability and Reproducibility (CoRR) \citep{zuo2014open, gorgolewski2015high}.
 
-The dataset contains 454 different brain scans, each of which was processed to yield an undirected, unweighted graph with no self-loops using the pipeline describe in \citet{gray2012magnetic} {\color{red}(I think?)}.
+The dataset contains 454 different brain scans, each of which was processed to yield an undirected, unweighted graph with no self-loops, using the pipeline describe in \citet{gray2012magnetic} {\color{red}(I think?)}.
 The vertices of the graphs represent different regions in the brain defined according to an atlas.
 We used three atlases, the JHU atlas with 48 vertices, the Desikan atlas with 70 vertices and the  CPAC200 atlas with 200.
-An edge exists between two regions whenever there is at least one white-matter tract connecting the corresponding two parts of the brain. 
+An edge exists between two vertices whenever there is at least one white-matter tract connecting the corresponding two regions of the brain. 
 Further details of the dataset are provided in Section \ref{section:data}.
 
 In order to evaluate the performance of the two estimators, we use a cross validation on the 454 graphs of each size. 
@@ -349,17 +357,20 @@ While we cannot interpret this mean graph as the probability matrix for an IEM d
 
 % By observing 454 graphs generated by the atlas being picked, we use $\hat{P}$ to estimate the mean graph $P$, which is the proportions of the existence of a white-matter tract connecting different parts of the brain. Since $P$ is unknown in practice, we perform a cross-validation study to compare $\bar{A}$ and $\hat{P}$. For each Monte Carlo replicate, we first fix the sample size $M$ and randomly sample $M$ graphs from the total 454 graphs in the dataset. We assure $M$ to be relatively small such that the entry-wise mean of the remaining $(454 - M)$ graphs is a valid approximation of the true probability matrix $P$ we are estimating. Then we can calculate $\bar{A}$ and $\hat{P}$ based on the $M$ samples and compare their performance based on the estimated probability matrix.
 
-We run 1000 simulations on each of the three different atlases for each sample size $M=1,5,10$.
+We run 1000 simulations on each of the three atlases for each sample size $M=1,5,10$.
 We also considered all possible dimensions for $\hat{P}$ by ranging $d$ from 1 to $N$ in order to investigate the impact of the dimension selection procedures.
 We plot the MSE of $\bar{A}$ and $\hat{P}$ in Figure \ref{fig:realdata}.
 The horizontal axis gives dimension $d$, which only impacs $\hat{P}$, which is why the MSE of $\bar{A}$ is shown as flat.
 
-When $d$ is small, $\hat{P}$ underestimate the dimension and throws away important information, which leads to a relative poor performance. When $d=N$, $\hat{P}$ is equal to $\bar{A}$, so that the curve of the MSE for $\hat{P}$ ends at the MSE for $\bar{A}$. 
+When $d$ is small, $\hat{P}$ underestimate the dimension and throws away important information, which leads to relatively poor performance. When $d=N$, $\hat{P}$ is equal to $\bar{A}$, so that the curve of the MSE for $\hat{P}$ ends at the MSE for $\bar{A}$. 
 In practice, we use algorithms like Zhu and Ghodsi's method or USVT to select the dimension $d$ (see section~\ref{section:dim_select}). 
-In the figure, we denote the 3rd elbow found by the Zhu and Ghodsi method by a triangle (with largest 95\% confidence interval length to be $3.5$), and denote the dimension selected by USVT with threshold 0.7 by a square (with largest 95\% confidence interval length to be $0.7$). 
-Both algorithms dimension selection algorithms select dimensions which nearly minimize minimize. 
+In the figure, we denote the 3rd elbow found by the Zhu and Ghodsi method by a triangle , and denote the dimension selected by USVT with threshold 0.7 by a square. 
+% (with largest 95\% confidence interval length to be $3.5$)
+% (with largest 95\% confidence interval length to be $0.7$)
+Both dimension selection algorithms tend to select dimensions which nearly minimize the mean square error.
+% The standard error for the Zhu and Ghodsi and the USVT methods are about $0.9$ and $0.17$ respectively.
 
-When $M$ is 1 or 5, $\bar{A}$ has large variance which leads to large MSE Meanwhile, $\hat{P}$ reduces the variance by taking advantages of inherent low-rank-like structure of the mean graph. Additionally, we see that there is a large range of dimensions where perfomance for $\hat{P}$ is superior to $\bar{A}$. 
+When $M$ is 1 or 5, $\bar{A}$ has large variance which leads to large MSE. Meanwhile, $\hat{P}$ reduces the variance by taking advantages of inherent low-rank structure of the mean graph. Additionally, we see that there is a large range of dimensions where the performance for $\hat{P}$ is superior to $\bar{A}$. 
 With a larger $M$, the performance of $\bar{A}$ improves so that its performance is frequently superior to $\hat{P}$ but $\hat{P}$ still performs nearly as well.
 
 \begin{figure}[!htb]
@@ -367,11 +378,15 @@ With a larger $M$, the performance of $\bar{A}$ improves so that its performance
 \includegraphics[width=1\textwidth]{corr_data_MSE_jhu.pdf}\\
 \includegraphics[width=1\textwidth]{corr_data_MSE_desikan.pdf}\\
 \includegraphics[width=1\textwidth]{corr_data_MSE_CPAC200.pdf}
-\caption{A comparison of the mean square error for $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for three dataset (JHU, Desikan and CPAC200) while embedding the graphs into different dimensions and with different sample sizes $M$. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted in triangle (with largest 95\% confidence interval length to be $3.5$), and chosen by USVT with threshold equals 0.7 is denoted in square (with largest 95\% confidence interval length to be $0.7$).  Vertical intervals represent the 95\% confidence interval.  When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
+\caption{A comparison of the mean square error for $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for three dataset (JHU, Desikan and CPAC200) while embedding the graphs into different dimensions and with different sample sizes $M$. The dimension chosen by the 3rd elbow of Zhu and Ghodsi is denoted by a triangle,
+ % (with largest 95\% confidence interval length to be $3.5$), 
+ and chosen by USVT with threshold equals 0.7 is denoted in square.
+% (with largest 95\% confidence interval length to be $0.7$). 
+ Vertical intervals, visible mainly in the $N=48,70$ and $M=1$ plots, represent the 95\% confidence interval for the mean square errors.  When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
 \label{fig:realdata}
 \end{figure}
 
-For illustration, we consider a random sample of size $M=5$ based on the Desikan atlas.
+As an illustration, we consider a random sample of size $M=5$ based on the Desikan atlas.
 We calculated $\bar{A}$ and $\hat{P}$, using  Zhu and Ghodsi's 3rd elbow to select $d=11$. 
 In Figure \ref{fig:Matrix_desikan_m5}, the estimates $\bar{A}$ and $\hat{P}$ as well as the sample mean of 454 graphs (as a close estimate of $P$) are plotted. 
 Since the sample size is small, there are a lot of pairs of vertices with no edges or 5 edges in the 5 observations.
@@ -383,12 +398,14 @@ There are 18 edges from $\bar{A}$ and 6 edges from $\hat{P}$ being highlighted i
 Note that $\approx 13\%$ of the potential edges are present in all $454$ graphs and hence $\bar{A}$ will always have zero error for those pairs of vertices.
 Nonetheless, $\hat{P}$ typically outperforms $\bar{A}$.
 
-We also investigate the difference in performance with respect to the geometry of brain. 
-In Figure \ref{fig:Diff_between_desikan}, we plot the physical locations for the 50 edges between regions with the largest difference $|\bar{A} - P| - |\hat{P} - P|$. Red edges indicate that $\hat{P}$ overestimate $P$ while blue means that $\hat{P}$ underestimate $P$. The edge width is determined by the estimation error. Connections with larger estimation error are represented by thicker lines.
+To investigate the difference in performance with respect to the geometry of brain, 
+in Figure \ref{fig:Diff_between_desikan}, we plot the 50 edges with the largest difference $|\bar{A} - P| - |\hat{P} - P|$ according to the location of the corresponding regions in the brain. Red edges indicate that $\hat{P}$ overestimate $P$ while blue means that $\hat{P}$ underestimate $P$. The edge width is determined by the estimation error for $\hat{P}$, where pairs with larger estimation error are represented by thicker lines.
 We also highlight the regions corresponding to vertices that contribute most to the difference, meaning the vertices $i$ with the largest value of $\sum_j (|\bar{A} - P| - |\hat{P} - P|)_{ij}$.
+Notably, these regions of improvement appear to be concentrated in three distinct regions of the brain.
+{\color{red}(Can JOVO give names to these areas?)}
 
 
-The result demonstrates that $\hat{P}$ gives a better estimate than $\bar{A}$ for the CoRR dataset with all three atlases. 
+These results demonstrate that $\hat{P}$ gives a better estimate than $\bar{A}$ for the CoRR dataset with all three atlases. 
 Importantly, this improvement is robust to the embedding dimension as long as provided the dimension is not underestimated.
 
 \begin{figure}[!htb]
@@ -474,7 +491,7 @@ Importantly, this improvement is robust to the embedding dimension as long as pr
 
 \subsection{Simulation under the Full Rank Independent Edge Model}\label{sec:sim_iem}
 
-While the theory we have devloped is based on the assumption that the mean graph is low rank, as we have seen in Section~\ref{sec:corr_data}, $\hat{P}$ often performs well even when this assumption is false. 
+While the theory we have developed is based on the assumption that the mean graph is low rank, as we have seen in Section~\ref{sec:corr_data}, $\hat{P}$ often performs well even when this assumption is false. 
 To further illuminate this point, we perform a simulation under a full-rank independent edge model where we use the sample mean of the 454 graphs in the Desikan dataset as the probability matrix $P$.
 As in the previous section, we simulated data sets of size $M=1,5$, and $10$ and used $\bar{A}$ and $\hat{P}$, where for $\hat{P}$ we varied the rank from 1 to 70.
 
@@ -482,7 +499,7 @@ Figure \ref{fig:sim_desikan} shows resulting estimated MSE for $\bar{A}$ (solid 
 % Vertical lines at each dimension indicate the 95\% confidence intervals for the MSE.
 We see that the results are very similar to those presented in section~\ref{sec:corr_data}.
 When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including those selected by the Zhu and Ghodsi method while when $M$ is large enough, both estimators perform very well.
-So $\hat{P}$ does a good job even when the low rank assumption of the model is violated. This simulation shows again the robustness of $\hat{P}$.
+So $\hat{P}$ does a good job even when the low rank assumption of the model is violated. This simulation again shows the robustness of $\hat{P}$ to deviations from the RDPG model.
 
 
 \begin{figure}[!htb]
@@ -525,7 +542,7 @@ These structural ones appear since edges between certain regions of the brain ar
 The low-rank methods tend to miss these always present edges while the sample mean will always capture them.
 Detecting and incorporating these structural ones could yield a method that shares the best elements of both methods considered herein.
 
-We note is that for the CoRR data set we used a cross validation framework where we compared the estimates based on a subsample to the mean for a hold out set. 
+For the CoRR data set, we used a cross validation framework where we compared the estimates based on a subsample to the mean for a hold out set. 
 Another option would be to the estimates to the mean for the entire population including the subsample.
 Both of these analyses lead to very similar results in the cases presented above but for various reasons one may prefer one analysis over another.
 The cross validation method is most reasonable from a prediction perspective where prediction about new samples is of interest.
