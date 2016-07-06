@@ -537,26 +537,23 @@ Rank-based methods and robust likelihood methods could be very useful in that ca
 
  % With contaminations, robust estimators like ML$q$E is preferred. If an estimator can not only inherit robustness from the robust estimators but also has small variance by taking advantage of the low rank structure of the graphs, it will be very useful.
 
-Another issue that arose in our analysis of the CoRR data set was the presence of structural ones in the mean graph for the population. 
+Another issue that arose in our analysis of the connectome data set was the presence of structural ones in the mean graph for the population. 
 These structural ones appear since edges between certain regions of the brain are present in all or nearly all members of the healthy population. 
 The low-rank methods tend to miss these always present edges while the sample mean will always capture them.
-Detecting and incorporating these structural ones could yield a method that shares the best elements of both methods considered herein.
+Detecting and incorporating structural ones and zeros could yield methods that share the best elements of both methods considered here.
 
-For the CoRR data set, we used a cross validation framework where we compared the estimates based on a subsample to the mean for a hold out set. 
-Another option would be to the estimates to the mean for the entire population including the subsample.
+For the CoRR data set, we used a cross validation framework where we compared the estimates based on a subsample to the mean for the held-out set. 
+Another option would be to compare the estimates $\bar{A}$ and $\hat{P}$ to the mean for the entire population including the subsample.
 Both of these analyses lead to very similar results in the cases presented above but for various reasons one may prefer one analysis over another.
 The cross validation method is most reasonable from a prediction perspective where prediction about new samples is of interest.
 If instead, one is interested in learning directly about the mean of a population, especially a finite population, the sub-sampling approach may be the most logical choice.
-
-
-
 
 \section{Methods}
 
 \subsection{Choosing Dimension}
 \label{section:dim_select}
-Often in dimensionality reduction techniques, the choice for dimension $d$, relies on analyzing the set of the ordered eigenvalues, looking for a ``gap'' or ``elbow'' in the scree-plot. \citet{zhu2006automatic} present an automated method for finding this gap in the scree-plot that takes only the ordered eigenvalues as an input and uses Gaussian mixture modeling to find a cutoff.
-The mixture modeling results in multiple ``elbows'' or dimensions that are found and our analysis indicated that underestimating the dimension is much more harmful than overestimating the dimension.
+Often in dimensionality reduction techniques, the choice for dimension $d$, relies on analyzing the set of the ordered eigenvalues, looking for a ``gap'' or ``elbow'' in the scree-plot. \citet{zhu2006automatic} present an automated method for finding this gap in the scree-plot that takes only the ordered eigenvalues as an input and uses Gaussian mixture modeling to find these gaps.
+The mixture modeling results in multiple candidate dimensions or elbows and our analysis indicated that underestimating the dimension is much more harmful than overestimating the dimension.
 For this reason, we use the 3rd elbow in the experiments performed in this work.
 
 Universal Singular Value Thresholding (USVT) is a simple estimation procedure proposed by \citet{chatterjee2015matrix} that can work for any matrix that has ``a little bit of structure''. 
@@ -564,7 +561,7 @@ In our setting, it selects the dimension $d$ as the number singular values that 
 The specific constant $c$ must be selected carefully based on the mean and variance of the entries and since again we found that overestimating the dimension was not overly harmful, we chose a relatively small value of $c=0.7$.
 
 Overall, selecting the appropriate dimension is a challenging task and numerous methods could be applied successfully depending on the setting.
-On the other hand, we have observed that in our setting many dimensions will yield nearly optimal mean square errors and so efforts to ensure the selected dimension are in the appropriate range are important.
+On the other hand, we have observed that in our setting many dimensions will yield nearly optimal mean square errors and so efforts to ensure the selected dimension are in the appropriate range are more important than finding the singular best dimension.
 
 
 
@@ -577,6 +574,7 @@ While this problem has been investigated in the single graph setting, with multi
 \citet{marchette2011vertex}  proposed the simple method of imputing the diagonals to be equal to the average of the non-diagonal entries for the corresponding row.
 Earlier, \citet{scheinerman2010modeling} proposed using an iterative method to impute the diagonal entries.
 In this work we combine these two ideas by first using the row-average method  (see Step 3 of Algorithm~\ref{algo:basic}) and then using one step of the iterative method (see Step 6 of Algorithm~\ref{algo:basic}).
+Note that when computing errors, we omit the diagonal entries since these are known to be zero.
 
 
 
