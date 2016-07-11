@@ -9,7 +9,7 @@
 \usepackage{theorem}
 \usepackage{amssymb}
 \usepackage{bm}
-
+\usepackage{booktabs}
 \usepackage[colorlinks=TRUE,linkcolor=olive,citecolor=brown]{hyperref}
 
 \usepackage{caption}
@@ -373,6 +373,9 @@ Both dimension selection algorithms tend to select dimensions which nearly minim
 When $M$ is 1 or 5, $\bar{A}$ has large variance which leads to large MSE. Meanwhile, $\hat{P}$ reduces the variance by taking advantages of inherent low-rank structure of the mean graph. Additionally, we see that there is a large range of dimensions where the performance for $\hat{P}$ is superior to $\bar{A}$. 
 With a larger $M$, the performance of $\bar{A}$ improves so that its performance is frequently superior to $\hat{P}$ but $\hat{P}$ still performs nearly as well.
 
+As further evidence for the improvement using $\hat{P}$, even when the dimension must be derived from data, Table~\ref{tab:corr_re}.
+For each atlas and each sample size we compare the \citet{zhu2006automatic} with the USVT method and note that both perform well, especially for large $N$ and small $M$.
+
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=1\textwidth]{corr_data_MSE_jhu.pdf}\\
@@ -385,6 +388,29 @@ With a larger $M$, the performance of $\bar{A}$ improves so that its performance
  Vertical intervals, visible mainly in the $N=48,70$ and $M=1$ plots, represent the 95\% confidence interval for the mean square errors.  When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including what Zhu and Ghodsi selects.}
 \label{fig:realdata}
 \end{figure}
+
+\begin{table}[tb]
+    \caption{Relative efficiencies for estimating the mean graph for the CoRR data set. }
+    \label{tab:corr_re}
+    \centering
+
+\begin{tabular}{rccc}\toprule
+\multicolumn{4}{c}{JHU} \\\midrule
+        & $m=1$  & $m=5$  & $m=10$ \\
+ZG      & 0.54 & 0.81 & 1.14 \\
+USVT    & 0.56 & 0.84 & 1.12 \\\midrule
+\multicolumn{4}{c}{Desikan} \\ \midrule
+        & $m=1$  & $m=5$  & $m=10$ \\
+ZG      & 0.52 & 0.81 & 1.14 \\
+USVT    & 0.50 & 0.81 & 1.09 \\\midrule
+\multicolumn{4}{c}{CPAC200} \\\midrule
+        & $m=1$  & $m=5$  & $m=10$ \\
+ZG      & 0.51 & 0.68 & 0.89 \\
+USVT    & 0.52 & 0.79 & 0.99 \\\bottomrule
+\end{tabular}
+\end{table}
+
+
 
 As an illustration, we consider a random sample of size $M=5$ based on the Desikan atlas.
 We calculated $\bar{A}$ and $\hat{P}$, using  Zhu and Ghodsi's 3rd elbow to select $d=11$. 

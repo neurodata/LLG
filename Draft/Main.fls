@@ -162,6 +162,8 @@ INPUT /usr/local/texlive/2015/texmf-dist/tex/latex/amsfonts/amsfonts.sty
 INPUT /usr/local/texlive/2015/texmf-dist/tex/latex/amsfonts/amsfonts.sty
 INPUT /usr/local/texlive/2015/texmf-dist/tex/latex/tools/bm.sty
 INPUT /usr/local/texlive/2015/texmf-dist/tex/latex/tools/bm.sty
+INPUT /usr/local/texlive/2015/texmf-dist/tex/latex/booktabs/booktabs.sty
+INPUT /usr/local/texlive/2015/texmf-dist/tex/latex/booktabs/booktabs.sty
 INPUT /usr/local/texlive/2015/texmf-dist/tex/latex/hyperref/hyperref.sty
 INPUT /usr/local/texlive/2015/texmf-dist/tex/latex/hyperref/hyperref.sty
 INPUT /usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
