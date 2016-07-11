@@ -53,6 +53,15 @@
 \begin{document}
 \maketitle
 
+\begin{abstract}
+Estimating the mean of a population of graphs based on a sample is a core problem in network science.
+While using the element-wise sample mean of the adjacency matrices is a common approach, this method does not exploit any underlying structure of graphs.
+We propose using a low-rank method together with tools for dimension selection and diagonal augmentation to improve performance over the naive methodology.
+Theoretical results for the stochastic blockmodel show that this method will offer major improvements when there are many vertices.
+Similarly, in analyzing human connectome data, we demonstrate that the low-rank methods outperform the the standard sample mean.
+These results indicate that low-rank methods should be a key part of the tool box for researchers studying populations of graphs.
+\end{abstract}
+
 \section{Introduction}
 
 Estimation of the mean of a population based on a sample is at the core of statistics.
