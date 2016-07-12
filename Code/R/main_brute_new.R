@@ -17,15 +17,15 @@ for (m in mVec) {
     
     print(c(m, isSVD))
     
-    nIter = 100
+    nIter = 1000
     nCores = 2
     
     dataName = "CPAC200"
-#     dataName = "desikan"
-#     dataName = "JHU"
-#     dataName = "slab907"
-#     dataName = "slab1068"
-#     dataName = "Talairach"
+#         dataName = "desikan"
+#         dataName = "JHU"
+    #     dataName = "slab907"
+    #     dataName = "slab1068"
+    #     dataName = "Talairach"
     
     
     source("function_collection.R")
@@ -53,13 +53,22 @@ for (m in mVec) {
     # out = array(unlist(out), dim = c(2, nD, nIter))
     # error_A_bar = out[1,,]
     # error_P_hat = out[2,,]
-    
-    out <- mclapply(1:nIter, function(x) dim_brute1(M, m, dVec, A_all, A_sum, isSVD), 
+
+    out <- mclapply(1:nIter, function(x) dim_brute2(M, m, dVec, A_all, A_sum, isSVD), 
                     mc.cores=nCores)
-    out = array(unlist(out), dim = c(nD+1, nIter))
+    out = array(unlist(out), dim = c(nD+3, nIter))
     
     error_A_bar = out[1,]
     error_P_hat = out[2:(nD+1),]
+    dim_ZG = out[nD+2,]
+    dim_USVT = out[nD+3,]
+    error_P_hat_ZG = rep(0, length(dim_ZG))
+    error_P_hat_USVT = rep(0, length(dim_USVT))
+    for (i in 1:length(dim_ZG)) {
+      error_P_hat_ZG[i] = error_P_hat[dim_ZG[i], i]
+      error_P_hat_USVT[i] = error_P_hat[dim_USVT[i], i]
+    }
+    
     # mean(error_A_bar)
     # mean(error_P_hat[3,])
     
@@ -102,7 +111,8 @@ for (m in mVec) {
       fileName = paste("../../Result/result_", dataName, "_brute_", "m_", m, "_eig.RData", sep="")
     }
     
-    save(error_A_bar, error_P_hat, n, M, m, dVec, nIter, file=fileName)
+    save(error_A_bar, error_P_hat, error_P_hat_ZG, error_P_hat_USVT, 
+         dim_ZG, dim_USVT, n, M, m, dVec, nIter, file=fileName)
     
   }
 }
