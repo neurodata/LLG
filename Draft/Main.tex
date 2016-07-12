@@ -68,7 +68,13 @@ Estimation of the mean of a population based on a sample is at the core of stati
 The sample mean, motivated by the law of large numbers and the central limit theorem, has its place as one of the most important statistics for this task.
 Nowadays we take averages almost everywhere, from data in Euclidean space to more complex objects, like shapes, documents and graphs.
 
-However, in a striking result, \citet{stein1956inadmissibility} and \citet{james1961estimation} showed the arithmetic average should not always be the first choice and is inadmissable in even simple settings by todays standards. 
+The mean of a population of graphs is a high dimensional object, consisting of $O(N^2)$ parameters for a graph with $N$ vertices.
+Estimating high dimensional estimands with a small sample size using naive unbiased methods often leads to inaccurate estimates with very high variance.
+By exploiting the bias-variance trade-off, it is often fruitful to develop estimators which have some bias with greatly reduced variance.
+When these estimators are biased towards low-dimensional structures which well approximate the full dimensional population mean, major improvements can be realized.
+
+
+Additionally, in a striking result, \citet{stein1956inadmissibility} and \citet{james1961estimation} showed the arithmetic average should not always be the first choice and is inadmissable in even simple settings by todays standards. 
 Twenty-seven years later, \citet{gutmann1982stein} proved that this phenomenon cannot occur when the sample spaces are finite.
 But even when  the sample mean is admissible, it doesn't close the door to other estimators in all cases.
 In many situations where other structural information is hypothesized, for instance a collection of graphs as considered in this paper, other estimators may be preferable.
@@ -97,7 +103,9 @@ Latent position models can capture strong community structure like the stochasti
 One example of a LPM which captures this middle ground is the random dot product graph (RDPG) \cite{young2007random, nickel2007random} which motivates our estimator. 
 % In this paper, we analyze our estimator in terms of RDPG specifically.
 
-Using the estimates of the latent positions based on a truncated eigen-decomposition of the adjacency matrix,  in the RDPG setting we consider an estimator for the mean of the collection of graphs which captures the low-rank structure of the RDPG model. In this study, we show via theory, simulations and real data analysis that it frequently outperforms the element-wise MLE, especially in small sample sizes.
+Using the estimates of the latent positions based on a truncated eigen-decomposition of the adjacency matrix,  in the RDPG setting we consider an estimator for the mean of the collection of graphs which captures the low-rank structure of the RDPG model.
+{\color{red} exploit low rank structures}
+In this study, we show via theory, simulations and real data analysis that it frequently outperforms the element-wise MLE, especially in small sample sizes.
 
 
 % (Future work) Robust estimation, dimension selection, diagonal augmentation, etc.
@@ -230,7 +238,9 @@ We consider a 5-block SBM and plot the corresponding probability matrix and one 
   \centering
   \includegraphics[width=\linewidth]{SBM_A.pdf}
 \end{subfigure}
-\caption{Example illustrating the stochastic blockmodel. The left figure shows the mean graph $P$ with $K = 5$ blocks and $N=200$ vertices and the right figure shows an adjacency matrix $A$ sampled according to the probabilities from $P$.}
+\caption{Example illustrating the stochastic blockmodel. The left figure shows the mean graph $P$ with $K = 5$ blocks and $N=200$ vertices and the right figure shows an adjacency matrix $A$ sampled according to the probabilities from $P$.
+{\color{red}  take home message}
+}
 \label{fig:SBM_example}
 \end{figure}
 
@@ -404,16 +414,14 @@ For each atlas and each sample size we compare the \citet{zhu2006automatic} with
     \centering
 
 \begin{tabular}{rccc}\toprule
-\multicolumn{4}{c}{JHU} \\\midrule
-        & $m=1$  & $m=5$  & $m=10$ \\
+        % & $m=1$  & $m=5$  & $m=10$ \\\toprule
+\multicolumn{1}{l}{\textbf{JHU}} & $m=1$  & $m=5$  & $m=10$  \\\midrule
 ZG      & 0.54 & 0.81 & 1.14 \\
 USVT    & 0.56 & 0.84 & 1.12 \\\midrule
-\multicolumn{4}{c}{Desikan} \\ \midrule
-        & $m=1$  & $m=5$  & $m=10$ \\
+\multicolumn{1}{l}{\textbf{Desikan}} & $m=1$  & $m=5$  & $m=10$  \\ \midrule
 ZG      & 0.52 & 0.81 & 1.14 \\
 USVT    & 0.50 & 0.81 & 1.09 \\\midrule
-\multicolumn{4}{c}{CPAC200} \\\midrule
-        & $m=1$  & $m=5$  & $m=10$ \\
+\multicolumn{1}{l}{\textbf{CPAC200}} & $m=1$  & $m=5$  & $m=10$  \\\midrule
 ZG      & 0.51 & 0.68 & 0.89 \\
 USVT    & 0.52 & 0.79 & 0.99 \\\bottomrule
 \end{tabular}
