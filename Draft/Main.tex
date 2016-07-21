@@ -450,9 +450,9 @@ Nonetheless, $\hat{P}$ typically outperforms $\bar{A}$.
 To investigate the difference in performance with respect to the geometry of brain, 
 in Figure \ref{fig:Diff_between_desikan}, we plot the 50 edges with the largest difference $|\bar{A} - P| - |\hat{P} - P|$ according to the location of the corresponding regions in the brain. Red edges indicate that $\hat{P}$ overestimate $P$ while blue means that $\hat{P}$ underestimate $P$. The edge width is determined by the estimation error for $\hat{P}$, where pairs with larger estimation error are represented by thicker lines.
 We also highlight the regions corresponding to vertices that contribute most to the difference, meaning the vertices $i$ with the largest value of $\sum_j (|\bar{A} - P| - |\hat{P} - P|)_{ij}$.
-Notably, these regions of improvement appear to be concentrated in three distinct regions of the brain.
-{\color{red}(Can JOVO give names to these areas?)}
-
+Notably, these regions of improvement appear to be concentrated in three distinct regions of the brain. 
+{\color{red} Does this sound right?} 
+The top five regions are the inferior temporal, middle temporal, and transverse temporal regions in the left hemisphere and the parahippocampal and parsopercularis regions in the right hemisphere of the Desikan atlas.
 
 These results demonstrate that $\hat{P}$ gives a better estimate than $\bar{A}$ for the CoRR dataset with all three atlases. 
 Importantly, this improvement is robust to the embedding dimension as long as provided the dimension is not underestimated.
@@ -646,7 +646,7 @@ Here we provide an outline of the proof Lemma~\ref{lm:VarPhat} which provides th
 The result depends on using the asymptotic results for the distribution of eigenvectors from \citet{athreya2013limit} which extend to the multiple graph setting in a straightforward way.
 
 The first key observation, is that since $\bar{A}$ is computed from iid observations each with expectation $P$, $\bar{A}$ is unbiased for $P$ and $\mathrm{Var}(A_{ij}) = \frac{1}{M}P_{ij}(1-P_{ij}$.
-The results of $\citet{athreya2013limit}$ provide a central limit theorem for estimates of the latent position in a RDPG model for a single graph.
+The results of \citet{athreya2013limit} provide a central limit theorem for estimates of the latent position in a RDPG model for a single graph.
 Since the variance of each entry is scaled by $1/M$ in $\bar{A}$, the analogous result for $\bar{A}$ is that the estimated latent positions will follow an approximately normal distribution with variance scaled by $1/M$ compared to the variance for a single graph. 
 	
 % When comparing two estimators, the first thing we need to consider is consistency.
