@@ -26,6 +26,7 @@
 \newtheorem{proposition}[fact]{Proposition}
 \newtheorem{claim}[fact]{Claim}
 \newtheorem{exercise}[fact]{Exercise}
+\newtheorem{remark}[fact]{Remark}
 
 \usepackage{algorithm}
 \usepackage{algorithmic}
@@ -302,6 +303,13 @@ Also, the ARE does not depend on the number of graphs $M$, so the larger the gra
 If instead of assuming that the graphs follow a SBM distribution we assume the graphs are distributed according to a RDPG distribution, similar gains in relative efficiency can be realized.
 While there is no compact analytical formula for the relative efficiency of $\hat{P}$ versus $\bar{A}$ in the general RDPG case, using the same ideas as in Theorem~\ref{thm:ARE}, we can show that $\mathrm{RE}(\bar{A}_{ij},\hat{P}_{ij}) = O(1/N)$.
 
+\begin{remark}
+As we noted above, if the graphs are distributed according to an SBM or an RDPG, the relative efficiency is approximately invariant to the number of graphs $M$ when $N$ is large.
+If on the other hand, the graphs are generated according to a full-rank independent edge model, then the relative efficiency can change more dramatically as $M$ changes. 
+The reason for this is because for larger $M$, more of the eigenvectors of $\bar{A}$ will begin to concentrate around the eigenvectors of the mean graph.
+This leads to the fact that the optimal embedding dimension will increase, making $\bar{A}$ and $\hat{P}$ closer together, moving the relative efficiency towards unity.
+\end{remark}
+
 \subsection{Validation with Simulations}\label{sec:sbm_sim}
 
 
@@ -451,7 +459,6 @@ To investigate the difference in performance with respect to the geometry of bra
 in Figure \ref{fig:Diff_between_desikan}, we plot the 50 edges with the largest difference $|\bar{A} - P| - |\hat{P} - P|$ according to the location of the corresponding regions in the brain. Red edges indicate that $\hat{P}$ overestimate $P$ while blue means that $\hat{P}$ underestimate $P$. The edge width is determined by the estimation error for $\hat{P}$, where pairs with larger estimation error are represented by thicker lines.
 We also highlight the regions corresponding to vertices that contribute most to the difference, meaning the vertices $i$ with the largest value of $\sum_j (|\bar{A} - P| - |\hat{P} - P|)_{ij}$.
 Notably, these regions of improvement appear to be concentrated in three distinct regions of the brain. 
-{\color{red} Does this sound right?} 
 The top five regions are the inferior temporal, middle temporal, and transverse temporal regions in the left hemisphere and the parahippocampal and parsopercularis regions in the right hemisphere of the Desikan atlas.
 
 These results demonstrate that $\hat{P}$ gives a better estimate than $\bar{A}$ for the CoRR dataset with all three atlases. 
