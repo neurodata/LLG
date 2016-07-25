@@ -223,7 +223,7 @@ Runze Tang\textsuperscript{1},
 Michael Ketcha\textsuperscript{2},
 Joshua T. Vogelstein\textsuperscript{2},
 Carey E. Priebe\textsuperscript{1}
-Daniel L. Sussman\textsuperscript{3},
+Daniel L. Sussman\textsuperscript{3*},
 \\
 \bigskip
 \textbf{1} Department of Applied Math \& Statistics, The Johns Hopkins University, Baltimore, MD, USA
@@ -232,7 +232,8 @@ Daniel L. Sussman\textsuperscript{3},
 \\
 \textbf{3} Department of Mathematics \& Statistics, Boston University, Boston, MA, USA
 \\
-% \bigskip
+* sussman@bu.edu
+ \bigskip
 
 
 
@@ -269,7 +270,11 @@ These results indicate that low-rank methods should be a key part of the tool bo
 % Use first person. PLOS ONE authors please skip this step. 
 % Author Summary not valid for PLOS ONE submissions.   
 \section*{Author Summary}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eget porta erat. Morbi consectetur est vel gravida pretium. Suspendisse ut dui eu ante cursus gravida non sed sem. Nullam sapien tellus, commodo id velit id, eleifend volutpat quam. Phasellus mauris velit, dapibus finibus elementum vel, pulvinar non tellus. Nunc pellentesque pretium diam, quis maximus dolor faucibus id. Nunc convallis sodales ante, ut ullamcorper est egestas vitae. Nam sit amet enim ultrices, ultrices elit pulvinar, volutpat risus.
+Sampling from populations of networks is common task in areas such as connectomics and gene expression analysis.
+When confronted with a sample from a population of graphs estimating the mean graph is a non-trivial task since the number of parameters in the mean graph grows quadratically with the number of vertices in the graph.
+We propose using low-rank estimates of the mean graph in order to reduce the variance of the estimate in exchange for a slight increase in bias.
+This results in an estimator which is often superior to using the naive element-wise mean, especially when there are very few graphs in the sample.
+We demonstrate the improved performance via theoretical results for the stochastic blockmodel as well as in an extensive analysis of connectomic data derived from diffusion tensor magnetic resonance imaging.
 
 \linenumbers
 
@@ -519,7 +524,8 @@ While there is no compact analytical formula for the relative efficiency of $\ha
 As we noted above, if the graphs are distributed according to an SBM or an RDPG, the relative efficiency is approximately invariant to the number of graphs $M$ when $N$ is large.
 If on the other hand, the graphs are generated according to a full-rank independent edge model, then the relative efficiency can change more dramatically as $M$ changes. 
 The reason for this is because for larger $M$, more of the eigenvectors of $\bar{A}$ will begin to concentrate around the eigenvectors of the mean graph.
-This leads to the fact that the optimal embedding dimension will increase, making $\bar{A}$ and $\hat{P}$ closer together, moving the relative efficiency towards unity.
+This leads to the fact that the optimal embedding dimension will increase, making $\bar{A}$ and and the low-rank approximation at the optimal dimension closer together. 
+As a result, $\mathrm{RE}(\bar{A},\hat{P})$ will increase as $M$ increases for full-rank models.
 \end{remark}
 
 \subsection{Validation with Simulations}\label{sec:sbm_sim}
