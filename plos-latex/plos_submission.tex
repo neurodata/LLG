@@ -352,6 +352,7 @@ For this case, we aim to estimate the mean matrix $P=\Ex[A^{(m)}]$ base on the o
 
 
 \subsection{Estimator $\bar{A}$}
+\label{sec:abar}
 Under the IEM, the MLE for the mean graph $P$ is the element-wise sample mean of the adjacency matrices $\bar{A}=\frac{1}{M}\sum_{m=1}^M A^{(m)}$.
 It is unbiased with entry-wise variance $\mathrm{Var}(\bar{A}_{ij}) = P_{ij} (1-P_{ij})/M$. Moreover, $\bar{A}$ is the uniformly minimum-variance unbiased estimator, so it has the smallest variance among all unbiased estimators and enjoys the many asymptotic properties of the MLE as $M\to \infty$.
 
@@ -385,6 +386,7 @@ These properties lead us to our proposed estimator.
 
 
 \subsection{Low-Rank Estimator $\hat{P}$}
+\label{sec:phat}
 
 Motivated by the low-rank structure of the RDPG mean matrix, we consider the estimator $\hat{P}$ based on the spectral decomposition of $\bar{A}$ which yields a low rank approximation of $\bar{A}$.
 This estimator is similar to the estimator proposed by \citet{chatterjee2015matrix} but we analyze its performance more specifically in the random graph setting.
@@ -445,6 +447,7 @@ In this way, the SBM can be seen as an RDPG where all vertices in the same block
 
 An example SBM is illustrated in Fig~\ref{fig:SBM_example}.
 We consider a 5-block SBM and plot the corresponding probability matrix and one adjacency matrix generated from it with 200 vertices. From the figure, we can clearly see the structure of 25 blocks in both the probability matrix and the adjacency matrix as a result of 5 different blocks among vertices.
+We also see that using the low-rank approximation $\hat{P}$ performs much better to estimate $P$ compared to usingt he sample mean $\bar{A}$.
 
 \begin{figure}
 \centering
@@ -466,9 +469,9 @@ We consider a 5-block SBM and plot the corresponding probability matrix and one 
 \end{subfigure}
 \caption{Example illustrating the stochastic blockmodel. The top left figure shows the mean graph $P$ with $K = 5$ blocks and $N=200$ vertices and the top right figure shows an adjacency matrix $A$ sampled according to the probabilities from $P$.
 While $A$ is a noisy version of $P$, much of the structure of $P$ is preserved in $A$, a property we will exploit in our estimation procedure.
-Based on three graphs sampled independently and identically according to the probability matrix $P$, we construct the element-wise mean $\bar{A}$, shown in the lower right panel. 
-Finally, by taking a rank-5 approximation of $\bar{A}$ and thresholding the values to be between $O$ and $1$, we construct our proposed estimate $\hat{P}$, shown in the lower left panel.
-By visual inspection, it is clear that the low-rank estimate $\hat{P}$ more closely approxmates the probability matrix $P$ as compared to $\bar{A}$.
+Based on three graphs sampled independently and identically according to the probability matrix $P$, we construct the element-wise mean $\bar{A}$, shown in the lower right panel (see Section~\ref{sec:abar}.  
+Finally, by taking a rank-5 approximation of $\bar{A}$ and thresholding the values to be between $O$ and $1$, we construct our proposed estimate $\hat{P}$, shown in the lower left panel (see Section~\ref{sec:phat}).
+By visual inspection, it is clear that the low-rank estimate $\hat{P}$ more closely approximates the probability matrix $P$ as compared to $\bar{A}$.
 }
 \label{fig:SBM_example}
 \end{figure}
