@@ -525,11 +525,32 @@ and for large enough $N$, we have
 \]
 \end{theorem}
 
+
 This theorem indicates that under the SBM, $\hat{P}$ is a much better estimate of the mean of the collection of graphs $P$ than $\bar{A}$. 
 From the result, we see that the relative efficiency is of order $O(N^{-1})$ and $N \cdot \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ converges to $1/\rho_{\tau_i}+1/\rho_{\tau_j}$ when $N$ goes to infinity.
 If for example there is one block containing half the vertices, the relative efficiency for estimating the probabilities of edges between vertices in that block will be approximately $4/N$.
 For even large blocks the relative will decrease towards $1/N$ where as if a block tends to have very few vertices, so that the the asymptotic relative efficiency will tends towards 1, but will always be less than one.
 Also, the ARE does not depend on the number of graphs $M$, so the larger the graphs are, the better $\hat{P}$ is relative to $\bar{A}$, regardless of $M$.
+
+
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=1\textwidth]{Rho.pdf}
+\caption{Theoretical scaled asymptotic relative efficiency $N\cdot RE(\bar{A},\hat{P})$ based on Theorem~\ref{thm:ARE} for the three distinct edge probabilities of a two-block SBM as a function of the proportion $\rho_1$ of vertices in the first block
+These lines all meet at a scaled relative efficiency of 4 when $\rho_1=1/2$.
+Improvements using low-rank methods are greater for larger blocks, such as for $B_{22}$ when $\rho_2=1-\rho_1$ is close to 1, while the improvements are smaller for blocks with relatively few vertex pairs such as $B_{11}$ and $B_{12}$ when $\rho_1$ is small.
+% Simulated results for scaled RE, i.e. $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ with $N = 500$ and $M = 100$ of 1000 Monte Carlo replicates while changing $\rho_1$ from 0.1 to 0.9. Scaled relative efficiency in average with different $N$ and fixed $M$ based on 1000 Monte Carlo replicates. Different types of lines denote the simulated values associated with the edges we are averaging over. Notice that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Fig~\ref{fig:RE} as expected.}
+}
+\label{fig:RErho}
+\end{figure}
+
+
+
+To illustrate Theorem \ref{thm:ARE}, Fig~\ref{fig:RErho} shows $1/\rho_s + 1/\rho_t$, the scaled asymptotic RE, for each $s,t\in\{1,2\}$ as $\rho_1$ changes from $0.01$ to $0.50$ for a two block model. 
+For $N=500$ and $M=100$, estimates of the scaled RE based on simulations agree very closely with their corresponding theoretical values displayed in the figure. Note that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Fig~\ref{fig:RE} for simulated data.
+
+
 
 If instead of assuming that the graphs follow a SBM distribution we assume the graphs are distributed according to a RDPG distribution, similar gains in relative efficiency can be realized.
 While there is no compact analytical formula for the relative efficiency of $\hat{P}$ versus $\bar{A}$ in the general RDPG case, using the same ideas as in Theorem~\ref{thm:ARE}, we can show that $\mathrm{RE}(\bar{A}_{ij},\hat{P}_{ij}) = O(1/N)$.
@@ -553,17 +574,6 @@ As a result, $\mathrm{RE}(\bar{A},\hat{P})$ will increase as $M$ increases for f
     All the lines converge to four, the theoretical limit, as $N\to\infty$ since there are two blocks of equal size so $1/\rho_s+1/\rho_t=4$. }
     % Different types of dashed lines denote the simulated scaled RE associated with different blocks. Solid line represents the theoretical value for scaled RE. Observe that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t = 4$ as expected.}
     \label{fig:RE}
-\end{figure}
-
-\begin{figure}[!t]
-\centering
-\includegraphics[width=1\textwidth]{Rho.pdf}
-\caption{Theoretical scaled relative efficiency $N\cdot RE(\bar{A},\hat{P})$ for the three distinct edge probabilities as a function the proportion $\rho_1$ of vertices in the first block based on the SBM described in Section~\ref{sec:sbm_sim}.
-These lines all meet at a scaled relative efficiency of 4 when $\rho_1=1/2$.
-Improvements using low-rank methods are greater for larger blocks, such as for $B_{22}$ when $\rho_2=1-\rho_1$ is close to 1, while the improvements are smaller for blocks with relatively few vertex pairs such as $B_{11}$ and $B_{12}$ when $\rho_1$ is small.
-% Simulated results for scaled RE, i.e. $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ with $N = 500$ and $M = 100$ of 1000 Monte Carlo replicates while changing $\rho_1$ from 0.1 to 0.9. Scaled relative efficiency in average with different $N$ and fixed $M$ based on 1000 Monte Carlo replicates. Different types of lines denote the simulated values associated with the edges we are averaging over. Notice that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Fig~\ref{fig:RE} as expected.}
-}
-\label{fig:RErho}
 \end{figure}
 
 In this section, we will illustrate the theoretical results from Section 3.1 regarding the relative efficiency between $\bar{A}$ and $\hat{P}$ via Monte Carlo simulation experiments.
@@ -595,12 +605,6 @@ The different dashed lines denote the estimated scaled RE associated with differ
 From the figure, we see that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to scaled asymptotic RE quite rapidly.
 We omit error bars as the standard errors are very small for these estimates.
 % {\color{red} Say something about why $B_{11}, B_{22}>4$ and $B_{12}<4$}
-
-
-
-To further illustrate Theorem \ref{thm:ARE}, Fig~\ref{fig:RErho} shows $1/\rho_s + 1/\rho_t$, the scaled asymptotic RE, as $\rho$ changes from $0.01$ to $0.50$, for fixed $N=500$ and $M=100$.
-For $N=500$ and $M=100$, estimates of the scaled RE based on simulations agree very closely with their corresponding theoretical values. Note that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Fig~\ref{fig:RE}.
-
 
 
 \subsection{CoRR Brain Graphs: Cross-Validation}\label{sec:corr_data}
