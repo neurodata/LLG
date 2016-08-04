@@ -577,6 +577,7 @@ As a result, $\mathrm{RE}(\bar{A},\hat{P})$ will increase as $M$ increases for f
 \end{figure}
 
 In this section, we will illustrate the theoretical results from Section 3.1 regarding the relative efficiency between $\bar{A}$ and $\hat{P}$ via Monte Carlo simulation experiments.
+These numerical simulations will also allow us to investigate the finite sample performance of the two estimators.
 
 %\subsubsection{Simulation Setting}
 Here, we consider a 2-block SBM with parameters
@@ -605,6 +606,12 @@ The different dashed lines denote the estimated scaled RE associated with differ
 From the figure, we see that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to scaled asymptotic RE quite rapidly.
 We omit error bars as the standard errors are very small for these estimates.
 % {\color{red} Say something about why $B_{11}, B_{22}>4$ and $B_{12}<4$}
+
+An intriguing aspect of these finite sample results is that the scaled relative efficiencies behave differently for small graphs with fewer vertices. 
+The estimates of the edge probabilities for pairs of vertices in different blocks are signicantly better than the estimates for edges within each block.
+The reason for this may be due the actual values of the true probability but it may also be do the fact there are approximately twice as many pairs of vertices in different blocks than there are in the same block.
+This could lead to an increase in effective sample size which may cause the larger differences displayed in the left parts of Fig.~\ref{fig:RE}.
+
 
 
 \subsection{CoRR Brain Graphs: Cross-Validation}\label{sec:corr_data}
@@ -791,9 +798,10 @@ As in the previous section, we simulated data sets of size $M=1,5$, and $10$ and
 
 Fig~\ref{fig:sim_desikan} shows resulting estimated MSE for $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for simulated data based on the full rank probability matrix $P$ shown in the left panel of Fig~\ref{fig:Matrix_desikan_m5}.
 % Vertical lines at each dimension indicate the 95\% confidence intervals for the MSE.
-We see that the results are very similar to those presented in section~\ref{sec:corr_data}.
-When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including those selected by the Zhu and Ghodsi method while when $M$ is large enough, both estimators perform very well.
-So $\hat{P}$ does a good job even when the low rank assumption of the model is violated. This simulation again shows the robustness of $\hat{P}$ to deviations from the RDPG model.
+We see that the results are very similar to those presented in section~\ref{sec:corr_data}, though overall $\hat{P}$ performs even better than in the real data experiments. 
+When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including those selected by the Zhu and Ghodsi method while when $M$ is large enough, both estimators perform well with the decision between the two being less conclusive.
+This simulation again shows the robustness of $\hat{P}$ to deviations from the RDPG model, specifically if the probability matrix is full-rank.
+We also see that the degradation in the performance of $\hat{P}$ in real data can at least partially be due to the fact that the independent edge assumption does not hold for real data.
 
 
 \begin{figure}[!htb]
