@@ -649,8 +649,11 @@ Both dimension selection algorithms tend to select dimensions which nearly minim
 When $M$ is 1 or 5, $\bar{A}$ has large variance which leads to large MSE. Meanwhile, $\hat{P}$ reduces the variance by taking advantages of inherent low-rank structure of the mean graph. Additionally, we see that there is a large range of dimensions where the performance for $\hat{P}$ is superior to $\bar{A}$. 
 With a larger $M$, the performance of $\bar{A}$ improves so that its performance is frequently superior to $\hat{P}$ but $\hat{P}$ still performs nearly as well.
 
-As further evidence for the improvement using $\hat{P}$, even when the dimension must be derived from data, Table~\ref{tab:corr_re} shows relative efficiencies of $\hat{P}$ versus $\bar{A}$.
-For each atlas and each sample size we compare the \citet{zhu2006automatic} with the USVT method and note that both perform well relative to the full-dimensional $\bar{A}$, especially for large $N$ and small $M$.
+For a more specific comparison of the performance of $\hat{P}$ and $\bar{A}$ in the most realistic situation where the rank $d$ much be chosen based on data, Table~\ref{tab:corr_re} shows relative efficiencies of $\hat{P}$ versus $\bar{A}$.
+For each atlas and each sample size we compare the \citet{zhu2006automatic} with the USVT method and note that both perform reasonable well relative to the full-dimensional $\bar{A}$.
+Again we can see that the largest improvements using $\hat{P}$ occur when $M$ is small and $N$ is lareg. 
+On the other hand once $m=10$ is , $\bar{A}$ tends to do nearly as well or better than the $\hat{P}$. 
+Nonetheless, $\hat{P}$ offers certain advantages, especially since low-rank estimates can often be more easily interpretable by considering the latent position representation described in Section~\ref{section:sbm_rdpg}.
 
 \begin{figure}[!htb]
 \centering
@@ -686,7 +689,7 @@ USVT    & 0.52 & 0.79 & 0.99 \\\bottomrule
 
 
 
-As an illustration, we consider a random sample of size $M=5$ based on the Desikan atlas.
+To further illustrate the differences betweent the two estimators, we consider a single random sample of size $M=5$ based on the Desikan atlas.
 We calculated $\bar{A}$ and $\hat{P}$, using  Zhu and Ghodsi's 3rd elbow to select $d=11$. 
 In Fig~\ref{fig:Matrix_desikan_m5}, the estimates $\bar{A}$ and $\hat{P}$ as well as the sample mean of 454 graphs (as a close estimate of $P$) are plotted. 
 Since the sample size is small, there are a lot of pairs of vertices with no edges or 5 edges in the 5 observations.
@@ -704,8 +707,10 @@ We also highlight the regions corresponding to vertices that contribute most to 
 Notably, these regions of improvement appear to be concentrated in three distinct regions of the brain. 
 The top five regions are the inferior temporal, middle temporal, and transverse temporal regions in the left hemisphere and the parahippocampal and parsopercularis regions in the right hemisphere of the Desikan atlas.
 
-These results demonstrate that $\hat{P}$ gives a better estimate than $\bar{A}$ for the CoRR dataset with all three atlases. 
+These results demonstrate that overall $\hat{P}$ gives a better estimate than $\bar{A}$ for the CoRR dataset with all three atlases. 
 Importantly, this improvement is robust to the embedding dimension as long as provided the dimension is not underestimated.
+We should note that though the total error for $\hat{P}$ is smaller in this case, for certain entries $\bar{A}$ does perform better.
+For example, there are some pairs of vertices that are adjacent for all samples in the population and for these pairs $\bar{A}$ will always perform better than $\hat{P}$. 
 
 \begin{figure}[!htb]
 \centering
@@ -822,9 +827,15 @@ We give a closed form for the asymptotic relative efficiency between the entry-w
 Moreover, our estimator outperforms the entry-wise MLE in a cross validation analysis of the CoRR brain graphs and in low- and full-rank simulation settings.
 These results illustrate that $\hat{P}$ performs well even when the low-rank assumption is violated and that $\hat{P}$ is robust and can be applied in practice.
 
-One of the key observations from our real data analysis was that the largest improvements using the low-rank method occurred when the number of graphs $M$ was small and that it provided only minor improvements when $M$ is large. 
+One of the key observations from our real data analysis was that the largest improvements using the low-rank method occurred when the number of graphs $M$ was small and that it provided only minor improvements or degrade performance slightly when $M$ is large. 
 However, even in large scale studies the low-rank methods will be useful for estimating graph means for subpopulations, for example the population of females over 60 with some college education.
-In another direction, \citet{durante2014nonparametric} used low-rank deviations from a full rank population mean to model collections of graphs and our methods could be easily adapted to these ideas.
+Using the element-wise sample mean for such small strata, which may have fewer than ten subjects, will frequently result in a degradation of performance.
+In similar direction, \citet{durante2014nonparametric} used low-rank deviations from a full rank population mean to model collections of graphs and our methods could be easily adapted to these ideas.
+
+We also note that low-rank methods can often be more easily interpreted.
+By representing a low-rank matrix in terms of the latent position, where each vertex is represented as a vectors in $\Re^d$ and the entries of the matrix are given by inner products of these vectors (see Section~\ref{section:sbm_rdpg}, one can analyze and visualize the geometry of these vectors in order to interpret how each vertex is behaving in the context of the larger graph. 
+Additionally, such a representation allows the use of techniques from multivariate analysis to further study the estimated population mean.
+
 
 
 % \subsection{Future Work}
