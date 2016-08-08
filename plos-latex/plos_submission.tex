@@ -890,7 +890,13 @@ Earlier, \citet{scheinerman2010modeling} proposed using an iterative method to i
 In this work we combine these two ideas by first using the row-average method  (see Step 3 of Algorithm~\ref{algo:basic}) and then using one step of the iterative method (see Step 6 of Algorithm~\ref{algo:basic}).
 Note that when computing errors, we omit the diagonal entries since these are known to be zero.
 
-
+\subsection{Mean Square Error and Relative Efficiency}
+\label{section:rel_eff}
+We evaluate our estimators in terms of mean square error, either $\mathrm{MSE}(\hat{P}_{ij})=\Ex[\hat{P}_{ij}-P]^2$ or $\Ex[\bar{A}_{ij}-P]^2$.
+While we can directly compare the difference in mean square errors between the two estimators, it is frequently useful to consider the relative efficiency between two estimators.
+In our case this is $\mathrm{RE}(\bar{A}_{ij},\hat{P}_{ij}) = \frac{\mathrm{MSE}(\hat{P}_{ij})}{\mathrm{MSE}(\bar{A}_{ij})}$, with values above 1 indicating $\bar{A}$ should be preferred while values below 1 indicate $\hat{P}$ should be preferred.
+We also use asymptotic relative efficiency, which is the limit of the relative efficiency as the number of vertices increase to infinity, and the scaled relative efficiency, $N\cdot \mathrm{RE}(\bar{A}_{ij},\hat{P}_{ij}) $ which in our case normalizes the relative efficiency so that the asymptotic scaled relative efficiency is non-zero and finite.
+Relative efficiency is a useful metric for comparing estimators because it will frequently be invariant to the scale of the noise in the problem and hence is more easily comparable across different settings.
 
 \subsection{Dataset Description}
 \label{section:data}
