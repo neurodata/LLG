@@ -9,13 +9,16 @@ set.seed(12345)
 require(Matrix)
 require(igraph)
 
-setEPS()
+source("function_collection.R")
 
 B = array(c(0.9,0.27,0.05,0.1,0.3,
             0.27,0.67,0.02,0.26,0.14,
             0.05,0.02,0.44,0.25,0.33,
             0.1,0.26,0.25,0.7,0.18,
             0.3,0.14,0.33,0.18,0.58), dim=c(5,5))
+
+isSVD <- 0
+
 
 rho = c(0.22,0.39,0.05,0.16,0.18)
 K <- length(rho)
@@ -45,6 +48,27 @@ A2 = sample_sbm(n, B, round(n*rho), directed=F, loops=F)[]
 A3 = sample_sbm(n, B, round(n*rho), directed=F, loops=F)[]
 
 Abar <- (A+A2+A3)/3
+
+
+####### Estimate dimensions ######
+source("getElbows.R")
+nElb = 2
+dMax = ceiling(n*3/5)
+evalVec = ase(Abar, dMax, isSVD)[[1]]
+dHat = getElbows(evalVec, n=nElb, plot=F)[[nElb]]
+
+dHat = 5;
+
+####### Calculate Phat ######
+A.ase = ase(diag_aug(Abar), dHat, isSVD)
+if (dHat == 1) {
+  Ahat = A.ase[[1]] * A.ase[[3]] %*% t(A.ase[[2]])
+} else {
+  Ahat <- A.ase[[3]][,1:dHat] %*% diag(A.ase[[1]][1:dHat]) %*% t(A.ase[[2]][,1:dHat])
+}
+P_hat = regularize(Ahat)
+
+
 Phat <- as.matrix(with(eigen(Abar), vectors[,1:K]%*%diag(values[1:K])%*%t(vectors[,1:K])))
 Phat[Phat<0]<- 0
 Phat[Phat>1]<- 1
@@ -58,7 +82,7 @@ dev.off()
 
 
 pdf("../../Draft/SBM_Phat.pdf", family="CM Roman", width=4, height=4.4)
-image(Matrix(Phat),main=list(label="rank-5 approximation (M=3)"),sub="",
+image(Matrix(P_hat),main=list(label="rank-5 approximation (M=3)"),sub="",
       xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
       lwd=0)
 dev.off()
