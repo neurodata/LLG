@@ -286,23 +286,25 @@ We demonstrate the improved performance via theoretical results for the stochast
 
 Estimation of the mean of a population based on a sample is at the core of statistics.
 The sample mean, motivated by the law of large numbers and the central limit theorem, has its place as one of the most important statistics for this task.
-Nowadays we take averages almost everywhere, from data in Euclidean space to more complex objects, like shapes, documents and graphs.
+In modern settings, we take averages almost everywhere, from data in Euclidean space to more complex objects, like shapes, documents and graphs.
 
 The mean of a population of graphs is a high dimensional object, consisting of $O(N^2)$ parameters for a graph with $N$ vertices.
 Estimating high dimensional estimands with a small sample size using naive unbiased methods often leads to inaccurate estimates with very high variance.
-By exploiting the bias-variance trade-off, it is often fruitful to develop estimators which have some bias with greatly reduced variance.
-When these estimators are biased towards low-dimensional structures which well approximate the full dimensional population mean, major improvements can be realized.
+By exploiting the bias-variance trade-off, it is often fruitful to develop estimators which have some bias but greatly reduced variance.
+When these estimators are biased towards low-dimensional structures which well approximate the full dimensional population mean, major improvements can be realized \citep{trunk1979problem}.
 
 
 Additionally, in a striking result, \citet{stein1956inadmissibility} and \citet{james1961estimation} showed the arithmetic average should not always be the first choice and is inadmissable in even simple settings by todays standards. 
+In particular, James and Stein showed that the sample mean for a multivariate normal distribution with at least three dimensions is inadmissable and can be strictly improved by carefully biasing the  estimate towards any given fixed point. 
 Twenty-seven years later, \citet{gutmann1982stein} proved that this phenomenon cannot occur when the sample spaces are finite.
-But even when  the sample mean is admissible, it doesn't close the door to other estimators in all cases.
+But even when  the sample mean is admissible, this doesn't other estimators should not be used in all cases.
 In many situations where other structural information is hypothesized, for instance a collection of graphs as considered in this paper, other estimators may be preferable.
 
 In complex data settings such as shape data, language data or graph data, we also must take care in how we define the mean.
 As with real valued data, one may want to define the mean of a graph to itself be a graph such as for the median graph \citep{jiang2001median}.
 However, this may be too restrictive for populations of graphs where there is high variation in which edges appear. 
 Instead, we define the mean graph as the weigted adjacency matrix with weights given by the proportion of times the corresponding edge appears in the population. 
+For a random graph distribution, the mean graph is the expectation of the adjacency matrix.
 This population mean is becoming more and more important both in statistical inference and in various applications like connectomics, social networks, and computational biology.
 
 % Nowadays, people care about information that can be extracted from the networks through different ways in neuroscience.
@@ -310,9 +312,9 @@ This population mean is becoming more and more important both in statistical inf
 While hypothesis testing is the end goal of their work, estimation is a key intermediate step which may be improved by accounting for underlying structure in the mean matrix. 
 Thus improving the estimation procedures for the mean graph is not only important by itself, but also can be applied to help improve other statistical inference procedures.
 
-The element-wise sample mean is a reasonable estimator if we consider the general independent edge model (IEM) \cite{bollobas2007phase} without taking any additional structure into account. 
-However, it does not perform very well especially when only a small sample size is available.
-Intuitively, an estimator incorporating the mean-graph structure is preferable to the entry-wise MLE. 
+The element-wise sample mean is a reasonable estimator if we consider the general independent edge model (IEM) \cite{bollobas2007phasIUSe} without taking any additional structure into account. 
+However, with only a small sample size, such as when the sample size is much less than the number of vertices, it does not perform very well.
+Intuitively, an estimator incorporating structure in the distribution of graphs, assuming the estimator is computationally tractable, is preferable to the entry-wise MLE. 
 In general, we don't have any knowledge about this structure so it can be hard to take advantage of in practice.
 
 
@@ -323,9 +325,9 @@ Latent position models can capture strong community structure like the stochasti
 One example of a LPM which captures this middle ground is the random dot product graph (RDPG) \cite{young2007random, nickel2007random} which motivates our estimator. 
 % In this paper, we analyze our estimator in terms of RDPG specifically.
 
-Using the estimates of the latent positions based on a truncated eigen-decomposition of the adjacency matrix,  in the RDPG setting we consider an estimator for the mean of the collection of graphs which captures the low-rank structure of the RDPG model.
+Using the estimates of the latent positions based on a truncated eigen-decomposition of the adjacency matrix, we consider an estimator for the mean of the collection of graphs which captures the low-rank structure of the RDPG model.
 These estimates will improve performance since they will be biased towards the low-rank structure of the RDPG model and will have significantly lower overall variance than naive element-wise sample means.
-In this study, we show via theory, simulations and real data analysis that it frequently outperforms the element-wise MLE, especially in small sample sizes.
+In this study, we show via theory, simulations and real data analysis that the low-rank estimator frequently outperforms the element-wise MLE, especially in small sample sizes.
 
 
 % (Future work) Robust estimation, dimension selection, diagonal augmentation, etc.
@@ -337,26 +339,25 @@ In this study, we show via theory, simulations and real data analysis that it fr
 This work considers the scenario of having $M$ graphs represented as adjacency matrices, $\{A^{(m)}\}$ ($m = 1, \cdots, M$), each having $N$ vertices.
 We assume there is a known correspondence for vertices in different graphs, so that vertex $i$ in graph $m$ corresponds to vertex $i$ in graph $m'$ for any $i$, $m$, $m'$.
 The graphs we consider are undirected and unweighted with no self-loops, so each $A^{(m)}$ is a binary symmetric matrix with zeros along the diagonal. An example application of this arises in the field of connectomics, where functional brain imaging data for each subject can be represented as a graph.
-Each vertex represent a well defined anatomical region present in each subject, and an edge between two regions is defined to exist if correlation in activity between the regions surpasses a certain threshold.
+Each vertex represents a well defined anatomical region present in each subject, and an edge between two regions is defined to exist if correlation in activity between the regions surpasses a certain threshold.
 Similarly, for structural brain imaging an edge may represent the presence of anatomical connections between the two regions.
 
 For the purpose of this paper, we will also assume that the graphs are sampled independently and identically from some distribution.
-We consider three nested models for these distributions, the independent edge model, the random dot product model, and the stochastic blockmodel, and two estimators motivated by these models.
+We consider three nested models for these distributions, the independent edge model, the random dot product model, and the (positive semi-definite) stochastic blockmodel, and two estimators motivated by these models.
 
 
 
 \subsection{Independent Edge Model}
 The first model we consider is the independent edge model (IEM) with parameter $P \in [0,1]^{N\times N}$ \citep{bollobas2007phase}.
 An edge exists between vertex $i$ and vertex $j$ with probability $P_{ij}$ and each edge is present independently of all other edges. 
-For this case, the mean graph is the 
-For this case, we aim to estimate the mean matrix $P=\Ex[A^{(m)}]$ base on the observed adjacency matrices $A^{(1)},\dotsc,A^{(M)}$.
+For this case, we aim to estimate the mean graph $P=\Ex[A^{(m)}]$ base on the observed adjacency matrices $A^{(1)},\dotsc,A^{(M)}$.
 
 
 
 \subsection{Estimator $\bar{A}$}
 \label{sec:abar}
 Under the IEM, the MLE for the mean graph $P$ is the element-wise sample mean of the adjacency matrices $\bar{A}=\frac{1}{M}\sum_{m=1}^M A^{(m)}$.
-It is unbiased with entry-wise variance $\mathrm{Var}(\bar{A}_{ij}) = P_{ij} (1-P_{ij})/M$. Moreover, $\bar{A}$ is the uniformly minimum-variance unbiased estimator, so it has the smallest variance among all unbiased estimators and enjoys the many asymptotic properties of the MLE as $M\to \infty$.
+It is unbiased with entry-wise variance $\mathrm{Var}(\bar{A}_{ij}) = P_{ij} (1-P_{ij})/M$. Moreover, $\bar{A}$ is the uniformly minimum-variance unbiased estimator, so it has the smallest variance among all unbiased estimators and enjoys the many asymptotic properties of the MLE as $M\to \infty$ for fixed $N$.
 
 However, $\bar{A}$ doesn't exploit any graph structure, and sometimes the performance is not very good especially when $M$ is small. 
 For example, when $M=1$, $\bar{A}$ is exactly the binary graph we observe, which is an inaccurate estimate for an arbitrary $P$ compared to estimates which exploit underlying structure.
@@ -438,9 +439,11 @@ The SBM is parameterized by the number of blocks $K$ (generally much less than t
 $\tau\in\{1,\dotsc,K\}^n$, where for each $i \in [n]$, $\tau_i = k$ means vertex $i$ is a member of block $k$.
 % We will assume each vertex is assigned its block independently according to the probability vector $\rho$, so $\Pr[tau_i = k] = \rho_k$. 
 Conditioned on $\tau$, each entry of the adjacency matrix $A_{ij}$ is independently sampled from the Bernoulli distribution with parameter $B_{\tau_i,\tau_j}$.
+To ensure that the SBM can be considered as an RDPG we will impose that the $B$ matrix for the SBM is positive semidefinite. 
+For notational convenience we will refer to the sub-model of the SBM with positive semidefinite $B$ matrix as the SBM.
 
-In order to analyze the estimator $\hat{P}$ motivated by RDPG, we move to another representation of SBM based on RDPG. 
-Consider a positive semi-definite $K$-block SBM with a rank $d\le K$ block probability matrix $B$, we can always decompose $B$ into $\nu \nu^T$, where $\nu \in \mathbb{R}^{K \times d}$ and each row $\nu_k$ is the shared latent position for all vertices assigned to block $k$. 
+In order to analyze the estimator $\hat{P}$ motivated by RDPG, we will represent the SBM as an RDPG by
+decomposing $B$ as $\nu \nu^T$, where $\nu \in \mathbb{R}^{K \times d}$ and each row $\nu_k$ is the shared latent position for all vertices assigned to block $k$. 
 For $X \in \mathbb{R}^{N \times d}$ with rows given by $X_i = \nu_{\tau_i}$, we have
 \[
     \Pr[A_{ij} = 1|\tau] = B_{\tau_i, \tau_j} = \nu_{\tau_i}^T \nu_{\tau_j}.
@@ -1097,6 +1100,13 @@ Daniel~L Sussman, Minh Tang, and Carey~E Priebe.
   random dot product graphs.
 \newblock \emph{IEEE transactions on pattern analysis and machine
   intelligence}, 36\penalty0 (1):\penalty0 48--57, 2014.
+
+\bibitem[Trunk(1979)]{trunk1979problem}
+G.~V. Trunk.
+\newblock A problem of dimensionality: A simple example.
+\newblock \emph{Pattern Analysis and Machine Intelligence, IEEE Transactions
+  on}, \penalty0 (3):\penalty0 306--307, 1979.
+
 
 \bibitem[Young and Scheinerman(2007)]{young2007random}
 Stephen~J Young and Edward~R Scheinerman.
