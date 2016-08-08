@@ -534,38 +534,54 @@ In the same setting as in Lemma \ref{lm:VarPhat}, for any $i$ and $j$, if $\math
     \mathrm{ARE}(\bar{A}_{ij}, \hat{P}_{ij}) = \lim_{N \to \infty} \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) = 0.
 \]
 and for large enough $N$, we have
-\[
-    \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) \approx
+\begin{equation}
+	    \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) \approx
     \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{N}.
-\]
+\label{eq:approx_re}}
+\end{equation}
 \end{theorem}
 
 
-This theorem indicates that under the SBM, $\hat{P}$ is a much better estimate of the mean of the collection of graphs $P$ than $\bar{A}$. 
+This theorem indicates that under the SBM, $\hat{P}$ is a much better estimate of the mean of the collection of graphs $P$ than $\bar{A}$.
+Note, that a relative efficiency less than 1 indicates that $\hat{P}$ should be preferred over $\bar{A}$ so, under the above assumptions, as $N\to\infty$, $\hat{P}$ performs far better than $\bar{A}$.
 From the result, we see that the relative efficiency is of order $O(N^{-1})$ and $N \cdot \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ converges to $1/\rho_{\tau_i}+1/\rho_{\tau_j}$ when $N$ goes to infinity.
+A key component of Theorem~\ref{thm:ARE} is that the ARE does not depend on the number of graphs $M$, so the larger the graphs are, the better $\hat{P}$ is relative to $\bar{A}$, regardless of $M$.
 
+The approximate formula Eq.~\ref{eq:approx_re} indicates that the the sizes of the blocks can greatly impact the relative efficiency.
+To illustrate this consider a two block stochastic model. 
+If each of the blocks contain half the vertices, then for each pair of vertices, the relative efficiency is approximately $4/N$. 
+If the first block gets larger, with $\rho_1$ tending to 1, then the RE for estimating $P_{ij}$ with $\tau_i=\tau_j=1$, will tend to its minimum of $2/N$. 
+On the other hand as $\rho_1\to 1$, if $\tau_i=1$ and $\tau_j=2$, then since $\rho_2=1-\rho_2$, the relative efficiency for estimating such an edge pair will be approximately $1$ and the same will hold if $\tau_i=\tau_j=2$.
+Note that the maximum value for the relative efficiency in a two-block model is achieved when $\rho_1=1/N$ and $\rho_2=(N-1)/N$ in which case the relative efficiency is $(N^2+N-1)/N^2\approx 1$.
+(Note values of $\rho_s$ below $1/N$ correspond to graphs where typically no vertices are in that block so the effective minimum we can consider for $\rho_s$ is $1/N$.)
 
-If for example there is one block containing half the vertices, the relative efficiency for estimating the probabilities of edges between vertices in that block will be approximately $4/N$.
-For even larger blocks, the relative efficiency will decrease towards $1/N$ as the proportion of the verties in that block tends.
-If a block has very few vertices, the asymptotic relative efficiency will tend towards one, but will always be less than one.
-Also, the ARE does not depend on the number of graphs $M$, so the larger the graphs are, the better $\hat{P}$ is relative to $\bar{A}$, regardless of $M$.
+% If for example there is one block containing half the vertices, the relative efficiency for estimating the probabilities of edges between vertices in that block will be approximately $4/N$.
+% For even larger blocks, the relative efficiency will decrease towards $1/N$ as the proportion of the verties in that block tends.
+% If a block has very few vertices, the asymptotic relative efficiency will tend towards one, but will always be less than one.
+% 
 
 
 
 \begin{figure}[!t]
 \centering
 \includegraphics[width=1\textwidth]{Rho.pdf}
-\caption{Theoretical scaled asymptotic relative efficiency $N\cdot RE(\bar{A},\hat{P})$ based on Theorem~\ref{thm:ARE} for the three distinct edge probabilities of a two-block SBM as a function of the proportion $\rho_1$ of vertices in the first block
-These lines all meet at a scaled relative efficiency of 4 when $\rho_1=1/2$.
-Improvements using low-rank methods are greater for larger blocks, such as for $B_{22}$ when $\rho_2=1-\rho_1$ is close to 1, while the improvements are smaller for blocks with relatively few vertex pairs such as $B_{11}$ and $B_{12}$ when $\rho_1$ is small.
+\caption{{\bf Asymptotic scaled relative efficiency $N\cdot RE(\bar{A},\hat{P})$ for two distinct edge probabilities in a two-block SBM.}
+For each distinct pair of edge probabilities in a two block model, the scaled relative efficiency only depends on the proportion of vertices in each block.
+We show the scaled asymptotic relative efficiency as $\rho_1$ changes from $0,1$ for pairs of vertices where either both are in block 1 or one is in block one and one is in block two. 
+These curves all intersect at a scaled relative efficiency of 4 when $\rho_1=1/2=\rho_2$.
+Improvements using low-rank methods are greater for larger blocks, such as for $B_{11}$ when $\rho_1=$ is close to 1, while the improvements are smaller for block pairs with relatively few vertex pairs such as $B_{11}$ when $\rho_1$ is small and $B_{12}$ when $\rho_1$ is near 0 or 1
+.
+Note that the curve for $B_{22}$ would be the same as that for $B_{11}$ but reflected around the vertical line when $\rho_1=1/2$.
 % Simulated results for scaled RE, i.e. $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ with $N = 500$ and $M = 100$ of 1000 Monte Carlo replicates while changing $\rho_1$ from 0.1 to 0.9. Scaled relative efficiency in average with different $N$ and fixed $M$ based on 1000 Monte Carlo replicates. Different types of lines denote the simulated values associated with the edges we are averaging over. Notice that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Fig~\ref{fig:RE} as expected.}
+Overall, $\hat{P}$ performs best for large blocks while the improvements may be very minor for blocks with only a few vertices.
 }
 \label{fig:RErho}
 \end{figure}
 
 
 
-To illustrate Theorem \ref{thm:ARE}, Fig~\ref{fig:RErho} shows $1/\rho_s + 1/\rho_t$, the scaled asymptotic RE, for each $s,t\in\{1,2\}$ as $\rho_1$ changes from $0.01$ to $0.50$ for a two block model. 
+To illustrate Eq.~\ref{eq:approx_re} of Theorem~\ref{thm:ARE}, Fig~\ref{fig:RErho} shows $2/\rho_1$ and $1/\rho_1+1/\rho_2$, the scaled asymptotic RE for pairs of vertices with block one and pairs of vertices in differeent blocks the blocks, repsectively, in a  two-block stochastic blockmodel.
+We vary $\rho_1$ between 0 and 1 to demonstrate how the number of pairs of vertices with the corresponding block memberships impacts the overall relative efficiency.
 For $N=500$ and $M=100$, estimates of the scaled RE based on simulations agree very closely with their corresponding theoretical values displayed in the figure. Note that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Fig~\ref{fig:RE} for simulated data.
 
 

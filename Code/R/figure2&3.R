@@ -157,7 +157,7 @@ isSVD = 0
 iModel = 1
 d = 2
 
-rhoVec = (5:50)/100
+rhoVec = (1:100)/100
 nRho = length(rhoVec)
 
 re1Expectrho = rep(0,nRho)
@@ -174,10 +174,8 @@ for (iRho in 1:nRho) {
 
 df <- rbind(
   data.frame(re=re1Expectrho,which="B11",m=m,rho=rhoVec),
-  data.frame(re=re3Expectrho,which="B12",m=m,rho=rhoVec),
-  data.frame(re=re2Expectrho,which="B22",m=m,rho=rhoVec)) %>%
-  mutate(m=factor(paste0("Simulation based on SBM, M=",m,", N=",n),
-                  c("Simulation based on SBM, M=100, N=500")))
+  data.frame(re=re3Expectrho,which="B12",m=m,rho=rhoVec))
+  # data.frame(re=re2Expectrho,which="B22",m=m,rho=rhoVec))
 
 label_y <- with(df, .75*max(re)+.25*min(re))
 
@@ -191,8 +189,9 @@ p <- ggplot(df,aes(x=rho,y=re,linetype=factor(which)))+
   scale_linetype_manual(name="",values=c("solid","longdash","dotted"))+
   #   scale_color_discrete(guide=FALSE)+
 #   xlab("N") + ylab("Normalized Relative Efficiency")+
-  scale_x_continuous(name="block one proportion")+
+  scale_x_continuous(name="proportion of vertices in block one")+
   scale_y_continuous(name="scaled relative efficiency")+
+  coord_trans(limy=(c(0,40)))+
   # theme(strip.text.x = element_text(size=20,face="bold"))+
   # theme(axis.text=element_text(size=20),
         # axis.title=element_text(size=20,face="bold"))+
