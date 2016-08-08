@@ -480,7 +480,7 @@ By visual inspection, it is clear that the low-rank estimate $\hat{P}$ more clos
 
 \section{Results}
 
-\subsection{Theoretical Results}
+\subsection{Asymptotic Theory}
 \label{section:theoretical_result}
 To estimate the mean of a collection of graphs, we consider the two estimators from Section \ref{section:model_estimator}: the entry-wise sample mean $\bar{A}$ and the low-rank $\hat{P}$ motivated by the RDPG.
 In this section, we analyze the performance of these two estimators under the SBM by computing the entry-wise relative efficiency (RE), defined as $\mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) = \frac{\mathrm{MSE}(\hat{P}_{ij})}{\mathrm{MSE}(\bar{A}_{ij})}$.
@@ -563,7 +563,7 @@ This leads to the fact that the optimal embedding dimension will increase, makin
 As a result, $\mathrm{RE}(\bar{A},\hat{P})$ will increase as $M$ increases for full-rank models.
 \end{remark}
 
-\subsection{Validation with Simulations}\label{sec:sbm_sim}
+\subsection{Finite Sample Simulations}\label{sec:sbm_sim}
 
 
 \begin{figure}[!htb]
