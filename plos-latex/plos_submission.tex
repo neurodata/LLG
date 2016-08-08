@@ -334,16 +334,18 @@ In this study, we show via theory, simulations and real data analysis that the l
 
 
 
-\section{Models and Estimators}
+\section{Models}
 \label{section:model_estimator}
-This work considers the scenario of having $M$ graphs represented as adjacency matrices, $\{A^{(m)}\}$ ($m = 1, \cdots, M$), each having $N$ vertices.
+This work considers the scenario of having $M$ graphs, represented as adjacency matrices, $\{A^{(m)}\}$ ($m = 1, \cdots, M$), each having $N$ vertices.
 We assume there is a known correspondence for vertices in different graphs, so that vertex $i$ in graph $m$ corresponds to vertex $i$ in graph $m'$ for any $i$, $m$, $m'$.
-The graphs we consider are undirected and unweighted with no self-loops, so each $A^{(m)}$ is a binary symmetric matrix with zeros along the diagonal. An example application of this arises in the field of connectomics, where functional brain imaging data for each subject can be represented as a graph.
-Each vertex represents a well defined anatomical region present in each subject, and an edge between two regions is defined to exist if correlation in activity between the regions surpasses a certain threshold.
-Similarly, for structural brain imaging an edge may represent the presence of anatomical connections between the two regions.
+The graphs we consider are undirected and unweighted with no self-loops, so each $A^{(m)}$ is a binary symmetric matrix with zeros along the diagonal. An example application of this arises in the field of connectomics, where  brain imaging data for each subject can be represented as a graph, where each vertex represents a well-defined anatomical region present in each subject.
+For structural brain imaging, an edge may represent the presence of anatomical connections between the two regions as estimated based on  tractography for diffusion tensor magnetic resonance imaging.
+Similarly, for functional data, an edge between two regions may represent the presence of correlated brain activity between the two regions. 
+
 
 For the purpose of this paper, we will also assume that the graphs are sampled independently and identically from some distribution.
-We consider three nested models for these distributions, the independent edge model, the random dot product model, and the (positive semi-definite) stochastic blockmodel, and two estimators motivated by these models.
+We present here three nested models for these distributions, the independent edge model, the random dot product model, and the (positive semi-definite) stochastic blockmodel.
+In the Section~\ref{sec:estimator} we present, two estimators motivated by these models.
 
 
 
@@ -351,18 +353,6 @@ We consider three nested models for these distributions, the independent edge mo
 The first model we consider is the independent edge model (IEM) with parameter $P \in [0,1]^{N\times N}$ \citep{bollobas2007phase}.
 An edge exists between vertex $i$ and vertex $j$ with probability $P_{ij}$ and each edge is present independently of all other edges. 
 For this case, we aim to estimate the mean graph $P=\Ex[A^{(m)}]$ base on the observed adjacency matrices $A^{(1)},\dotsc,A^{(M)}$.
-
-
-
-\subsection{Estimator $\bar{A}$}
-\label{sec:abar}
-Under the IEM, the MLE for the mean graph $P$ is the element-wise sample mean of the adjacency matrices $\bar{A}=\frac{1}{M}\sum_{m=1}^M A^{(m)}$.
-It is unbiased with entry-wise variance $\mathrm{Var}(\bar{A}_{ij}) = P_{ij} (1-P_{ij})/M$. Moreover, $\bar{A}$ is the uniformly minimum-variance unbiased estimator, so it has the smallest variance among all unbiased estimators and enjoys the many asymptotic properties of the MLE as $M\to \infty$ for fixed $N$.
-
-However, $\bar{A}$ doesn't exploit any graph structure, and sometimes the performance is not very good especially when $M$ is small. 
-For example, when $M=1$, $\bar{A}$ is exactly the binary graph we observe, which is an inaccurate estimate for an arbitrary $P$ compared to estimates which exploit underlying structure.
-Additionally, there are no useful asymptotic properties for $\bar{A}$ as the number of vertices $N$ becomes large.
-
 
 
 \subsection{Random Dot Product Graph}
@@ -386,6 +376,74 @@ These properties lead us to our proposed estimator.
 %Note that $\mathrm{rank}(P) = \mathrm{rank}(X)$.
 
 
+
+\subsection{Stochastic Block Model as an Random Dot Product Graph}
+\label{section:sbm_rdpg}
+One of the most important structures for graphs is the community structure in which vertices are clustered into different communities such that vertices of the same community behave similarly. This structural property is captured by the stochastic blockmodel (SBM) \cite{holland1983stochastic}, where each vertex is assigned to a block and the probability that an edge exists between two vertices depends only on their respective block memberships.
+
+The SBM is parameterized by the number of blocks $K$ (generally much less than the number of vertices $N$), the block probability matrix $B \in [0,1]^{K \times K}$, and the vector of block memberships
+ % and block proportion vector $\rho \in (0,1)^K$ with $\sum_{k=1}^K \rho_k = 1$. 
+$\tau\in\{1,\dotsc,K\}^n$, where for each $i \in [n]$, $\tau_i = k$ means vertex $i$ is a member of block $k$.
+% We will assume each vertex is assigned its block independently according to the probability vector $\rho$, so $\Pr[tau_i = k] = \rho_k$. 
+Conditioned on $\tau$, each entry of the adjacency matrix $A_{ij}$ is independently sampled from the Bernoulli distribution with parameter $B_{\tau_i,\tau_j}$.
+To ensure that the SBM can be considered as an RDPG we will impose that the $B$ matrix for the SBM is positive semidefinite. 
+For notational convenience we will refer to the sub-model of the SBM with positive semidefinite $B$ matrix as the SBM.
+
+In order to analyze the estimator $\hat{P}$ motivated by RDPG, we will represent the SBM as an RDPG by
+decomposing $B$ as $\nu \nu^T$, where $\nu \in \mathbb{R}^{K \times d}$ and each row $\nu_k$ is the shared latent position for all vertices assigned to block $k$. 
+For $X \in \mathbb{R}^{N \times d}$ with rows given by $X_i = \nu_{\tau_i}$, we have
+\[
+    \Pr[A_{ij} = 1|\tau] = B_{\tau_i, \tau_j} = \nu_{\tau_i}^T \nu_{\tau_j}.
+\]
+In this way, the SBM can be seen as an RDPG where all vertices in the same block will have identical latent positions.
+
+An example SBM is illustrated in Fig~\ref{fig:SBM_example}.
+We consider a 5-block SBM and plot the corresponding probability matrix and one adjacency matrix generated from it with 200 vertices. From the top two panels of the figure, we can clearly see the structure of 25 blocks in both the probability matrix and the adjacency matrix as a result of 5 different blocks among vertices.
+
+
+
+\section{Estimators}
+\label{sec:estimator}
+
+In this section, we present two estimators, the standard element-wise sample mean $\bar{A}$, and a low-rank estimator $\hat{P}$.
+We describe the low-rank aspects of this estimator in this section and present further important details regarding diagonal augmentation and dimension estimation in Section~\ref{sec:method}.
+
+\begin{figure}
+\centering
+\begin{subfigure}{.4\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{SBM_P.pdf}
+\end{subfigure}%
+\begin{subfigure}{.4\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{SBM_A.pdf}
+\end{subfigure}
+\begin{subfigure}{.4\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{SBM_Phat.pdf}
+\end{subfigure}%
+\begin{subfigure}{.4\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{SBM_Abar.pdf}
+\end{subfigure}
+\caption{Example illustrating the stochastic blockmodel. The top left figure shows the mean graph $P$ with $K = 5$ blocks and $N=200$ vertices and the top right figure shows an adjacency matrix $A$ sampled according to the probabilities from $P$.
+While $A$ is a noisy version of $P$, much of the structure of $P$ is preserved in $A$, a property we will exploit in our estimation procedure.
+Based on three graphs sampled independently and identically according to the probability matrix $P$, we construct the element-wise mean $\bar{A}$, shown in the lower right panel (see Section~\ref{sec:abar}.  
+Finally, by taking a rank-5 approximation of $\bar{A}$ and thresholding the values to be between $O$ and $1$, we construct our proposed estimate $\hat{P}$, shown in the lower left panel (see Section~\ref{sec:phat}).
+By visual inspection, it is clear that the low-rank estimate $\hat{P}$ more closely approximates the probability matrix $P$ as compared to $\bar{A}$.
+}
+\label{fig:SBM_example}
+\end{figure}
+
+
+\subsection{Estimator $\bar{A}$}
+\label{sec:abar}
+Under the IEM, the MLE for the mean graph $P$ is the element-wise sample mean of the adjacency matrices $\bar{A}=\frac{1}{M}\sum_{m=1}^M A^{(m)}$.
+It is unbiased with entry-wise variance $\mathrm{Var}(\bar{A}_{ij}) = P_{ij} (1-P_{ij})/M$. Moreover, $\bar{A}$ is the uniformly minimum-variance unbiased estimator, so it has the smallest variance among all unbiased estimators and enjoys the many asymptotic properties of the MLE as $M\to \infty$ for fixed $N$.
+
+However, $\bar{A}$ doesn't exploit any graph structure, and sometimes the performance is not very good especially when $M$ is small. 
+For example, when $M=1$, $\bar{A}$ is exactly the binary graph we observe, which is an inaccurate estimate for an arbitrary $P$ compared to estimates which exploit underlying structure.
+Additionally, there are no useful asymptotic properties for $\bar{A}$ as the number of vertices $N$ becomes large.
 
 
 \subsection{Low-Rank Estimator $\hat{P}$}
@@ -430,56 +488,8 @@ As we will see in the proceeding sections, this procedure will frequently yield 
 While this is unsurprising for random dot product graphs, where we are able to show theoretical results to this effect, we also see this effect for connectome data and more general independent edge graphs.
 In the next sections, we explore this estimator in the context of the stochastic blockmodel.
 
-\subsection{Stochastic Block Model as an Random Dot Product Graph}
-\label{section:sbm_rdpg}
-One of the most important structures for graphs is the community structure in which vertices are clustered into different communities such that vertices of the same community behave similarly. This structural property is captured by the stochastic blockmodel (SBM) \cite{holland1983stochastic}, where each vertex is assigned to a block and the probability that an edge exists between two vertices depends only on their respective block memberships.
-
-The SBM is parameterized by the number of blocks $K$ (generally much less than the number of vertices $N$), the block probability matrix $B \in [0,1]^{K \times K}$, and the vector of block memberships
- % and block proportion vector $\rho \in (0,1)^K$ with $\sum_{k=1}^K \rho_k = 1$. 
-$\tau\in\{1,\dotsc,K\}^n$, where for each $i \in [n]$, $\tau_i = k$ means vertex $i$ is a member of block $k$.
-% We will assume each vertex is assigned its block independently according to the probability vector $\rho$, so $\Pr[tau_i = k] = \rho_k$. 
-Conditioned on $\tau$, each entry of the adjacency matrix $A_{ij}$ is independently sampled from the Bernoulli distribution with parameter $B_{\tau_i,\tau_j}$.
-To ensure that the SBM can be considered as an RDPG we will impose that the $B$ matrix for the SBM is positive semidefinite. 
-For notational convenience we will refer to the sub-model of the SBM with positive semidefinite $B$ matrix as the SBM.
-
-In order to analyze the estimator $\hat{P}$ motivated by RDPG, we will represent the SBM as an RDPG by
-decomposing $B$ as $\nu \nu^T$, where $\nu \in \mathbb{R}^{K \times d}$ and each row $\nu_k$ is the shared latent position for all vertices assigned to block $k$. 
-For $X \in \mathbb{R}^{N \times d}$ with rows given by $X_i = \nu_{\tau_i}$, we have
-\[
-    \Pr[A_{ij} = 1|\tau] = B_{\tau_i, \tau_j} = \nu_{\tau_i}^T \nu_{\tau_j}.
-\]
-In this way, the SBM can be seen as an RDPG where all vertices in the same block will have identical latent positions.
-
-An example SBM is illustrated in Fig~\ref{fig:SBM_example}.
-We consider a 5-block SBM and plot the corresponding probability matrix and one adjacency matrix generated from it with 200 vertices. From the figure, we can clearly see the structure of 25 blocks in both the probability matrix and the adjacency matrix as a result of 5 different blocks among vertices.
-We also see that using the low-rank approximation $\hat{P}$ performs much better to estimate $P$ compared to usingt he sample mean $\bar{A}$.
-
-\begin{figure}
-\centering
-\begin{subfigure}{.4\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{SBM_P.pdf}
-\end{subfigure}%
-\begin{subfigure}{.4\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{SBM_A.pdf}
-\end{subfigure}
-\begin{subfigure}{.4\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{SBM_Phat.pdf}
-\end{subfigure}%
-\begin{subfigure}{.4\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{SBM_Abar.pdf}
-\end{subfigure}
-\caption{Example illustrating the stochastic blockmodel. The top left figure shows the mean graph $P$ with $K = 5$ blocks and $N=200$ vertices and the top right figure shows an adjacency matrix $A$ sampled according to the probabilities from $P$.
-While $A$ is a noisy version of $P$, much of the structure of $P$ is preserved in $A$, a property we will exploit in our estimation procedure.
-Based on three graphs sampled independently and identically according to the probability matrix $P$, we construct the element-wise mean $\bar{A}$, shown in the lower right panel (see Section~\ref{sec:abar}.  
-Finally, by taking a rank-5 approximation of $\bar{A}$ and thresholding the values to be between $O$ and $1$, we construct our proposed estimate $\hat{P}$, shown in the lower left panel (see Section~\ref{sec:phat}).
-By visual inspection, it is clear that the low-rank estimate $\hat{P}$ more closely approximates the probability matrix $P$ as compared to $\bar{A}$.
-}
-\label{fig:SBM_example}
-\end{figure}
+The bottom panels of Figure~\ref{fig:SBM_example} demonstrate the two estimators $\hat{P}$ and $\bar{A}$ for the stochastic blockmodel given by the upper left panel. 
+The estimates are based on a sample of size $M=3$ and in this instance visual inspection demonstrates that $\hat{P}$ is performing significantly better than $\bar{A}$.
 
 
 
@@ -533,8 +543,11 @@ and for large enough $N$, we have
 
 This theorem indicates that under the SBM, $\hat{P}$ is a much better estimate of the mean of the collection of graphs $P$ than $\bar{A}$. 
 From the result, we see that the relative efficiency is of order $O(N^{-1})$ and $N \cdot \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ converges to $1/\rho_{\tau_i}+1/\rho_{\tau_j}$ when $N$ goes to infinity.
+
+
 If for example there is one block containing half the vertices, the relative efficiency for estimating the probabilities of edges between vertices in that block will be approximately $4/N$.
-For even large blocks the relative will decrease towards $1/N$ where as if a block tends to have very few vertices, so that the the asymptotic relative efficiency will tends towards 1, but will always be less than one.
+For even larger blocks, the relative efficiency will decrease towards $1/N$ as the proportion of the verties in that block tends.
+If a block has very few vertices, the asymptotic relative efficiency will tend towards one, but will always be less than one.
 Also, the ARE does not depend on the number of graphs $M$, so the larger the graphs are, the better $\hat{P}$ is relative to $\bar{A}$, regardless of $M$.
 
 
@@ -576,7 +589,7 @@ As a result, $\mathrm{RE}(\bar{A},\hat{P})$ will increase as $M$ increases for f
     \includegraphics[width=1\textwidth]{RE.pdf}
     \caption{Scaled relative efficiency $N\cdot RE(\bar{A},\hat{P})$ as a function $N$ for fixed $M$ based on 1000 Monte Carlo replicates of the SBM from Section~\ref{sec:sbm_sim}.
     Each line represents the estimated scaled relative efficiency for one of the three distinct probabilities from the stochastic blockmodel.
-    All the lines converge to four, the theoretical limit, as $N\to\infty$ since there are two blocks of equal size so $1/\rho_s+1/\rho_t=4$. }
+    All the curves converge to four, the theoretical limit, as $N\to\infty$ since there are two blocks of equal size so $1/\rho_s+1/\rho_t=4$. }
     % Different types of dashed lines denote the simulated scaled RE associated with different blocks. Solid line represents the theoretical value for scaled RE. Observe that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t = 4$ as expected.}
     \label{fig:RE}
 \end{figure}
@@ -868,6 +881,7 @@ The cross validation method is most reasonable from a prediction perspective whe
 If instead, one is interested in learning directly about the mean of a population, especially a finite population, the sub-sampling approach may be the most logical choice.
 
 \section{Methods}
+\label{sec:method}
 
 \subsection{Choosing Dimension}
 \label{section:dim_select}
@@ -897,7 +911,7 @@ Note that when computing errors, we omit the diagonal entries since these are kn
 
 \subsection{Mean Square Error and Relative Efficiency}
 \label{section:rel_eff}
-We evaluate our estimators in terms of mean square error, either $\mathrm{MSE}(\hat{P}_{ij})=\Ex[\hat{P}_{ij}-P]^2$ or $\Ex[\bar{A}_{ij}-P]^2$.
+We evaluate our estimators in terms of mean square error, either $\mathrm{MSE}(\hat{P}_{ij})=\Ex[\hat{P}_{ij}-P]^2$ or $\mathrm{MSE}(\bar{A})=\Ex[\bar{A}_{ij}-P]^2$.
 While we can directly compare the difference in mean square errors between the two estimators, it is frequently useful to consider the relative efficiency between two estimators.
 In our case this is $\mathrm{RE}(\bar{A}_{ij},\hat{P}_{ij}) = \frac{\mathrm{MSE}(\hat{P}_{ij})}{\mathrm{MSE}(\bar{A}_{ij})}$, with values above 1 indicating $\bar{A}$ should be preferred while values below 1 indicate $\hat{P}$ should be preferred.
 We also use asymptotic relative efficiency, which is the limit of the relative efficiency as the number of vertices increase to infinity, and the scaled relative efficiency, $N\cdot \mathrm{RE}(\bar{A}_{ij},\hat{P}_{ij}) $ which in our case normalizes the relative efficiency so that the asymptotic scaled relative efficiency is non-zero and finite.
