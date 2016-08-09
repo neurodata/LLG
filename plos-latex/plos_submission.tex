@@ -558,14 +558,14 @@ Note that the maximum value for the relative efficiency in a two-block model is 
 % If for example there is one block containing half the vertices, the relative efficiency for estimating the probabilities of edges between vertices in that block will be approximately $4/N$.
 % For even larger blocks, the relative efficiency will decrease towards $1/N$ as the proportion of the verties in that block tends.
 % If a block has very few vertices, the asymptotic relative efficiency will tend towards one, but will always be less than one.
-% 
+% x
 
 
 
 \begin{figure}[!t]
 \centering
 \includegraphics[width=1\textwidth]{Rho.pdf}
-\caption{{\bf Asymptotic scaled relative efficiency $N\cdot RE(\bar{A},\hat{P})$ for two distinct edge probabilities in a two-block SBM.}
+\caption{{\bf Asymptotic scaled relative efficiency $N\cdot RE(\bar{A},\hat{P})$ in a two-block SBM.}
 For each distinct pair of edge probabilities in a two block model, the scaled relative efficiency only depends on the proportion of vertices in each block.
 We show the scaled asymptotic relative efficiency as $\rho_1$ changes from $0,1$ for pairs of vertices where either both are in block 1 or one is in block one and one is in block two. 
 These curves all intersect at a scaled relative efficiency of 4 when $\rho_1=1/2=\rho_2$.
@@ -603,9 +603,16 @@ As a result, $\mathrm{RE}(\bar{A},\hat{P})$ will increase as $M$ increases for f
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=1\textwidth]{RE.pdf}
-    \caption{Scaled relative efficiency $N\cdot RE(\bar{A},\hat{P})$ as a function $N$ for fixed $M$ based on 1000 Monte Carlo replicates of the SBM from Section~\ref{sec:sbm_sim}.
-    Each line represents the estimated scaled relative efficiency for one of the three distinct probabilities from the stochastic blockmodel.
-    All the curves converge to four, the theoretical limit, as $N\to\infty$ since there are two blocks of equal size so $1/\rho_s+1/\rho_t=4$. }
+    \includegraphics[width=1\textwidth]{scaled_RE.pdf}
+    \caption{{\bf Finite sample relative efficiency based on simulations. }
+    The top panel shows the estimated relative efficiency $\mathrm{RE}(\bar{A},\hat{P})$ as a function of $N$ for fixed $M=100$ based on simulations of a SBM. 
+    For each value of $N$, we used 1000 Monte Carlo replicates of the SBM from Section~\ref{sec:sbm_sim} to estimate the RE.
+    Each curve corresponds to an average across vertex pairs corresponding the three distinct block probabilities, $B_{11}$, $B_{12}$, $B_{22}$ in the two-block SBM.
+    Recall that values below 1 indicate that $\hat{P}$ is performing better than $\bar{A}$.
+    The relative efficiencies are all very close so the lines are indistinguishable. \\
+    To distinguish the three curves, the bottom panel shows the corresponding scaled relative efficiencies, $N\cdot RE(\bar{A},\hat{P})$.
+    The solid horizontal line indicates the theoretical asymptotic scaled relative which is  $1/\rho_s+1/\rho_t=4$, since $\rho_1=\rho_2=4$.
+    All the curves converge quickly to this theoretical limit. }
     % Different types of dashed lines denote the simulated scaled RE associated with different blocks. Solid line represents the theoretical value for scaled RE. Observe that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to $1/\rho_s + 1/\rho_t = 4$ as expected.}
     \label{fig:RE}
 \end{figure}
@@ -633,19 +640,23 @@ To investigate the finite sample relative efficiency, we first sample 1000 Monte
 \]
 for $s,t\in\{1,2\}$, where $\hat{MSE}$ denotes the estimated mean square error based on the Monte Carlo replicates.
 
-We plot the scaled relative efficiency $N \cdot \mathrm{RE}_{st}(\bar{A},\hat{P})$ in Fig~\ref{fig:RE}. 
-Based on the Theorem~\ref{thm:ARE}, we have that the scaled RE converges to $1/\rho_{\tau_i}+1/\rho_{\tau_j}=4$ as $N\to\infty$ for all $i,j$.
-This is plotted as a solid line.
+In Fig~\ref{fig:RE}, We plot the relative efficiency (top panel) and the scaled relative efficiency (bottom panel), $N \cdot \mathrm{RE}_{st}(\bar{A},\hat{P})$.
 The different dashed lines denote the estimated scaled RE associated with different block pairs, either $B_{11}$, $B_{12}$ or $B_{22}$. 
+As expected from Theorem~\ref{thm:ARE}, the top panel indicates that the relative efficiencies are all very close together and significantly less than 1, decreasing at the rate of $1/N$, indicating that $\hat{P}$ is performing better than $\bar{A}$.
+
+Based on Theorem~\ref{thm:ARE}, we also have that the scaled RE converges to $1/\rho_{\tau_i}+1/\rho_{\tau_j}=4$ as $N\to\infty$ for all pairs $i,j$.
+This is plotted as a solid line in the bottom panel.
 From the figure, we see that $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ converges to scaled asymptotic RE quite rapidly.
 We omit error bars as the standard errors are very small for these estimates.
 % {\color{red} Say something about why $B_{11}, B_{22}>4$ and $B_{12}<4$}
 
+\begin{remark}
 An intriguing aspect of these finite sample results is that the scaled relative efficiencies behave differently for small graphs with fewer vertices. 
 The estimates of the edge probabilities for pairs of vertices in different blocks are signicantly better than the estimates for edges within each block.
-The reason for this may be due the actual values of the true probability but it may also be do the fact there are approximately twice as many pairs of vertices in different blocks than there are in the same block.
+The reason for this is unclear and be due the actual values of the true probability, but it may also be do the fact there are approximately twice as many pairs of vertices in different blocks $N^2/4$, than there are in the same block, $N^2/8-N/4$.
 This could lead to an increase in effective sample size which may cause the larger differences displayed in the left parts of Fig.~\ref{fig:RE}.
-
+However, overall these differences are nearly indistinguishable for unscaled relative efficiency.
+\end{remark}
 
 
 \subsection{CoRR Brain Graphs: Cross-Validation}\label{sec:corr_data}

@@ -135,15 +135,28 @@ p <- ggplot(df,aes(x=n,y=re,linetype=factor(which),alpha=factor(which)))+
   theme(legend.position="bottom")
 print(p)
 
-ggplot(df,aes(x=n,y=n*(re-4),linetype=factor(which),alpha=factor(which)))+
-  geom_line()
-
-
-ggsave("../../Draft/RE.pdf",
+ggsave("../../Draft/scaled_RE.pdf",
     p+theme(text=element_text(size=10,family="CM Roman")),
       width=5, height=3)
 
 
+p <- ggplot(df %>% filter(which!="Theoretical"),aes(x=n,y=re/n,linetype=factor(which)))+
+  geom_line()+
+  scale_linetype_manual(name="",values=c("longdash","dotted","dotdash"))+
+  xlab("number of vertices") + ylab("relative efficiency")+
+  theme(panel.grid.major = element_line(colour="grey95"),
+        panel.grid.minor = element_blank())+
+  theme(panel.background = element_rect(fill = 'white', colour = 'grey70'))+
+  theme(legend.position="none")
+print(p)
+
+ggsave("../../Draft/RE.pdf",
+    p+theme(text=element_text(size=10,family="CM Roman")),
+      width=5, height=2)
+
+
+ggplot(df,aes(x=n,y=n*(re-4),linetype=factor(which),alpha=factor(which)))+
+  geom_line()
 
 
 
