@@ -24,20 +24,27 @@ n = tmpList[[2]]
 M = tmpList[[3]]
 rm(tmpList)
 
+
+library(lattice)
+new.palette=colorRampPalette(c("white","black"),space="rgb")
+
+
 add <- function(x) Reduce("+", x)
 P = add(A_all)/M
-pdf("../../Draft/Matrix_desikan_m5.pdf", family="CM Roman", width=8, height=2.75)
-print(image(Matrix(P),main=list(label=TeX('$P$ for Desikan')),sub="",
+
+pdf("../../Draft/P_desikan.pdf", family="CM Roman", width=4, height=3.5)
+image(Matrix(P),main=list(label=TeX('$P$ for Desikan')),sub="",
             xlab=list(cex=0),ylab=list(cex=0),
-            scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0),
-      split=c(x=1,y=1,nx=3,ny=1),more=TRUE)
+            scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0)
+dev.off()
 
 sampleVec = sample.int(M, m)
 A_bar = add(A_all[sampleVec])/m
-print(image(Matrix(A_bar),main=list(label=TeX('$\\bar{A}$ for Desikan with M=5')),
+pdf("../../Draft/Abar_desikan_m5.pdf", family="CM Roman", width=4, height=3.5)
+image(Matrix(A_bar),main=list(label=TeX('$\\bar{A}$ for Desikan with M=5')),
             sub="",xlab=list(cex=0),ylab=list(cex=0),
-            scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0),
-      split=c(x=2,y=1,nx=3,ny=1),more=TRUE)
+            scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0)
+dev.off()
 
 ####### Estimate dimensions ######
 source("getElbows.R")
@@ -55,10 +62,15 @@ if (dHat == 1) {
 }
 P_hat = regularize(Ahat)
 
-print(image(Matrix(P_hat),main=list(label=TeX('$\\hat{P}$ for Desikan with M=5')),
-            sub="",xlab=list(cex=0),ylab=list(cex=0),
-            scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0),
-      split=c(x=3,y=1,nx=3,ny=1))
+# image(Matrix(P_hat),main=list(label=TeX('$\\hat{P}$ for Desikan with M=5')),
+#             sub="",xlab=list(cex=0),ylab=list(cex=0),
+#             scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0),
+#       split=c(x=3,y=1,nx=3,ny=1))
+pdf("../../Draft/Phat_desikan_m5.pdf", family="CM Roman", width=4.5, height=3.5)
+levelplot(P_hat[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
+          ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
+          main=list(label=TeX('$|\\hat{P} - P|$ for Desikan with M=5')),
+          colorkey=list(labels=list()))
 dev.off()
 print(dHat)
 
@@ -67,8 +79,6 @@ print(dHat)
 ####### Plot the difference ######
 Diff_A_bar = abs(A_bar - P)
 Diff_P_hat = abs(P_hat - P)
-
-library(lattice)
 
 # valLow = 0.35
 valLow = 0.4
@@ -91,7 +101,6 @@ valLow = 0.4
 #                 main=list(label=TeX('$|\\hat{P} - P|$ for desikan with M=5'),cex=2),
 #                 colorkey=FALSE),split=c(x=3,y=1,nx=3,ny=1))
 
-new.palette=colorRampPalette(c("white","black"),space="rgb")
 
 nv = (Diff_A_bar<valLow)
 nv[upper.tri(nv,diag=T)] = FALSE

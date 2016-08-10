@@ -623,6 +623,7 @@ For $N=500$ and $M=100$, estimates of the scaled RE based on simulations agree v
 If instead of assuming that the graphs follow a SBM distribution we assume the graphs are distributed according to a RDPG distribution, similar gains in relative efficiency can be realized.
 While there is no compact analytical formula for the relative efficiency of $\hat{P}$ versus $\bar{A}$ in the general RDPG case, using the same ideas as in Theorem~\ref{thm:ARE}, we can show that $\mathrm{RE}(\bar{A}_{ij},\hat{P}_{ij}) = O(1/N)$.
 
+
 \begin{remark}
 As we noted above, if the graphs are distributed according to an SBM or an RDPG, the relative efficiency is approximately invariant to the number of graphs $M$ when $N$ is large.
 If on the other hand, the graphs are generated according to a full-rank independent edge model, then the relative efficiency can change more dramatically as $M$ changes. 
@@ -794,7 +795,9 @@ For example, there are some pairs of vertices that are adjacent for all samples 
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=1\textwidth]{Matrix_desikan_m5.pdf}
+\includegraphics[height=.18\textheight]{P_desikan.pdf} 
+\includegraphics[height=.182\textheight]{Abar_desikan_m5.pdf} 
+\includegraphics[height=.186\textheight]{Phat_desikan_m5.pdf}
 \caption{Heat maps indicatign the sample mean for the remaining $454-5$ graphs (left), sample mean for the 5 sampled graphs (center), and $\hat{P}$ for the 5 sampled graphs with dimension $d=11$ selected using the Zhu and Ghodsi method (right).
 Darker pixels indicated a higher probability of an edge between the given vertices.
 Note that $\hat{P}$ appears to be better estimate the true probabilities $P$, especially for edges between the two hemispheres, in the upper right (and lower left) block.
