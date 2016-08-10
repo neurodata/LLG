@@ -397,6 +397,9 @@ One of the most important structures for graphs is the community structure in wh
 The SBM is parameterized by the number of blocks $K$ (generally much less than the number of vertices $N$), the block probability matrix $B \in [0,1]^{K \times K}$, and the vector of block memberships
  % and block proportion vector $\rho \in (0,1)^K$ with $\sum_{k=1}^K \rho_k = 1$. 
 $\tau\in\{1,\dotsc,K\}^n$, where for each $i \in [n]$, $\tau_i = k$ means vertex $i$ is a member of block $k$.
+The block proportion vector $\rho\in[0,1]^K$ gives the proportion of vertices in each block $k$, with $\rho_k=\frac{1}{N} |\{i: \tau_i=k\}|$, for each $k=1,\dotsc,K$.
+This vector will be important later for our asymptotic theory results in Sec.~\ref{section:theoretical_result}.
+
 % We will assume each vertex is assigned its block independently according to the probability vector $\rho$, so $\Pr[tau_i = k] = \rho_k$. 
 Conditioned on $\tau$, each entry of the adjacency matrix $A_{ij}$ is independently sampled from the Bernoulli distribution with parameter $B_{\tau_i,\tau_j}$.
 To ensure that the SBM can be considered as an RDPG we will impose that the $B$ matrix for the SBM is positive semidefinite. 
@@ -549,7 +552,7 @@ and for large enough $N$, we have
     \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{M N} P_{ij}(1-P_{ij}).
 \]
 \end{lemma}
-
+The first part of this Lemma gives the form the asymptotic variance of $\hat{P}$ and the second part ensures that additionally the estimator is approximately unbiased for $P$.
 The proof of this lemma is outlined in Section \ref{section:outline_proof} and is based on results for the variance of the adjacency spectral embedding from \citet{athreya2013limit}. From the result, we can see that the MSE of $\hat{P}_{ij}$ is of order $O(M^{-1}N^{-1})$ approximately.
 
 Moreover, since $\bar{A}_{ij}$ is the sample mean of $M$ independent Bernoulli random variables with parameter $P_{ij}$, we have
@@ -624,8 +627,9 @@ While there is no compact analytical formula for the relative efficiency of $\ha
 As we noted above, if the graphs are distributed according to an SBM or an RDPG, the relative efficiency is approximately invariant to the number of graphs $M$ when $N$ is large.
 If on the other hand, the graphs are generated according to a full-rank independent edge model, then the relative efficiency can change more dramatically as $M$ changes. 
 The reason for this is because for larger $M$, more of the eigenvectors of $\bar{A}$ will begin to concentrate around the eigenvectors of the mean graph.
-This leads to the fact that the optimal embedding dimension will increase, making $\bar{A}$ and and the low-rank approximation at the optimal dimension closer together. 
+This leads to the fact that the optimal embedding dimension for estimating the mean will increase, making $\bar{A}$ and and the low-rank approximation at the optimal dimension closer together. 
 As a result, $\mathrm{RE}(\bar{A},\hat{P})$ will increase as $M$ increases for full-rank models.
+Indeed, for large $M$ we will have $\mathrm{RE}(\bar{A},\hat{P})$ since we cannot guarantee that $\hat{P}$ will choose the optimal dimension.
 \end{remark}
 
 \subsection{Finite Sample Simulations}\label{sec:sbm_sim}
@@ -667,7 +671,7 @@ When calculating $\hat{P}$, we omit the dimension selection step from Algorithm~
 %\subsubsection{Simulation Results}
 To investigate the finite sample relative efficiency, we first sample 1000 Monte Carlo replicates from the above SBM distribution with different number of vertices $N$ and fixed number of graphs $M$. The scaled relative efficiency $N \cdot \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ can be estimated since $P$ is known for this simulation. Since the relative efficiency only depends on the blocks memberships of the pair $i,j$, we estimate the relative efficiency for each block pair using
 \[
-    \mathrm{RE}_{st}(\bar{A},\hat{P}) = \frac{\sum_{\tau_i=s,\tau_j=t,i \ne j} \widehat{MSE}(\hat{P}_{ij})}{\sum_{\tau_i=s,\tau_j=t,i \ne j} \widehat{MSE}(\bar{A}_{ij})}
+    \hat{\mathrm{RE}}_{st}(\bar{A},\hat{P}) = \frac{\sum_{\tau_i=s,\tau_j=t,i \ne j} \widehat{MSE}(\hat{P}_{ij})}{\sum_{\tau_i=s,\tau_j=t,i \ne j} \widehat{MSE}(\bar{A}_{ij})}
 \]
 for $s,t\in\{1,2\}$, where $\hat{MSE}$ denotes the estimated mean square error based on the Monte Carlo replicates.
 
@@ -694,7 +698,7 @@ However, overall these differences are nearly indistinguishable for unscaled rel
 
 In practice, graphs do not follow the independent edge model, let alone an RDPG or SBM, but the mean of a collection of graphs is still of interest for these cases.
 To demonstrate that the estimator $\hat{P}$ is still useful in such cases, we test its performance on structural connectomic data. 
-The graphs are based on diffusion tensor MR images collected and available at the Consortium for Reliability and Reproducibility (CoRR) \citep{zuo2014open, gorgolewski2015high}.
+The graphs are based on diffusion tensor MR images collected and available at the Consortium for Reliability and Reproducibility (CoRR) \citep{zuo2014open, gorgolewski2015high} (see Sec.~\ref{section:data}).
 
 The dataset contains 454 different brain scans, each of which was processed to yield an undirected, unweighted graph with no self-loops, using the pipeline describe in \citet{gray2013migraine} and \citet{kiar2016m2g}.
 The vertices of the graphs represent different regions in the brain defined according to an atlas.
@@ -705,14 +709,14 @@ Further details of the dataset are provided in Section \ref{section:data}.
 In order to evaluate the performance of the two estimators, we use a cross validation on the 454 graphs of each size. 
 Specifically, for a given atlas, each Monte Carlo replicate corresponds to sampling $M$ graphs out of the 454 and computing the low-rank estimator $\hat{P}$ and the sample mean $\bar{A}$ using the $M$ selected graphs. 
 We then compare these estimates to the sample mean for the remaining $454-M$ adjacency matrices.
-While we cannot interpret this mean graph as the probability matrix for an IEM distribution (see section~\ref{sec:sim_iem}, it matches our definition as the proportion of times each edge appears in the population.
+While we cannot interpret this mean graph as the probability matrix for an IEM distribution (see section~\ref{sec:sim_iem}), the sample mean for the remaining graphs does give the proportion of times each pair of vertices are adjacent in the population from which the graphs were sampled.
 
 % By observing 454 graphs generated by the atlas being picked, we use $\hat{P}$ to estimate the mean graph $P$, which is the proportions of the existence of a white-matter tract connecting different parts of the brain. Since $P$ is unknown in practice, we perform a cross-validation study to compare $\bar{A}$ and $\hat{P}$. For each Monte Carlo replicate, we first fix the sample size $M$ and randomly sample $M$ graphs from the total 454 graphs in the dataset. We assure $M$ to be relatively small such that the entry-wise mean of the remaining $(454 - M)$ graphs is a valid approximation of the true probability matrix $P$ we are estimating. Then we can calculate $\bar{A}$ and $\hat{P}$ based on the $M$ samples and compare their performance based on the estimated probability matrix.
 
 We run 1000 simulations on each of the three atlases for each sample size $M=1,5,10$.
 We also considered all possible dimensions for $\hat{P}$ by ranging $d$ from 1 to $N$ in order to investigate the impact of the dimension selection procedures.
 We plot the MSE of $\bar{A}$ and $\hat{P}$ in Fig~\ref{fig:realdata}.
-The horizontal axis gives dimension $d$, which only impacs $\hat{P}$, which is why the MSE of $\bar{A}$ is shown as flat.
+The horizontal axis gives dimension $d$, which only impacts $\hat{P}$, which is why the MSE of $\bar{A}$ is shown as flat.
 
 When $d$ is small, $\hat{P}$ underestimate the dimension and throws away important information, which leads to relatively poor performance. When $d=N$, $\hat{P}$ is equal to $\bar{A}$, so that the curve of the MSE for $\hat{P}$ ends at the MSE for $\bar{A}$. 
 In practice, we use algorithms like Zhu and Ghodsi's method or USVT to select the dimension $d$ (see section~\ref{section:dim_select}). 
@@ -723,12 +727,12 @@ Both dimension selection algorithms tend to select dimensions which nearly minim
 % The standard error for the Zhu and Ghodsi and the USVT methods are about $0.9$ and $0.17$ respectively.
 
 When $M$ is 1 or 5, $\bar{A}$ has large variance which leads to large MSE. Meanwhile, $\hat{P}$ reduces the variance by taking advantages of inherent low-rank structure of the mean graph. Additionally, we see that there is a large range of dimensions where the performance for $\hat{P}$ is superior to $\bar{A}$. 
-With a larger $M$, the performance of $\bar{A}$ improves so that its performance is frequently superior to $\hat{P}$ but $\hat{P}$ still performs nearly as well.
+With a larger $M$, the performance of $\bar{A}$ improves so that its performance is frequently superior but nearly identical to $\hat{P}$.
 
 For a more specific comparison of the performance of $\hat{P}$ and $\bar{A}$ in the most realistic situation where the rank $d$ much be chosen based on data, Table~\ref{tab:corr_re} shows relative efficiencies of $\hat{P}$ versus $\bar{A}$.
 For each atlas and each sample size we compare the \citet{zhu2006automatic} with the USVT method and note that both perform reasonable well relative to the full-dimensional $\bar{A}$.
-Again we can see that the largest improvements using $\hat{P}$ occur when $M$ is small and $N$ is lareg. 
-On the other hand once $m=10$ is , $\bar{A}$ tends to do nearly as well or better than the $\hat{P}$. 
+Again we can see that the largest improvements using $\hat{P}$ occur when $M$ is small and $N$ is large. 
+On the other hand, once $m=10$, $\bar{A}$ tends to do nearly as well or better than $\hat{P}$. 
 Nonetheless, $\hat{P}$ offers certain advantages, especially since low-rank estimates can often be more easily interpretable by considering the latent position representation described in Section~\ref{section:sbm_rdpg}.
 
 \begin{figure}[!htb]
@@ -779,12 +783,12 @@ Nonetheless, $\hat{P}$ typically outperforms $\bar{A}$.
 
 To investigate the difference in performance with respect to the geometry of brain, 
 in Fig~\ref{fig:Diff_between_desikan}, we plot the 50 edges with the largest difference $|\bar{A} - P| - |\hat{P} - P|$ according to the location of the corresponding regions in the brain. Red edges indicate that $\hat{P}$ overestimate $P$ while blue means that $\hat{P}$ underestimate $P$. The edge width is determined by the estimation error for $\hat{P}$, where pairs with larger estimation error are represented by thicker lines.
-We also highlight the regions corresponding to vertices that contribute most to the difference, meaning the vertices $i$ with the largest value of $\sum_j (|\bar{A} - P| - |\hat{P} - P|)_{ij}$.
+We also highlight the five regions corresponding to vertices that contribute most to the difference, meaning the vertices $i$ with the largest value of $\sum_j (|\bar{A} - P| - |\hat{P} - P|)_{ij}$.
 Notably, these regions of improvement appear to be concentrated in three distinct regions of the brain. 
 The top five regions are the inferior temporal, middle temporal, and transverse temporal regions in the left hemisphere and the parahippocampal and parsopercularis regions in the right hemisphere of the Desikan atlas.
 
-These results demonstrate that overall $\hat{P}$ gives a better estimate than $\bar{A}$ for the CoRR dataset with all three atlases. 
-Importantly, this improvement is robust to the embedding dimension as long as provided the dimension is not underestimated.
+These results demonstrate that for small sample sizes, such as $M=1$ or $M=5$, and for the atlases with larger number of vertices, $\hat{P}$ gives a better estimate than $\bar{A}$ for the CoRR dataset.
+Importantly, this improvement is robust to the embedding dimension provided the dimension is not underestimated.
 We should note that though the total error for $\hat{P}$ is smaller in this case, for certain entries $\bar{A}$ does perform better.
 For example, there are some pairs of vertices that are adjacent for all samples in the population and for these pairs $\bar{A}$ will always perform better than $\hat{P}$. 
 
@@ -871,10 +875,10 @@ Note that $\hat{P}$ appears to be better estimate the true probabilities $P$, es
 %\end{figure}
 
 
-\subsection{Simulation under the Full Rank Independent Edge Model}\label{sec:sim_iem}
+\subsection{Synthetic Data Analysis for Full Rank IEM}\label{sec:sim_iem}
 
 While the theory we have developed is based on the assumption that the mean graph is low rank, as we have seen in Section~\ref{sec:corr_data}, $\hat{P}$ often performs well even when this assumption is false. 
-To further illuminate this point, we perform a simulation under a full-rank independent edge model where we use the sample mean of the 454 graphs in the Desikan dataset as the probability matrix $P$.
+To further illuminate this point, we perform a synthetic data analysis under a full-rank independent edge model where we use the sample mean of the 454 graphs in the Desikan dataset as the probability matrix $P$.
 As in the previous section, we simulated data sets of size $M=1,5$, and $10$ and used $\bar{A}$ and $\hat{P}$, where for $\hat{P}$ we varied the rank from 1 to 70.
 
 Fig~\ref{fig:sim_desikan} shows resulting estimated MSE for $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for simulated data based on the full rank probability matrix $P$ shown in the left panel of Fig~\ref{fig:Matrix_desikan_m5}.
@@ -882,7 +886,9 @@ Fig~\ref{fig:sim_desikan} shows resulting estimated MSE for $\bar{A}$ (solid lin
 We see that the results are very similar to those presented in section~\ref{sec:corr_data}, though overall $\hat{P}$ performs even better than in the real data experiments. 
 When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including those selected by the Zhu and Ghodsi method while when $M$ is large enough, both estimators perform well with the decision between the two being less conclusive.
 This simulation again shows the robustness of $\hat{P}$ to deviations from the RDPG model, specifically if the probability matrix is full-rank.
-We also see that the degradation in the performance of $\hat{P}$ in real data can at least partially be due to the fact that the independent edge assumption does not hold for real data.
+
+We also note that the finite-sample relative efficiency in these cases shows is even more favorable to $\hat{P}$, with relative efficiencies lower than $1/3$ for $M=1$, than for the real data, where relative efficiencies were at best around $1/2$ for $M=1$.
+From this observation we can postulate that the degradation in the performance of $\hat{P}$ in real data can at least partially be attributed to the fact that the independent edge assumption does not hold for real data.
 
 
 \begin{figure}[!htb]
@@ -899,7 +905,7 @@ Overall, we that the structure of these plots well approximates the structure fo
 
 % In this paper, we propose using low-rank methods to estimate the mean of a collection of graphs.
 Motivated by the RDPG model, our methodology takes advantage of the low-rank structure of the graphs by applying low-rank approximation to the entry-wise MLE. 
-We give a closed form for the asymptotic relative efficiency between the entry-wise MLE $\bar{A}$ and our estimator $\hat{P}$ in the case of a stochastic blockmodel, demonstrating that when $N$ is sufficiently low-rank methods provide a substantial improvement.
+We give a closed form for the asymptotic relative efficiency between the entry-wise MLE $\bar{A}$ and our estimator $\hat{P}$ in the case of a stochastic blockmodel, demonstrating that when the number of vertices $N$ is sufficiently large, low-rank methods provide a substantial improvement.
 Moreover, our estimator outperforms the entry-wise MLE in a cross validation analysis of the CoRR brain graphs and in low- and full-rank simulation settings.
 These results illustrate that $\hat{P}$ performs well even when the low-rank assumption is violated and that $\hat{P}$ is robust and can be applied in practice.
 
@@ -909,7 +915,7 @@ Using the element-wise sample mean for such small strata, which may have fewer t
 In similar direction, \citet{durante2014nonparametric} used low-rank deviations from a full rank population mean to model collections of graphs and our methods could be easily adapted to these ideas.
 
 We also note that low-rank methods can often be more easily interpreted.
-By representing a low-rank matrix in terms of the latent position, where each vertex is represented as a vectors in $\Re^d$ and the entries of the matrix are given by inner products of these vectors (see Section~\ref{section:sbm_rdpg}, one can analyze and visualize the geometry of these vectors in order to interpret how each vertex is behaving in the context of the larger graph. 
+By representing a low-rank matrix in terms of the latent position, where each vertex is represented as a vectors in $\Re^d$ and the entries of the matrix are given by inner products of these vectors (see Section~\ref{section:sbm_rdpg}), one can analyze and visualize the geometry of these vectors in order to interpret how each vertex is behaving in the context of the larger graph. 
 Additionally, such a representation allows the use of techniques from multivariate analysis to further study the estimated population mean.
 
 
@@ -920,8 +926,8 @@ Additionally, such a representation allows the use of techniques from multivaria
 
 % Meanwhile, estimating the rank of the graph structure accurately will certainly help improve the performance of the estimator $\hat{P}$. Now we are using Zhu and Ghodsi's method and USVT, but there is still a lot of space for improvement, especially in this particular case.
 
-While the low-rank methods considered in this paper will often offer substantial improvements, further refinements of these methods are still necessary.
-For example, we assume that the adjacency matrix is observed without contamination, however, in practice there will be noise in the observed graph and accounting for this noise with other more robust methods is necessary.
+While the low-rank methods considered in this paper will often offer substantial improvements, further refinements of these methods which account for the particular traits of connectomics data would be useful to improve estimation further.
+For example, we assume that the adjacency matrix is observed without contamination, however, in practice there will be noise in the observed graph and one may seek to account for this noise with more robust methods.
 This may be especially fruitful when each graph has weighted edges and the weights themselves have noisy or heavy-tailed distributions.
 Rank-based methods and robust likelihood methods could be very useful in that case. 
 
@@ -1284,8 +1290,7 @@ Thus
 % \]
 
 
-\begin{lemma}
-\label{lm:VarPhat}
+\begin{lemma}[Lemma~\ref{lm:VarPhat}]
 In the same setting as above, for any $i, j$, conditioning on $X_i = \nu_{\tau_i}$ and $X_j = \nu_{\tau_j}$, we have
 \[
 	\lim_{N \to \infty} N \cdot \mathrm{Var}(\hat{P}_{ij}) =
