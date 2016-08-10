@@ -303,9 +303,11 @@ In many situations where other structural information is hypothesized, for insta
 In complex data settings such as shape data, language data or graph data, we also must take care in how we define the mean.
 As with real valued data, one may want to define the mean of a graph to itself be a graph such as for the median graph \citep{jiang2001median}.
 However, this may be too restrictive for populations of graphs where there is high variation in which edges appear. 
-Instead, we define the mean graph as the weigted adjacency matrix with weights given by the proportion of times the corresponding edge appears in the population. 
-For a random graph distribution, the mean graph is the expectation of the adjacency matrix.
+Instead, for a collection of graphs sampled from a larger population, we define the mean graph as the weighted adjacency matrix with weights given by the proportion of times the corresponding edge appears in the population. 
+As we will describe below, this definition of the mean graph is the expectation of the adjacency matrix.
 This population mean is becoming more and more important both in statistical inference and in various applications like connectomics, social networks, and computational biology.
+
+
 
 % Nowadays, people care about information that can be extracted from the networks through different ways in neuroscience.
 \citet{ginestet2014hypothesis} proposed a way to test if there is a difference between the distributions for two groups of networks.  
@@ -336,7 +338,7 @@ In this study, we show via theory, simulations and real data analysis that the l
 
 \section{Models}
 \label{section:model_estimator}
-This work considers the scenario of having $M$ graphs, represented as adjacency matrices, $\{A^{(m)}\}$ ($m = 1, \cdots, M$), each having $N$ vertices.
+This work considers the scenario of having $M$ graphs, represented as adjacency matrices, $\{A^{(m)}\}$ ($m = 1, \cdots, M$), each having $N$ vertices with $A^{(m)}\in\{0,1\}^{N\times N}$.
 We assume there is a known correspondence for vertices in different graphs, so that vertex $i$ in graph $m$ corresponds to vertex $i$ in graph $m'$ for any $i$, $m$, $m'$.
 The graphs we consider are undirected and unweighted with no self-loops, so each $A^{(m)}$ is a binary symmetric matrix with zeros along the diagonal. An example application of this arises in the field of connectomics, where  brain imaging data for each subject can be represented as a graph, where each vertex represents a well-defined anatomical region present in each subject.
 For structural brain imaging, an edge may represent the presence of anatomical connections between the two regions as estimated based on  tractography for diffusion tensor magnetic resonance imaging.
@@ -344,6 +346,12 @@ Similarly, for functional data, an edge between two regions may represent the pr
 
 
 For the purpose of this paper, we will also assume that the graphs are sampled independently and identically from some distribution.
+To this end the mean graph is the expectation of each adjacency matrix.
+\begin{definition}[Mean Graph]
+Suppose that $A^{(1)},\dotsc,A^{(M)}\stackrel{iid}{\sim} \mathcal{G}$ for some random graph distribution $\mathcal{G}$, with $A^{(m)}\in\{0,1\}^{N\times N}$ for each $m$.
+The {\em mean graph} is defined as $\Ex[A^{(m)}]$, where since the graphs are identically distributed $\Ex[A^{(m)}]=\Ex[A^{(m')}]$ for any $m,m'$.
+\end{definition}
+
 We present here three nested models for these distributions, the independent edge model, the random dot product model, and the (positive semi-definite) stochastic blockmodel.
 In the Section~\ref{sec:estimator} we present, two estimators motivated by these models.
 
@@ -443,7 +451,7 @@ It is unbiased with entry-wise variance $\mathrm{Var}(\bar{A}_{ij}) = P_{ij} (1-
 
 However, $\bar{A}$ doesn't exploit any graph structure, and sometimes the performance is not very good especially when $M$ is small. 
 For example, when $M=1$, $\bar{A}$ is exactly the binary graph we observe, which is an inaccurate estimate for an arbitrary $P$ compared to estimates which exploit underlying structure.
-Additionally, there are no useful asymptotic properties for $\bar{A}$ as the number of vertices $N$ becomes large.
+Additionally, there are no useful asymptotic properties for $\bar{A}$ as the number of vertices $N$ becomes large for fixed $M$.
 
 
 \subsection{Low-Rank Estimator $\hat{P}$}
@@ -532,12 +540,13 @@ This yields the following result.
 In the same setting as in Lemma \ref{lm:VarPhat}, for any $i$ and $j$, if $\mathrm{rank}(B)=K=d$, the asymptotic relative efficiency (ARE) is 
 \[
     \mathrm{ARE}(\bar{A}_{ij}, \hat{P}_{ij}) = \lim_{N \to \infty} \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) = 0.
+    \label{eq:sbm_are}
 \]
 and for large enough $N$, we have
 \begin{equation}
 	    \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) \approx
     \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{N}.
-\label{eq:approx_re}}
+\label{eq:approx_re}
 \end{equation}
 \end{theorem}
 
