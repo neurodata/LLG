@@ -141,6 +141,9 @@
 
 \newcommand{\Ex}{\mathbb{E}}
 
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
 
 % create "+" rule type for thick vertical lines
 \newcolumntype{+}{!{\vrule width 2pt}}
@@ -316,7 +319,7 @@ Thus improving the estimation procedures for the mean graph is not only importan
 
 The element-wise sample mean is a reasonable estimator if we consider the general independent edge model (IEM) \cite{bollobas2007phasIUSe} without taking any additional structure into account. 
 However, with only a small sample size, such as when the sample size is much less than the number of vertices, it does not perform very well.
-Intuitively, an estimator incorporating structure in the distribution of graphs, assuming the estimator is computationally tractable, is preferable to the entry-wise MLE. 
+Intuitively, an estimator incorporating structure in the distribution of graphs, assuming the estimator is computationally tractable, is preferable to the entry-wise sample mean. 
 In general, we don't have any knowledge about this structure so it can be hard to take advantage of in practice.
 
 
@@ -327,9 +330,9 @@ Latent position models can capture strong community structure like the stochasti
 One example of a LPM which captures this middle ground is the random dot product graph (RDPG) \cite{young2007random, nickel2007random} which motivates our estimator. 
 % In this paper, we analyze our estimator in terms of RDPG specifically.
 
-Using the estimates of the latent positions based on a truncated eigen-decomposition of the adjacency matrix, we consider an estimator for the mean of the collection of graphs which captures the low-rank structure of the RDPG model.
+Using estimates of the latent positions based on a truncated eigen-decomposition of the adjacency matrix, we propose an estimator which captures the low-rank structure of the mean graph for the RDPG model.
 These estimates will improve performance since they will be biased towards the low-rank structure of the RDPG model and will have significantly lower overall variance than naive element-wise sample means.
-In this study, we show via theory, simulations and real data analysis that the low-rank estimator frequently outperforms the element-wise MLE, especially in small sample sizes.
+In this study, we show via theory, simulations and real data analysis that the low-rank estimator frequently outperforms the element-wise sample mean, especially in small sample sizes.
 
 
 % (Future work) Robust estimation, dimension selection, diagonal augmentation, etc.
@@ -448,13 +451,15 @@ By visual inspection, it is clear that the low-rank estimate $\hat{P}$ more clos
 
 \subsection{Estimator $\bar{A}$}
 \label{sec:abar}
-Under the IEM, the MLE for the mean graph $P$ is the element-wise sample mean of the adjacency matrices $\bar{A}=\frac{1}{M}\sum_{m=1}^M A^{(m)}$.
-It is unbiased with entry-wise variance $\mathrm{Var}(\bar{A}_{ij}) = P_{ij} (1-P_{ij})/M$. Moreover, $\bar{A}$ is the uniformly minimum-variance unbiased estimator, so it has the smallest variance among all unbiased estimators and enjoys the many asymptotic properties of the MLE as $M\to \infty$ for fixed $N$.
+The most natural estimator to consider is to take the average of the observed adjacency matrices which yields the element-wise sample mean.
+This estimator, defined as $\bar{A}=\frac{1}{M}\sum_{m=1}^M A^{(m)}$, is the  maximum likelihood estimator (MLE) for the mean graph $P$ if the graphs are sampled from an IEM distribution.
+It is unbiased so $\Ex[\bar{A}]=P$ with entry-wise variance $\mathrm{Var}(\bar{A}_{ij}) = P_{ij} (1-P_{ij})/M$. Moreover, $\bar{A}$ is the uniformly minimum-variance unbiased estimator, so it has the smallest variance among all unbiased estimators and enjoys the many asymptotic properties of the MLE as $M\to \infty$ for fixed $N$.
+However, if graphs with a large number of vertices are of interest, there are no useful asymptotic properties for $\bar{A}$ as the number of vertices $N$ becomes large for fixed $M$.
 
-However, $\bar{A}$ doesn't exploit any graph structure, and sometimes the performance is not very good especially when $M$ is small. 
-For example, when $M=1$, $\bar{A}$ is exactly the binary graph we observe, which is an inaccurate estimate for an arbitrary $P$ compared to estimates which exploit underlying structure.
-Additionally, there are no useful asymptotic properties for $\bar{A}$ as the number of vertices $N$ becomes large for fixed $M$.
-
+Additionally, $\bar{A}$ doesn't exploit any graph structure.
+If the graphs are distributed according to a RDPG or SBM, then $\bar{A}$ is no longer the maximum likelihood estimator since it is not guaranteed to satisfy the properties of the mean graph for that model.
+The performance can be especially poor when the sample size $M$ is small, such as when $M\ll N$.
+For example, when $M=1$, $\bar{A}$ is simple the binary adjacency matrix $A^{(1)}$, which is an inaccurate estimate for an arbitrary $P$ compared to estimates which exploit underlying structure, such as occurs for the RDPG.
 
 \subsection{Low-Rank Estimator $\hat{P}$}
 \label{sec:phat}
@@ -466,11 +471,25 @@ For a given dimension $d$ we consider the estimator $\hat{P}$ defined as the bes
 Since the graphs are symmetric, we can compute the eigendecomposition of $\bar{A}$ as $\hat{U} \hat{S} \hat{U}^T + \tilde{U}\tilde{S}\tilde{U}^T$, where $\hat{S}$ is a diagonal matrix with non-increasing entries along the diagonal corresponding to the largest $d$ eigenvalues of $A$ and $\hat{U}$ has columns given by the corresponding eigenvectors.
 The $d$-dimensional adjacency spectral embedding (ASE) of $\bar{A}$ is given by $\hat{X}=\hat{U} \hat{S}^{1/2}\in \mathbb{R}^{N \times d}$.
 For an RDPG, the rows of $\hat{X}$ are estimates of the latent vectors for each vertex \citep{sussman2014consistent}.
-Using the adjacency spectral embedding, we have that $\hat{P} = \hat{X} \hat{X}^T=\hat{U}\hat{S}\hat{U}^T$.
+Using the adjacency spectral embedding, we have that the low-rank approximation of $\bar{A}$ is $\hat{X} \hat{X}^T=\hat{U}\hat{S}\hat{U}^T$.
+Algorithm~\ref{algo:lowrank} gives the steps to compute this low-rank approximation.
 
-To compute $\hat{P}$, we need to specify what rank $d$ to use and there are various ways of dealing with dimension selection. 
+\begin{algorithm}[H]
+\caption{Algorithm to compute the rank-$d$ approximation of a matrix.}
+\label{algo:lowrank}
+\begin{algorithmic}[1]
+\REQUIRE Symmetric matrix $A\in \Re^{N\times N}$ and dimension $d\leq N$.
+\ENSURE $\mathrm{lowrank}_d(A)\in \Re^{N\times N}$
+\STATE Compute the algebraically largest $d$ eigenvalues of $A$, $s_1>s_2>\dotsc,s_d$ and corresponding unit-norm eigenvectors $u_1,u_2,\dotsc,u_d\in \Re^N$;
+\STATE Set $\hat{S}$ to the $d\times d$ diagonal matrix $\mathrm{diag}(s_1,\dotsc,s_d)$;
+\STATE Set $\hat{U} = [u_1,\dotsc,u_d]\in \Re{N\times d}$;
+\STATE Set $\mathrm{lowrank}_d(A)$ to $\hat{U}\hat{S}\hat{U}^T$;
+\end{algorithmic}
+\end{algorithm}
+
+To compute our estimator $\hat{P}$, we need to additionally specify what rank $d$ to use and there are various ways of dealing with dimension selection. 
 In this paper, we use Zhu and Ghodsi's elbow selection method \cite{zhu2006automatic} and the universal singular value thresholding (USVT) method \cite{chatterjee2015matrix}. 
-Details are discussed in Section \ref{section:dim_select}.
+Details for these methods are discussed in Section \ref{section:dim_select}.
 
 Moreover, since the adjacency matrices are hollow, with zeros along the diagonal, there is a missing data problem that leads to inaccuracies if we compute $\hat{P}$ based only on $\bar{A}$. 
 To compensate for this issue, we use an iterative method developed by Scheinerman and Tucker \cite{scheinerman2010modeling}. 
@@ -481,14 +500,15 @@ Details are discussed in Section \ref{section:diag_aug}.
 \caption{Algorithm to compute $\hat{P}$}
 \label{algo:basic}
 \begin{algorithmic}[1]
-\STATE \textbf{Input:} $A^{(1)}, A^{(2)}, \cdots, A^{(M)}$, each $A^{(m)} \in \{0,1\}^{N \times N}$, $k_max$
+\REQUIRE Adjacency matrices $A^{(1)}, A^{(2)}, \cdots, A^{(M)}$, with each $A^{(m)} \in \{0,1\}^{N \times N}$
+\ENSURE Estimate $\hat{P}\in[0,1]^{N\times N}$
 \STATE Calculate the sample mean $\bar{A} = \frac{1}{M}\sum\limits_{m = 1}^M A^{(m)}$;
 \STATE Calculate the scaled degree matrix $D^{(0)} = \mathrm{diag}(\bar{A} \bm{1})/(n-1)$;
-\STATE Select the dimension $d$  using $\bar{A} + D^{(0)}$ (see Section \ref{section:dim_select});
-\STATE Calculate the rank-$d$ approximation $\hat{U} \hat{S} \hat{U}^T$ for $\bar{A} + D^{(0)}$;
-\STATE Update the diagonal to $D^{(1)} \leftarrow \mathrm{diag}(\hat{U} \hat{S} \hat{U}^T)$ (see Section \ref{section:diag_aug}); 
-\STATE Set $\tilde{P}\rightarrow\hat{U} \hat{S} \hat{U}^T$, the rank-$d$ approximation for $\bar{A} + D^{(1)}$;
-\STATE \textbf{Output}: $\hat{P}$ equal to $\tilde{P}$ with values $<0$ set to $0$ and values $>1$ set to $1$.
+\STATE Select the dimension $d$ based on the eigenvalues of $\bar{A} + D^{(0)}$; (see Section~\ref{section:dim_select})
+\STATE Set $\tilde{P}^{(0)}$ to $\mathrm{lowrank}_d(\bar{A} + D^{(0)})$; (see Alg.~\ref{algo:lowrank})
+\STATE Set $D^{(1)}$ to $ \mathrm{diag}(\tilde{P})$, the diagonal matrix with diagonal matching $\tilde{P}$; 
+\STATE Set $\tilde{P}^{(1)}$ to $\mathrm{lowrank}_d(\bar{A} + D^{(1)})$; (see Alg.~\ref{algo:lowrank})
+\STATE Set $\hat{P}$ to $\tilde{P}^{(1)}$ with values $<0$ set to $0$ and values $>1$ set to $1$.
 \end{algorithmic}
 \end{algorithm}
 
