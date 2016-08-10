@@ -929,7 +929,7 @@ Additionally, such a representation allows the use of techniques from multivaria
 While the low-rank methods considered in this paper will often offer substantial improvements, further refinements of these methods which account for the particular traits of connectomics data would be useful to improve estimation further.
 For example, we assume that the adjacency matrix is observed without contamination, however, in practice there will be noise in the observed graph and one may seek to account for this noise with more robust methods.
 This may be especially fruitful when each graph has weighted edges and the weights themselves have noisy or heavy-tailed distributions.
-Rank-based methods and robust likelihood methods could be very useful in that case. 
+Rank-based methods and robust likelihood methods could be very useful in that case \citep{huber2009robust,qin2013maximum}. 
 
  % With contaminations, robust estimators like ML$q$E is preferred. If an estimator can not only inherit robustness from the robust estimators but also has small variance by taking advantage of the low rank structure of the graphs, it will be very useful.
 
@@ -1106,6 +1106,12 @@ Paul~W Holland, Kathryn~Blackmond Laskey, and Samuel Leinhardt.
 \newblock Stochastic blockmodels: First steps.
 \newblock \emph{Social networks}, 5\penalty0 (2):\penalty0 109--137, 1983.
 
+\bibitem[Huber and Ronchetti(2009)]{huber2009robust}
+Peter~J. Huber and Elvezio~M. Ronchetti.
+\newblock \emph{Robust statistics}.
+\newblock Wiley Series in Probability and Statistics. John Wiley \& Sons, Inc.,
+  Hoboken, NJ, second edition, 2009.
+
 \bibitem[James and Stein(1961)]{james1961estimation}
 W.~James and Charles Stein.
 \newblock Estimation with quadratic loss.
@@ -1145,6 +1151,14 @@ Christine Leigh~Myers Nickel.
 \newblock \emph{Random dot product graphs: A model for social networks},
   volume~68.
 \newblock 2007.
+
+
+\bibitem[Qin and Priebe(2013)]{qin2013maximum}
+Yichen Qin and Carey~E Priebe.
+\newblock Maximum l q-likelihood estimation via the expectation-maximization
+  algorithm: A robust estimation of mixture models.
+\newblock \emph{Journal of the American Statistical Association}, 108\penalty0
+  (503):\penalty0 914--928, 2013.
 
 \bibitem[Roncal et~al.(2013)Roncal, Koterba, Mhembere, Kleissas, Vogelstein,
   Burns, Bowles, Donavos, Ryman, Jung, Wu, Calhoun, and
