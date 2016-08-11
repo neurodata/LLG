@@ -623,6 +623,15 @@ For $N=500$ and $M=100$, estimates of the scaled RE based on simulations agree v
 If instead of assuming that the graphs follow a SBM distribution we assume the graphs are distributed according to a RDPG distribution, similar gains in relative efficiency can be realized.
 While there is no compact analytical formula for the relative efficiency of $\hat{P}$ versus $\bar{A}$ in the general RDPG case, using the same ideas as in Theorem~\ref{thm:ARE}, we can show that $\mathrm{RE}(\bar{A}_{ij},\hat{P}_{ij}) = O(1/N)$.
 
+\begin{proposition}
+Suppose that $A^{(1)},A^{(2)},\dotsc,A^{(M)}$ are distributed iid from and RDPG distribution with common latent positions $X_1,\dotsc,X_n$, which are distributed iid from some distribution.
+As the number of vertices $N$ tends to $\infty$, it holds for any $i\neq j$ that 
+\[
+    \mathrm{RE}(\bar{A}_{ij},\hat{P}_{ij}) \leq O(1/N).
+\]
+where again the asymptotic relative efficiency in $N$ does not depend on $M$.
+\end{proposition}
+The proof of this proposition closely follows the proofs of Lemma~\ref{lm:VarPhat} and Theorem~\ref{thm:ARE} and hence we omit it here.
 
 \begin{remark}
 As we noted above, if the graphs are distributed according to an SBM or an RDPG, the relative efficiency is approximately invariant to the number of graphs $M$ when $N$ is large.
