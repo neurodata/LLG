@@ -730,9 +730,11 @@ Both dimension selection algorithms tend to select dimensions which nearly minim
 When $M$ is 1 or 5, $\bar{A}$ has large variance which leads to large MSE. Meanwhile, $\hat{P}$ reduces the variance by taking advantages of inherent low-rank structure of the mean graph. Additionally, we see that there is a large range of dimensions where the performance for $\hat{P}$ is superior to $\bar{A}$. 
 With a larger $M$, the performance of $\bar{A}$ improves so that its performance is frequently superior but nearly identical to $\hat{P}$.
 
-For a more specific comparison of the performance of $\hat{P}$ and $\bar{A}$ in the most realistic situation where the rank $d$ much be chosen based on data, Table~\ref{tab:corr_re} shows relative efficiencies of $\hat{P}$ versus $\bar{A}$.
+For a more specific comparison of the performance of $\hat{P}$ and $\bar{A}$ in the most realistic situation where the rank $d$ much be chosen based on data, Table~\ref{tab:corr_re} shows estimated relative efficiencies of $\hat{P}$ versus $\bar{A}$.
 For each atlas and each sample size we compare the \citet{zhu2006automatic} with the USVT method and note that both perform reasonable well relative to the full-dimensional $\bar{A}$.
-Again we can see that the largest improvements using $\hat{P}$ occur when $M$ is small and $N$ is large. 
+We omit confidence intervals for the estimated relative efficiencies since all confidence intervals had lengths less than $0.015$, indicating that all relative efficiencies are significantly different from 1.
+
+Again we can see that the largest improvements using $\hat{P}$ occur when $m$ is small and $N$ is large. 
 On the other hand, once $m=10$, $\bar{A}$ tends to do nearly as well or better than $\hat{P}$. 
 Nonetheless, $\hat{P}$ offers certain advantages, especially since low-rank estimates can often be more easily interpretable by considering the latent position representation described in Section~\ref{section:sbm_rdpg}.
 
@@ -750,7 +752,13 @@ Nonetheless, $\hat{P}$ offers certain advantages, especially since low-rank esti
 \end{figure}
 
 \begin{table}[!htb]
-    \caption{Relative efficiencies for estimating the mean graph for each atlas for the CoRR data set. We compared different sample sizes $m$ and different dimension selection procedures, ZG and USVT. Overall, the relative efficiencies are greater for smaller sample sizes $m$ and larger number of vertices $N$. } 
+    \caption{{\bf Relative efficiencies of $\bar{A}$ versus $\hat{P}$ for the CoRR data set.}
+    For each atlas, JHU, Desikan, and CPAC 200, we sampled graphs which we used to compute $\bar{A}$ and $\hat{P}$.
+     We compared different sample sizes $m$ and different dimension selection procedures, ZG and USVT.
+    For each of the two methods for computing $\hat{P}$, we estimated their relative efficiencies with respect to the sample mean $\bar{A}$.
+    Confidence intervals all had lengths less than $0.015$ and hence we omitted them for clarity.
+    Overall, the relative efficiencies are greater for smaller sample sizes $m$ and larger number of vertices $N$. 
+    } 
     \label{tab:corr_re}
     \centering
 
