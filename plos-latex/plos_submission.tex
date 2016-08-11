@@ -137,13 +137,6 @@
 }
 \makeatother
 
-\newcommand{\RT}[1]{\marginpar{\footnotesize\color{red}RT: #1}}
-
-\newcommand{\Ex}{\mathbb{E}}
-
-\renewcommand{\algorithmicrequire}{\textbf{Input:}}
-\renewcommand{\algorithmicensure}{\textbf{Output:}}
-
 
 % create "+" rule type for thick vertical lines
 \newcolumntype{+}{!{\vrule width 2pt}}
@@ -209,6 +202,15 @@
 \newcommand{\ipsum}{{\bf IPSUM}}
 
 %% END MACROS SECTION
+
+\renewcommand{\Re}{\mathbb{R}}
+\newcommand{\RT}[1]{\marginpar{\footnotesize\color{red}RT: #1}}
+
+\newcommand{\Ex}{\mathbb{E}}
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
 
 
 \begin{document}
@@ -369,15 +371,15 @@ For this case, we aim to estimate the mean graph $P=\Ex[A^{(m)}]$ base on the ob
 \subsection{Random Dot Product Graph}
 In graphs, the adjacencies between vertices generally depend on unobserved properties of the corresponding vertices. For example, in a connectomics setting, the two brain regions with similar properties will have similar connectivity patterns to other regions of the brain.
 The latent positions graph (LPG) model proposed by Hoff et. al. (2002) \cite{hoff2002latent} captures such structure, where each vertex is associated with a latent position that influences the adjacencies for that vertex.
-In this model, each vertex $i$ has an associated latent vector $X_i \in \mathbb{R}^d$.
+In this model, each vertex $i$ has an associated latent vector $X_i \in \Re^d$.
 Based on the latent positions, the existence of edges are conditionally independent with probability that only depends on the latent vectors of the incident vertices through a link function. If $d$ is much smaller than the number of vertices $N$ and the link function is known, LPMs are more parsimonious models compared to IEM, requiring only $dN$ parameters rather then $\binom{N}{2}$.
 
 A specific instance of a LPM that we examine in this work is the random dot product graph model (RDPG) \cite{young2007random, nickel2007random} where the link function is the dot product, so the probability of an edge being present between two nodes is the dot product of their latent vectors.
 The direction of the latent position is determined by properties of that vertex and vertices whose latent positions point in similar directions are more likely to have an edge between them than vertices whose latent positions point in orthogonal directions.
 Similarly, the magnitude of the latent position encodes the vertices overall tendency to form edges, with larger magnitudes leading to more edges.
 
-Formally, let $\mathcal{X} \subset \mathbb{R}^d$ be a set such that $x, y \in \mathcal{X}$ implies $\left \langle  x,y \right \rangle =\sum_i x_i y_i \in [0, 1]$.
-Let $X_1,\dotsc,X_n\in \mathcal{X}$ and write $X = [X_1|\cdots|X_N]^T \in \mathbb{R}^{N \times d}$.
+Formally, let $\mathcal{X} \subset \Re^d$ be a set such that $x, y \in \mathcal{X}$ implies $\left \langle  x,y \right \rangle =\sum_i x_i y_i \in [0, 1]$.
+Let $X_1,\dotsc,X_n\in \mathcal{X}$ and write $X = [X_1|\cdots|X_N]^T \in \Re^{N \times d}$.
 A random graph $G$ with adjacency matrix $A$ is said to be an RDPG if
 \[
     \Pr[A|X] = \prod_{i<j} \left \langle X_i, X_j \right \rangle^{A_{ij}} \left( 1 - \left \langle X_i, X_j \right \rangle \right)^{1 - A_{ij}}.
@@ -406,8 +408,8 @@ To ensure that the SBM can be considered as an RDPG we will impose that the $B$ 
 For notational convenience we will refer to the sub-model of the SBM with positive semidefinite $B$ matrix as the SBM.
 
 In order to analyze the estimator $\hat{P}$ motivated by RDPG, we will represent the SBM as an RDPG by
-decomposing $B$ as $\nu \nu^T$, where $\nu \in \mathbb{R}^{K \times d}$ and each row $\nu_k$ is the shared latent position for all vertices assigned to block $k$. 
-For $X \in \mathbb{R}^{N \times d}$ with rows given by $X_i = \nu_{\tau_i}$, we have
+decomposing $B$ as $\nu \nu^T$, where $\nu \in \Re^{K \times d}$ and each row $\nu_k$ is the shared latent position for all vertices assigned to block $k$. 
+For $X \in \Re^{N \times d}$ with rows given by $X_i = \nu_{\tau_i}$, we have
 \[
     \Pr[A_{ij} = 1|\tau] = B_{\tau_i, \tau_j} = \nu_{\tau_i}^T \nu_{\tau_j}.
 \]
@@ -442,7 +444,8 @@ We describe the low-rank aspects of this estimator in this section and present f
   \centering
   \includegraphics[width=\linewidth]{SBM_Abar.pdf}
 \end{subfigure}
-\caption{Example illustrating the stochastic blockmodel. The top left figure shows the mean graph $P$ with $K = 5$ blocks and $N=200$ vertices and the top right figure shows an adjacency matrix $A$ sampled according to the probabilities from $P$.
+\caption{{\bf Example illustrating the stochastic blockmodel.}
+The top left figure shows the mean graph $P$ with $K = 5$ blocks and $N=200$ vertices and the top right figure shows an adjacency matrix $A$ sampled according to the probabilities from $P$.
 While $A$ is a noisy version of $P$, much of the structure of $P$ is preserved in $A$, a property we will exploit in our estimation procedure.
 Based on three graphs sampled independently and identically according to the probability matrix $P$, we construct the element-wise mean $\bar{A}$, shown in the lower right panel (see Section~\ref{sec:abar}.  
 Finally, by taking a rank-5 approximation of $\bar{A}$ and thresholding the values to be between $O$ and $1$, we construct our proposed estimate $\hat{P}$, shown in the lower left panel (see Section~\ref{sec:phat}).
@@ -472,7 +475,7 @@ This estimator is similar to the estimator proposed by \citet{chatterjee2015matr
 
 For a given dimension $d$ we consider the estimator $\hat{P}$ defined as the best rank-$d$ positive-semidefinite approximation of $\bar{A}$.
 Since the graphs are symmetric, we can compute the eigendecomposition of $\bar{A}$ as $\hat{U} \hat{S} \hat{U}^T + \tilde{U}\tilde{S}\tilde{U}^T$, where $\hat{S}$ is a diagonal matrix with non-increasing entries along the diagonal corresponding to the largest $d$ eigenvalues of $A$ and $\hat{U}$ has columns given by the corresponding eigenvectors.
-The $d$-dimensional adjacency spectral embedding (ASE) of $\bar{A}$ is given by $\hat{X}=\hat{U} \hat{S}^{1/2}\in \mathbb{R}^{N \times d}$.
+The $d$-dimensional adjacency spectral embedding (ASE) of $\bar{A}$ is given by $\hat{X}=\hat{U} \hat{S}^{1/2}\in \Re^{N \times d}$.
 For an RDPG, the rows of $\hat{X}$ are estimates of the latent vectors for each vertex \citep{sussman2014consistent}.
 Using the adjacency spectral embedding, we have that the low-rank approximation of $\bar{A}$ is $\hat{X} \hat{X}^T=\hat{U}\hat{S}\hat{U}^T$.
 Algorithm~\ref{algo:lowrank} gives the steps to compute this low-rank approximation.
@@ -752,7 +755,8 @@ Nonetheless, $\hat{P}$ offers certain advantages, especially since low-rank esti
 \includegraphics[width=1\textwidth]{corr_data_MSE_jhu.pdf}\\
 \includegraphics[width=1\textwidth]{corr_data_MSE_desikan.pdf}\\
 \includegraphics[width=1\textwidth]{corr_data_MSE_CPAC200.pdf}
-\caption{A comparison of the mean square error for $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for three dataset (JHU, Desikan and CPAC200) while embedding the graphs into different dimensions and with different sample sizes $M$. The average dimensions chosen by the 3rd elbow of Zhu and Ghodsi is denoted by a triangle
+\caption{{\bf Comparison of MSE of $\hat{P}$ and $\bar{A}$ for three atlases at three sample sizes for the CoRR data.}
+These plots show the mean square error for $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for three dataset (JHU, Desikan and CPAC200) while embedding the graphs into different dimensions and with different sample sizes $M$. The average dimensions chosen by the 3rd elbow of Zhu and Ghodsi is denoted by a triangle
  % (with largest 95\% confidence interval length to be $3.5$), 
  and chosen by USVT with threshold equals 0.7 is denoted in square.
 % (with largest 95\% confidence interval length to be $0.7$). 
@@ -815,7 +819,8 @@ For example, there are some pairs of vertices that are adjacent for all samples 
 \includegraphics[height=.18\textheight]{P_desikan.pdf} 
 \includegraphics[height=.182\textheight]{Abar_desikan_m5.pdf} 
 \includegraphics[height=.186\textheight]{Phat_desikan_m5.pdf}
-\caption{Heat maps indicatign the sample mean for the remaining $454-5$ graphs (left), sample mean for the 5 sampled graphs (center), and $\hat{P}$ for the 5 sampled graphs with dimension $d=11$ selected using the Zhu and Ghodsi method (right).
+\caption{{\bf Heat maps of the population mean, the sample mean, the the estimator $\hat{P}$.}
+These heat maps indicate the sample mean for the remaining $454-5$ graphs (left), sample mean for the 5 sampled graphs (center), and $\hat{P}$ for the 5 sampled graphs with dimension $d=11$ selected using the Zhu and Ghodsi method (right).
 Darker pixels indicated a higher probability of an edge between the given vertices.
 Note that $\hat{P}$ appears to be better estimate the true probabilities $P$, especially for edges between the two hemispheres, in the upper right (and lower left) block.
 }
@@ -829,14 +834,17 @@ Note that $\hat{P}$ appears to be better estimate the true probabilities $P$, es
   \includegraphics[height=.4\linewidth]{Diff3_desikan_m5.pdf}
 \end{center}
 
-\caption{Heat plot of the absolute estimation error $|\bar{A} - P|$ and $|\hat{P} - P|$ for a sample of size $M=5$ from Desikan dataset while embedding the graphs into dimension $d=11$ selected by the 3rd elbow of ZG method. The lower triangular matrix shows the actual absolute difference, while the upper triangular matrix only highlights the edges with absolute differences larger than $0.4$. The fact that 18 edges from $\bar{A}$ are highlighted and while only six edges from $\hat{P}$ are highlighted indicates that $\hat{P}$ suffers from fewer large outliers.}
+\caption{{\bf Heat plot of absolute estimation error for $\bar{A}$ and $\hat{P}$ (lower triangle) and absolute errors above 0.4 (upper triangle).}
+These heat plots show the absolute estimation error $|\bar{A} - P|$ and $|\hat{P} - P|$ for a sample of size $M=5$ from Desikan dataset.
+The embedding dimension for $\hat{P}$ is $d=11$ selected by the 3rd elbow for ZG method. The lower triangular matrix shows the actual absolute difference, while the upper triangular matrix only highlights the edges with absolute differences larger than $0.4$. The fact that 18 edges from $\bar{A}$ are highlighted and while only six edges from $\hat{P}$ are highlighted indicates that $\hat{P}$ suffers from fewer large outliers.}
 \label{fig:Diff_desikan_m5}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=1\textwidth]{Diff_between_desikan.png}
-\caption{Top 5 regions of the brain (vertices in graphs) and top 50 connections between regions (edges in graphs) with largest difference $|\bar{A} - P| - |\hat{P} - P|$. Red edges indicate that $\hat{P}$ overestimate $P$ while blue means that $\hat{P}$ underestimate $P$. The edge width is determined by the estimation error. Connections with larger estimation error are represented by thicker lines. This figure shows the regions and connections of the brain where $\hat{P}$ outperforms $\bar{A}$ the most for estimating $P$.}
+\caption{{\bf Top 5 regions of the brain (vertices in graphs) and top 50 connections between regions (edges in graphs) with largest difference $|\bar{A} - P| - |\hat{P} - P|$.}
+Red edges indicate that $\hat{P}$ overestimate $P$ while blue means that $\hat{P}$ underestimate $P$. The edge width is determined by the estimation error. Connections with larger estimation error are represented by thicker lines. This figure shows the regions and connections of the brain where $\hat{P}$ outperforms $\bar{A}$ the most for estimating $P$.}
 \label{fig:Diff_between_desikan}
 \end{figure}
 
@@ -914,8 +922,10 @@ From this observation we can postulate that the degradation in the performance o
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=1\textwidth]{sim_desikan.pdf}
-\caption{Comparison of MSE between $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for simulated data with different sample sizes $M$ based on the sample mean for the Desikan dataset. Again, the average of dimensions selected by the USVT method (square) and the ZG method (triangle) tend to nearly approximate the optimal dimension. 
-Overall, we that the structure of these plots well approximates the structure for the real data indicating that performance for the independent edge model will tend to translate in structure to non-independent edge scenarios.}
+\caption{{\bf Comparison of $\hat{P}$ and $\bar{A}$ for synthetic data analyis.}
+As in Figure~\ref{fig:RE} MSE between $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for simulated data with different sample sizes $M$ based on the sample mean for the Desikan dataset. Again, the average of dimensions selected by the USVT method (square) and the ZG method (triangle) tend to nearly approximate the optimal dimension. 
+Overall, we see that the structure of these plots well approximates the structure for the real data indicating that performance for the independent edge model will tend to translate in structure to non-independent edge scenarios. 
+On the other hand, the relative efficiency $\mathrm{RE}(\bar{A},\hat{P})$ is lower for this synthetic data analysis then for the CoRR data.}
 \label{fig:sim_desikan}
 \end{figure}
 
@@ -1028,7 +1038,7 @@ Since the variance of each entry is scaled by $1/M$ in $\bar{A}$, the analogous 
 
 % Thus the relative efficiency between $\hat{P}$ and $\bar{A}$, which is equivalent to the ratio of mean square errors in this case, is a good indicate in comparison.
 
-Since $\hat{P}_{ij} = \hat{X}_i^T \hat{X}_j$ is a noisy version of the dot product of $\nu_s^T \nu_t$ from section~\ref{section:sbm_rdpg} and each $\hat{X}_i$ are approximately independent and normal, we can use common results for the variance of the inner product of two independent multivariate normals \citet{brown1977means}.
+Since $\hat{P}_{ij} = \hat{X}_i^T \hat{X}_j$ is a noisy version of the dot product of $\nu_s^T \nu_t$ from section~\ref{section:sbm_rdpg} and each $\hat{X}_i$ are approximately independent and normal, we can use common results for the variance of the inner product of two independent multivariate normals \citep{brown1977means}.
 After simplifications that occur in the stochastic blockmodel setting we can derive that the variance of $\hat{P}_{ij}$ converges to $\left( 1/\rho_{\tau_i} + 1/\rho_{\tau_j} \right) P_{ij} (1-P_{ij})/(N \cdot M)$ as $N \rightarrow \infty$. 
 Since the variance of $\bar{A}_{ij}$ is $P_{ij} (1-P_{ij})/M$, the relative efficiency between $\hat{P}_{ij}$ and $\bar{A}_{ij}$ is approximately $(\rho_{\tau_i}^{-1} + \rho_{\tau_j}^{-1})/N$ when $N$ is sufficiently large.
     
@@ -1270,7 +1280,7 @@ We modify the Theorem slightly to account for the multiple graph setting and pre
 
 \begin{theorem}[Corrolary of Theorem 1 in \citet{athreya2013limit}]\label{thm:clt_ext}
   In the setting above, let $X=[X_1,\dotsc,X_N]^T\in\Re^{K\times d}$ have row $i$ equal to $X_i=\nu_{\tau_i}$ where recall that $\tau_i$ are drawn from $[K]$ according to the probabilities $\rho$.
-	Then there exists an  orthogonal matrices $W$ such that for each row $i$ and $j$ and any $z \in \mathbb{R}^{d}$, conditioned on $\tau_i=s$ and $\tau_j=t$,
+	Then there exists an  orthogonal matrices $W$ such that for each row $i$ and $j$ and any $z \in \Re^{d}$, conditioned on $\tau_i=s$ and $\tau_j=t$,
   \begin{equation}
     \label{eq:4}
     \Pr\left\{\sqrt{n}( W \hat{X}_i - \nu_s ) \leq z, \sqrt{n}( W \hat{X}_j - \nu_t) \leq z'\right\}
@@ -1310,7 +1320,7 @@ Thus
 \end{proof}
 
 % \subsection{Parameter Setting}
-% Under SBM($B, \rho$) with $n$ vertices and $K$ blocks, we have the $d$-dimensional latent position $X_i \stackrel{iid}{\sim} \sum_{k=1}^K \rho_k \delta_{\nu_k}$, where $d = \mathrm{rank}(B) \le K$ and $\nu = [\nu_1, \cdots, \nu_K]^T \in \mathbb{R}^{K \times d}$ satisfying $B = \nu \nu^T$. Define the block assignment $\tau$ such that $\tau_i = k$ if and only if $X_i = \nu_k$. Let $P = X X^T$ where $X = [X_1, \cdots, X_n]^T$.
+% Under SBM($B, \rho$) with $n$ vertices and $K$ blocks, we have the $d$-dimensional latent position $X_i \stackrel{iid}{\sim} \sum_{k=1}^K \rho_k \delta_{\nu_k}$, where $d = \mathrm{rank}(B) \le K$ and $\nu = [\nu_1, \cdots, \nu_K]^T \in \Re^{K \times d}$ satisfying $B = \nu \nu^T$. Define the block assignment $\tau$ such that $\tau_i = k$ if and only if $X_i = \nu_k$. Let $P = X X^T$ where $X = [X_1, \cdots, X_n]^T$.
 % Here we assume that the second moment matrix for $X_i$, $\Delta = E[X_i X_i^T]$, is diagonal without loss of generality. Moreover, we assume that the eigenvalues of $\Delta$ are distinct and positive for the remainder of this work.
 
 % First draw $\tau \in [K]^n$ from the multinomial distribution with parameter $\rho$. Then we sample $m$ conditionally i.i.d.~graphs $A^{(1)}, \cdots, A^{(m)}$ such that $A^{(t)}_{ij}|\tau \stackrel{ind}{\sim} Bern(P_{ij})$ for each $1 \le t \le m$, $1 \le i, j \le n$.

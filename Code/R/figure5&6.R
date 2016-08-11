@@ -69,7 +69,7 @@ P_hat = regularize(Ahat)
 pdf("../../Draft/Phat_desikan_m5.pdf", family="CM Roman", width=4.5, height=3.5)
 levelplot(P_hat[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
           ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
-          main=list(label=TeX('$|\\hat{P} - P|$ for Desikan with M=5')),
+          main=list(label=TeX('$\\hat{P}$ for Desikan with M=5')),
           colorkey=list(labels=list()))
 dev.off()
 print(dHat)
