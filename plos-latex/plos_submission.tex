@@ -489,7 +489,7 @@ Algorithm~\ref{algo:lowrank} gives the steps to compute this low-rank approximat
 \begin{algorithmic}[1]
 \REQUIRE Symmetric matrix $A\in \Re^{N\times N}$ and dimension $d\leq N$.
 \ENSURE $\mathrm{lowrank}_d(A)\in \Re^{N\times N}$
-\STATE Compute the algebraically largest $d$ eigenvalues of $A$, $s_1>s_2>\dotsc,s_d$ and corresponding unit-norm eigenvectors $u_1,u_2,\dotsc,u_d\in \Re^N$;
+\STATE Compute the algebraically largest $d$ eigenvalues of $A$, $s_1\geq s_2\geq \dotsc\geq s_d$ and corresponding unit-norm eigenvectors $u_1,u_2,\dotsc,u_d\in \Re^N$;
 \STATE Set $\hat{S}$ to the $d\times d$ diagonal matrix $\mathrm{diag}(s_1,\dotsc,s_d)$;
 \STATE Set $\hat{U} = [u_1,\dotsc,u_d]\in \Re{N\times d}$;
 \STATE Set $\mathrm{lowrank}_d(A)$ to $\hat{U}\hat{S}\hat{U}^T$;
