@@ -476,7 +476,7 @@ This estimator is similar to the estimator proposed by \citet{chatterjee2015matr
 we propose adjustments to canonical low-rank methods which serve to improve the performance for the specific task of estimating the mean graph. 
 Additionally, we consider an alternative dimension selection technique as discussed in Section~\ref{section:dim_select}.
 
-For a given dimension $d$ we consider the estimator $\mathrm{lowrank}(\bar{A})$ defined as the best rank-$d$ positive-semidefinite approximation of $\bar{A}$.
+For a given dimension $d$ we consider the estimator $\mathrm{lowrank}_d(\bar{A})$ defined as the best rank-$d$ positive-semidefinite approximation of $\bar{A}$.
 Since the graphs are symmetric, we can compute the eigen-decomposition of $\bar{A}$ as $\hat{U} \hat{S} \hat{U}^T + \tilde{U}\tilde{S}\tilde{U}^T$, where $\hat{S}$ is a diagonal matrix with non-increasing entries along the diagonal corresponding to the largest $d$ eigenvalues of $A$ and $\hat{U}$ has columns given by the corresponding eigenvectors.
 The $d$-dimensional adjacency spectral embedding (ASE) of $\bar{A}$ is given by $\hat{X}=\hat{U} \hat{S}^{1/2}\in \Re^{N \times d}$.
 For an RDPG, the rows of $\hat{X}$ are estimates of the latent vectors for each vertex \citep{sussman2014consistent}.
@@ -497,11 +497,11 @@ Algorithm~\ref{algo:lowrank} gives the steps to compute this low-rank approximat
 \end{algorithm}
 
 To compute our estimator $\hat{P}$, we need to additionally specify what rank $d$ to use and there are various ways of dealing with dimension selection. 
-In this paper, we use Zhu and Ghodsi's elbow selection method \cite{zhu2006automatic} and the universal singular value thresholding (USVT) method \cite{chatterjee2015matrix}. 
+In this paper, we use an elbow selection method proposed in \citet{zhu2006automatic} and the universal singular value thresholding (USVT) method \citep{chatterjee2015matrix}. 
 Details for these methods are discussed in Section~\ref{section:dim_select}.
 
 Moreover, since the adjacency matrices are hollow, with zeros along the diagonal, there is a missing data problem that leads to inaccuracies if we compute $\hat{P}$ based only on $\bar{A}$. 
-To compensate for this issue, we use an iterative method developed by Scheinerman and Tucker \cite{scheinerman2010modeling}. 
+To compensate for this issue, we use an iterative method developed by \citet{scheinerman2010modeling}. 
 Details are discussed in Section~\ref{section:diag_aug}.
 
 
