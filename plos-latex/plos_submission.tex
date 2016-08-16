@@ -264,11 +264,11 @@ Daniel L. Sussman\textsuperscript{3*},
 % Please keep the abstract below 300 words
 \section*{Abstract}
 Estimating the mean of a population of graphs based on a sample is a core problem in network science.
-Often, the sample or cohort size is relatively small, where as the number of potential edges is much larger. 
+Often, this problem is especially difficult because the sample or cohort size is relatively small as compared to the number of parameters to estimate. 
 While using the element-wise sample mean of the adjacency matrices is a common approach, this method does not exploit any underlying structure of graphs.
-We propose using a low-rank method together with tools for dimension selection and diagonal augmentation to improve performance over the naive methodology.
+We propose using a low-rank method together with tools for dimension selection and diagonal augmentation to improve performance over the naive methodology for small sample sizes.
 Theoretical results for the stochastic blockmodel show that this method will offer major improvements when there are many vertices.
-Similarly, in analyzing human connectome data, we demonstrate that the low-rank methods outperform the the standard sample mean.
+Similarly, in analyzing human connectome data, we demonstrate that the low-rank methods outperform the the standard sample mean for many settings.
 These results indicate that low-rank methods should be a key part of the tool box for researchers studying populations of graphs.
 
 
@@ -277,8 +277,8 @@ These results indicate that low-rank methods should be a key part of the tool bo
 % Use first person. PLOS ONE authors please skip this step. 
 % Author Summary not valid for PLOS ONE submissions.   
 \section*{Author Summary}
-Sampling from populations of networks is common task in areas such as connectomics and gene expression analysis.
-When confronted with a sample from a population of graphs estimating the mean graph is a non-trivial task since the number of parameters in the mean graph grows quadratically with the number of vertices in the graph.
+Sampling from populations of networks is a common task in areas such as connectomics and gene expression analysis.
+When confronted with a sample from a population of graphs, estimating the mean graph is a non-trivial task since the number of parameters in the mean graph grows quadratically with the number of vertices in the graph whereas the number of graphs can be fewer than the number of vertices.
 We propose using low-rank estimates of the mean graph in order to reduce the variance of the estimate in exchange for a slight increase in bias.
 This results in an estimator which is often superior to using the naive element-wise mean, especially when there are very few graphs in the sample.
 We demonstrate the improved performance via theoretical results for the stochastic blockmodel as well as in an extensive analysis of connectomic data derived from diffusion tensor magnetic resonance imaging.
@@ -299,8 +299,8 @@ By exploiting the bias-variance trade-off, it is often fruitful to develop estim
 When these estimators are biased towards low-dimensional structures which well approximate the full dimensional population mean, major improvements can be realized \citep{trunk1979problem}.
 
 
-Additionally, in a striking result, \citet{stein1956inadmissibility} and \citet{james1961estimation} showed the arithmetic average should not always be the first choice and is inadmissable in even simple settings by todays standards. 
-In particular, James and Stein showed that the sample mean for a multivariate normal distribution with at least three dimensions is inadmissable and can be strictly improved by carefully biasing the  estimate towards any given fixed point. 
+Additionally, in a striking result, \citet{stein1956inadmissibility} and \citet{james1961estimation} showed the arithmetic average should not always be the first choice and is inadmissible in even simple settings by todays standards. 
+In particular, James and Stein showed that the sample mean for a multivariate normal distribution with at least three dimensions is inadmissible and can be strictly improved by carefully biasing the  estimate towards any given fixed point. 
 Twenty-seven years later, \citet{gutmann1982stein} proved that this phenomenon cannot occur when the sample spaces are finite.
 But even when  the sample mean is admissible, this doesn't other estimators should not be used in all cases.
 In many situations where other structural information is hypothesized, for instance a collection of graphs as considered in this paper, other estimators may be preferable.
@@ -385,7 +385,7 @@ A random graph $G$ with adjacency matrix $A$ is said to be an RDPG if
     \Pr[A|X] = \prod_{i<j} \left \langle X_i, X_j \right \rangle^{A_{ij}} \left( 1 - \left \langle X_i, X_j \right \rangle \right)^{1 - A_{ij}}.
 \]
 In the RDPG model, each vertex $i$ is associated with latent position $X_i$ and  conditioned on the latent positions $X$, the edges $A_{ij} \distas{iid} \text{Bern}(\left \langle X_i, X_j \right \rangle)$.
-Note that the probability matrix is the outter product of the latent position matrix with itself, $P = X X^T$.
+Note that the probability matrix is the outer product of the latent position matrix with itself, $P = X X^T$.
 This imposes two properties on $P$, namely that $P$ is positive-semidefinite and $\mathrm{rank}(P)=\mathrm{rank}(X)\leq d$.
 These properties lead us to our proposed estimator.
 %Note that $\mathrm{rank}(P) = \mathrm{rank}(X)$.
@@ -474,7 +474,7 @@ Motivated by the low-rank structure of the RDPG mean matrix, we consider the est
 This estimator is similar to the estimator proposed by \citet{chatterjee2015matrix} but we analyze its performance more specifically in the random graph setting.
 
 For a given dimension $d$ we consider the estimator $\hat{P}$ defined as the best rank-$d$ positive-semidefinite approximation of $\bar{A}$.
-Since the graphs are symmetric, we can compute the eigendecomposition of $\bar{A}$ as $\hat{U} \hat{S} \hat{U}^T + \tilde{U}\tilde{S}\tilde{U}^T$, where $\hat{S}$ is a diagonal matrix with non-increasing entries along the diagonal corresponding to the largest $d$ eigenvalues of $A$ and $\hat{U}$ has columns given by the corresponding eigenvectors.
+Since the graphs are symmetric, we can compute the eigen-decomposition of $\bar{A}$ as $\hat{U} \hat{S} \hat{U}^T + \tilde{U}\tilde{S}\tilde{U}^T$, where $\hat{S}$ is a diagonal matrix with non-increasing entries along the diagonal corresponding to the largest $d$ eigenvalues of $A$ and $\hat{U}$ has columns given by the corresponding eigenvectors.
 The $d$-dimensional adjacency spectral embedding (ASE) of $\bar{A}$ is given by $\hat{X}=\hat{U} \hat{S}^{1/2}\in \Re^{N \times d}$.
 For an RDPG, the rows of $\hat{X}$ are estimates of the latent vectors for each vertex \citep{sussman2014consistent}.
 Using the adjacency spectral embedding, we have that the low-rank approximation of $\bar{A}$ is $\hat{X} \hat{X}^T=\hat{U}\hat{S}\hat{U}^T$.
@@ -618,7 +618,7 @@ Overall, $\hat{P}$ performs best for large blocks while the improvements may be 
 
 
 
-To illustrate Eq.~\ref{eq:approx_re} of Theorem~\ref{thm:ARE}, Fig.~\ref{fig:RErho} shows $2/\rho_1$ and $1/\rho_1+1/\rho_2$, the scaled asymptotic RE for pairs of vertices with block one and pairs of vertices in differeent blocks the blocks, repsectively, in a  two-block stochastic blockmodel.
+To illustrate Eq.~\ref{eq:approx_re} of Theorem~\ref{thm:ARE}, Fig.~\ref{fig:RErho} shows $2/\rho_1$ and $1/\rho_1+1/\rho_2$, the scaled asymptotic RE for pairs of vertices with block one and pairs of vertices in different blocks the blocks, respectively, in a  two-block stochastic blockmodel.
 We vary $\rho_1$ between 0 and 1 to demonstrate how the number of pairs of vertices with the corresponding block memberships impacts the overall relative efficiency.
 For $N=500$ and $M=100$, estimates of the scaled RE based on simulations agree very closely with their corresponding theoretical values displayed in the figure. Note that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Fig.~\ref{fig:RE} for simulated data.
 
@@ -927,7 +927,7 @@ From this observation we can postulate that the degradation in the performance o
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=1\textwidth]{sim_desikan.pdf}
-\caption{{\bf Comparison of $\hat{P}$ and $\bar{A}$ for synthetic data analyis.}
+\caption{{\bf Comparison of $\hat{P}$ and $\bar{A}$ for synthetic data analysis.}
 As in Fig.~\ref{fig:RE}, this figure show $\hat{\mathrm{MSE}}$ for $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for simulated data with different sample sizes $M$ based on the sample mean for the Desikan dataset. Again, the average of dimensions selected by the USVT method (square) and the ZG method (triangle) tend to nearly approximate the optimal dimension. 
 Overall, we see that the structure of these plots well approximates the structure for the real data indicating that performance for the independent edge model will tend to translate in structure to non-independent edge scenarios. 
 On the other hand, the relative efficiency $\hat{\mathrm{RE}}(\bar{A},\hat{P})$ is lower for this synthetic data analysis then for the CoRR data.}
@@ -1298,7 +1298,7 @@ We modify the Theorem slightly to account for the multiple graph setting and pre
 \end{theorem}
 The proof of this result follows very closely the proof of the result in the original paper with only slight modifications for the multiple graph setting.
 
-We now prove a technical Lemma which yields the simplified form for the variance under the stochatic blockmodel.
+We now prove a technical Lemma which yields the simplified form for the variance under the stochastic blockmodel.
 
 \begin{lemma}
 \label{lm:mseForm}
