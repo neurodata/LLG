@@ -337,12 +337,13 @@ These estimates will improve performance since they will be biased towards the l
 In this study, we show via theory, simulations and real data analysis that the low-rank estimator frequently outperforms the element-wise sample mean, especially in small sample sizes.
 
 
-% (Future work) Robust estimation, dimension selection, diagonal augmentation, etc.
-
+In Section~\ref{section:model} we outline a the nested collection of models which consider for our theoretical and simulations and in Section~\ref{sec:estimator} we decribe the entry-wise sample mean and introduce our specific low-rank estimator, which accounts for the unknown dimension and attempts to correct for other issues found in real world problems.
+Our main results are presented in Section~\ref{sec:result} where we present theorems and simulations for the stochastic blockmodel, an investigation of a connectome dataset and a synthetic data analysis. 
+We conclude with a discussion of these results in Section~\ref{section:discussion}  and with details on our proposed method and data.
 
 
 \section{Models}
-\label{section:model_estimator}
+\label{section:model}
 This work considers the scenario of having $M$ graphs, represented as adjacency matrices, $\{A^{(m)}\}$ ($m = 1, \cdots, M$), each having $N$ vertices with $A^{(m)}\in\{0,1\}^{N\times N}$.
 We assume there is a known correspondence for vertices in different graphs, so that vertex $i$ in graph $m$ corresponds to vertex $i$ in graph $m'$ for any $i$, $m$, $m'$.
 The graphs we consider are undirected and unweighted with no self-loops, so each $A^{(m)}$ is a binary symmetric matrix with zeros along the diagonal. An example application of this arises in the field of connectomics, where  brain imaging data for each subject can be represented as a graph, where each vertex represents a well-defined anatomical region present in each subject.
@@ -470,10 +471,12 @@ For example, when $M=1$, $\bar{A}$ is simple the binary adjacency matrix $A^{(1)
 \subsection{Low-Rank Estimator $\hat{P}$}
 \label{sec:phat}
 
-Motivated by the low-rank structure of the RDPG mean matrix, we consider the estimator $\hat{P}$ based on the spectral decomposition of $\bar{A}$ which yields a low rank approximation of $\bar{A}$.
-This estimator is similar to the estimator proposed by \citet{chatterjee2015matrix} but we analyze its performance more specifically in the random graph setting.
+Motivated by the low-rank structure of the RDPG mean matrix, we propose the estimator $\hat{P}$ based on the spectral decomposition of $\bar{A}$ which yields a low rank approximation of $\bar{A}$.
+This estimator is similar to the estimator proposed by \citet{chatterjee2015matrix} but additionally
+we propose adjustments to canonical low-rank methods which serve to improve the performance for the specific task of estimating the mean graph. 
+Additionally, we consider an alternative dimension selection technique as discussed in Section~\ref{section:dim_select}.
 
-For a given dimension $d$ we consider the estimator $\hat{P}$ defined as the best rank-$d$ positive-semidefinite approximation of $\bar{A}$.
+For a given dimension $d$ we consider the estimator $\mathrm{lowrank}(\bar{A})$ defined as the best rank-$d$ positive-semidefinite approximation of $\bar{A}$.
 Since the graphs are symmetric, we can compute the eigen-decomposition of $\bar{A}$ as $\hat{U} \hat{S} \hat{U}^T + \tilde{U}\tilde{S}\tilde{U}^T$, where $\hat{S}$ is a diagonal matrix with non-increasing entries along the diagonal corresponding to the largest $d$ eigenvalues of $A$ and $\hat{U}$ has columns given by the corresponding eigenvectors.
 The $d$-dimensional adjacency spectral embedding (ASE) of $\bar{A}$ is given by $\hat{X}=\hat{U} \hat{S}^{1/2}\in \Re^{N \times d}$.
 For an RDPG, the rows of $\hat{X}$ are estimates of the latent vectors for each vertex \citep{sussman2014consistent}.
@@ -530,12 +533,14 @@ The estimates are based on a sample of size $M=3$ and in this instance visual in
 
 
 \section{Results}
+\label{sec:result}
 
 \subsection{Asymptotic Theory}
 \label{section:theoretical_result}
-To estimate the mean of a collection of graphs, we consider the two estimators from Section~\ref{section:model_estimator}: the entry-wise sample mean $\bar{A}$ and the low-rank $\hat{P}$ motivated by the RDPG.
+To estimate the mean of a collection of graphs, we consider the two estimators from Section~\ref{section:model}: the entry-wise sample mean $\bar{A}$ and the low-rank $\hat{P}$ motivated by the RDPG.
 In this section, we analyze the performance of these two estimators under the SBM by computing the entry-wise relative efficiency (RE), defined as $\mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) = \frac{\mathrm{MSE}(\hat{P}_{ij})}{\mathrm{MSE}(\bar{A}_{ij})}$.
 Specifically, we consider the asymptotic relative efficiency as the number of vertices $N\to\infty$ but with the number of graphs $M$ fixed.
+Somewhat surprising, the asymptotic relative efficiency will not depend on this fixed sample size $M$.
 
 For this asymptotic framework, we assume where the block memberships $\tau_i$ are drawn iid from a multinomial distribution with block membership probabilities given by $\rho\in[0,1]^K$.
 We will also assume that for a given $N$, the block membership probability are fixed for all graphs.
@@ -582,7 +587,7 @@ and for large enough $N$, we have
 This theorem indicates that under the SBM, $\hat{P}$ is a much better estimate of the mean of the collection of graphs $P$ than $\bar{A}$.
 Note, that a relative efficiency less than 1 indicates that $\hat{P}$ should be preferred over $\bar{A}$ so, under the above assumptions, as $N\to\infty$, $\hat{P}$ performs far better than $\bar{A}$.
 From the result, we see that the relative efficiency is of order $O(N^{-1})$ and $N \cdot \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ converges to $1/\rho_{\tau_i}+1/\rho_{\tau_j}$ when $N$ goes to infinity.
-A key component of Theorem~\ref{thm:ARE} is that the ARE does not depend on the number of graphs $M$, so the larger the graphs are, the better $\hat{P}$ is relative to $\bar{A}$, regardless of $M$.
+An important aspect of Theorem~\ref{thm:ARE} is that the ARE does not depend on the number of graphs $M$, so the larger the graphs are, the better $\hat{P}$ is relative to $\bar{A}$, regardless of $M$.
 
 
 The approximate formula Eq.~\ref{eq:approx_re} indicates that the the sizes of the blocks can greatly impact the relative efficiency.
@@ -936,7 +941,7 @@ On the other hand, the relative efficiency $\hat{\mathrm{RE}}(\bar{A},\hat{P})$ 
 
 
 
-\section{Discussion}
+\section{Discussion}\label{sec:discussion}
 
 % In this paper, we propose using low-rank methods to estimate the mean of a collection of graphs.
 Motivated by the RDPG model, our methodology takes advantage of the low-rank structure of the graphs by applying low-rank approximation to the entry-wise MLE. 
