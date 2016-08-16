@@ -371,7 +371,7 @@ For this case, we aim to estimate the mean graph $P=\Ex[A^{(m)}]$ base on the ob
 
 \subsection{Random Dot Product Graph}
 In graphs, the adjacencies between vertices generally depend on unobserved properties of the corresponding vertices. For example, in a connectomics setting, the two brain regions with similar properties will have similar connectivity patterns to other regions of the brain.
-The latent positions graph (LPG) model proposed by Hoff et. al. (2002) \cite{hoff2002latent} captures such structure, where each vertex is associated with a latent position that influences the adjacencies for that vertex.
+The latent positions model (LPM) proposed by Hoff et. al. (2002) \cite{hoff2002latent} captures such structure, where each vertex is associated with a latent position that influences the adjacencies for that vertex.
 In this model, each vertex $i$ has an associated latent vector $X_i \in \Re^d$.
 Based on the latent positions, the existence of edges are conditionally independent with probability that only depends on the latent vectors of the incident vertices through a link function. If $d$ is much smaller than the number of vertices $N$ and the link function is known, LPMs are more parsimonious models compared to IEM, requiring only $dN$ parameters rather then $\binom{N}{2}$.
 
@@ -385,7 +385,7 @@ A random graph $G$ with adjacency matrix $A$ is said to be an RDPG if
 \[
     \Pr[A|X] = \prod_{i<j} \left \langle X_i, X_j \right \rangle^{A_{ij}} \left( 1 - \left \langle X_i, X_j \right \rangle \right)^{1 - A_{ij}}.
 \]
-In the RDPG model, each vertex $i$ is associated with latent position $X_i$ and  conditioned on the latent positions $X$, the edges $A_{ij} \distas{iid} \text{Bern}(\left \langle X_i, X_j \right \rangle)$.
+In the RDPG model, each vertex $i$ is associated with latent position $X_i$ and  conditioned on the latent positions $X$, the edges $A_{ij}$ are distributed independently $ \text{Bern}(\left \langle X_i, X_j \right \rangle)$ for $i<j$.
 Note that the probability matrix is the outer product of the latent position matrix with itself, $P = X X^T$.
 This imposes two properties on $P$, namely that $P$ is positive-semidefinite and $\mathrm{rank}(P)=\mathrm{rank}(X)\leq d$.
 These properties lead us to our proposed estimator.
