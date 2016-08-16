@@ -774,14 +774,8 @@ These plots show the mean square error for $\bar{A}$ (solid line) and $\hat{P}$ 
 \label{fig:realdata}
 \end{figure}
 
-\begin{table}[!htb]
-    \caption{{\bf Relative efficiencies of $\bar{A}$ versus $\hat{P}$ for the CoRR data set.}
-    For each atlas, JHU, Desikan, and CPAC 200, we sampled graphs which we used to compute $\bar{A}$ and $\hat{P}$.
-     We compared different sample sizes $m$ and different dimension selection procedures, ZG and USVT.
-    For each of the two methods for computing $\hat{P}$, we estimated their relative efficiencies with respect to the sample mean $\bar{A}$.
-    Confidence intervals all had lengths less than $0.015$ and hence we omitted them for clarity.
-    Overall, the relative efficiencies are greater for smaller sample sizes $m$ and larger number of vertices $N$. 
-    } 
+\begin{table}[!tb]
+
     \label{tab:corr_re}
     \centering
 
@@ -797,6 +791,13 @@ USVT    & 0.50 & 0.81 & 1.09 \\\midrule
 ZG      & 0.51 & 0.68 & 0.89 \\
 USVT    & 0.52 & 0.79 & 0.99 \\\bottomrule
 \end{tabular}
+    \caption{{\bf Relative efficiencies of $\bar{A}$ versus $\hat{P}$ for the CoRR data set.}
+    For each atlas, JHU, Desikan, and CPAC 200, we sampled graphs which we used to compute $\bar{A}$ and $\hat{P}$.
+     We compared different sample sizes $m$ and different dimension selection procedures, ZG and USVT.
+    For each of the two methods for computing $\hat{P}$, we estimated their relative efficiencies with respect to the sample mean $\bar{A}$.
+    Confidence intervals all had lengths less than $0.015$ and hence we omitted them for clarity.
+    Overall, the relative efficiencies are greater for smaller sample sizes $m$ and larger number of vertices $N$. 
+    } 
 \end{table}
 
 
