@@ -400,8 +400,6 @@ One of the most important structures for graphs is the community structure in wh
 The SBM is parameterized by the number of blocks $K$ (generally much less than the number of vertices $N$), the block probability matrix $B \in [0,1]^{K \times K}$, and the vector of block memberships
  % and block proportion vector $\rho \in (0,1)^K$ with $\sum_{k=1}^K \rho_k = 1$. 
 $\tau\in\{1,\dotsc,K\}^N$, where for each $i \in [N]$, $\tau_i = k$ means vertex $i$ is a member of block $k$.
-The block proportion vector $\rho\in[0,1]^K$ gives the proportion of vertices in each block $k$, with $\rho_k=\frac{1}{N} |\{i: \tau_i=k\}|$, for each $k=1,\dotsc,K$.
-This vector will be important later for our asymptotic theory results in Section~\ref{section:theoretical_result}.
 
 % We will assume each vertex is assigned its block independently according to the probability vector $\rho$, so $\Pr[tau_i = k] = \rho_k$. 
 Conditioned on $\tau$, each entry of the adjacency matrix $A_{ij}$ is independently sampled from the Bernoulli distribution with parameter $B_{\tau_i,\tau_j}$.
@@ -543,6 +541,7 @@ Specifically, we consider the asymptotic relative efficiency as the number of ve
 Somewhat surprising, the asymptotic relative efficiency will not depend on this fixed sample size $M$.
 
 For this asymptotic framework, we assume where the block memberships $\tau_i$ are drawn iid from a multinomial distribution with block membership probabilities given by $\rho\in[0,1]^K$.
+In particular, this implies that for each block $k$, the proportion $|\{i:\tau_i=k\}|/N$ of vertices in block $k$ will converge to $\rho_k$ as $N\to\infty$.
 We will also assume that for a given $N$, the block membership probability are fixed for all graphs.
 Denote block probability matrix $B = \nu \nu^T$. 
 By definition, the mean of the collection of graphs generated from this SBM is $P$, where $P_{ij} = B_{\tau_i, \tau_j}$. After observing $M$ graphs on $N$ vertices $A^{(1)}, \cdots, A^{(M)}$ sampled independently from the SBM conditioned on $\tau$, we can calculate the two estimators $\bar{A}$ and $\hat{P}$.
@@ -683,8 +682,9 @@ B = \begin{bmatrix}
 \end{bmatrix}
 ,\qquad \rho = \begin{bmatrix}
 0.5 & 0.5
-\end{bmatrix}.
+\end{bmatrix},
 \end{equation*}
+so that $|\{i:\tau_i=1\}|=|\{i:\tau_i=2\}|$ for each $N$.
 When calculating $\hat{P}$, we omit the dimension selection step from Algorithm~\ref{algo:basic} and instead using the true dimension $d = \mathrm{rank}(B) = 2$.
 
 %\subsubsection{Simulation Results}
