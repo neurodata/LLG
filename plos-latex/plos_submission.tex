@@ -227,8 +227,8 @@
 Runze Tang\textsuperscript{1},
 Michael Ketcha\textsuperscript{2},
 Joshua T. Vogelstein\textsuperscript{2},
-Carey E. Priebe\textsuperscript{1}
-Daniel L. Sussman\textsuperscript{3*},
+Carey E. Priebe\textsuperscript{1},
+Daniel L. Sussman\textsuperscript{3*}
 \\
 \bigskip
 \textbf{1} Department of Applied Math \& Statistics, The Johns Hopkins University, Baltimore, MD, USA
@@ -299,10 +299,10 @@ By exploiting the bias-variance trade-off, it is often fruitful to develop estim
 When these estimators are biased towards low-dimensional structures which well approximate the full dimensional population mean, major improvements can be realized \citep{trunk1979problem}.
 
 
-Additionally, in a striking result, \citet{stein1956inadmissibility} and \citet{james1961estimation} showed the arithmetic average should not always be the first choice and is inadmissible in even simple settings by todays standards. 
+Additionally, in a striking result, \citet{stein1956inadmissibility} and \citet{james1961estimation} showed the arithmetic average should not always be the first choice and is inadmissible in even simple settings by today's standards. 
 In particular, James and Stein showed that the sample mean for a multivariate normal distribution with at least three dimensions is inadmissible and can be strictly improved by carefully biasing the  estimate towards any given fixed point. 
 Twenty-seven years later, \citet{gutmann1982stein} proved that this phenomenon cannot occur when the sample spaces are finite.
-But even when  the sample mean is admissible, this doesn't other estimators should not be used in all cases.
+But even when  the sample mean is admissible, this doesn't mean that other estimators should not be used in all cases.
 In many situations where other structural information is hypothesized, for instance a collection of graphs as considered in this paper, other estimators may be preferable.
 
 In complex data settings such as shape data, language data or graph data, we also must take care in how we define the mean.
@@ -399,7 +399,7 @@ One of the most important structures for graphs is the community structure in wh
 
 The SBM is parameterized by the number of blocks $K$ (generally much less than the number of vertices $N$), the block probability matrix $B \in [0,1]^{K \times K}$, and the vector of block memberships
  % and block proportion vector $\rho \in (0,1)^K$ with $\sum_{k=1}^K \rho_k = 1$. 
-$\tau\in\{1,\dotsc,K\}^n$, where for each $i \in [n]$, $\tau_i = k$ means vertex $i$ is a member of block $k$.
+$\tau\in\{1,\dotsc,K\}^N$, where for each $i \in [N]$, $\tau_i = k$ means vertex $i$ is a member of block $k$.
 The block proportion vector $\rho\in[0,1]^K$ gives the proportion of vertices in each block $k$, with $\rho_k=\frac{1}{N} |\{i: \tau_i=k\}|$, for each $k=1,\dotsc,K$.
 This vector will be important later for our asymptotic theory results in Section~\ref{section:theoretical_result}.
 
@@ -448,8 +448,8 @@ We describe the low-rank aspects of this estimator in this section and present f
 \caption{{\bf Example illustrating the stochastic blockmodel.}
 The top left figure shows the mean graph $P$ with $K = 5$ blocks and $N=200$ vertices and the top right figure shows an adjacency matrix $A$ sampled according to the probabilities from $P$.
 While $A$ is a noisy version of $P$, much of the structure of $P$ is preserved in $A$, a property we will exploit in our estimation procedure.
-Based on three graphs sampled independently and identically according to the probability matrix $P$, we construct the element-wise mean $\bar{A}$, shown in the lower right panel (see Section~\ref{sec:abar}.  
-Finally, by taking a rank-5 approximation of $\bar{A}$ and thresholding the values to be between $O$ and $1$, we construct our proposed estimate $\hat{P}$, shown in the lower left panel (see Section~\ref{sec:phat}).
+Based on three graphs sampled independently and identically according to the probability matrix $P$, we construct the element-wise mean $\bar{A}$, shown in the lower right panel (see Section~\ref{sec:abar}).  
+Finally, by taking a rank-5 approximation of $\bar{A}$ and thresholding the values to be between $0$ and $1$, we construct our proposed estimate $\hat{P}$, shown in the lower left panel (see Section~\ref{sec:phat}).
 By visual inspection, it is clear that the low-rank estimate $\hat{P}$ more closely approximates the probability matrix $P$ as compared to $\bar{A}$.
 }
 \label{fig:SBM_example}
@@ -491,7 +491,7 @@ Algorithm~\ref{algo:lowrank} gives the steps to compute this low-rank approximat
 \ENSURE $\mathrm{lowrank}_d(A)\in \Re^{N\times N}$
 \STATE Compute the algebraically largest $d$ eigenvalues of $A$, $s_1\geq s_2\geq \dotsc\geq s_d$ and corresponding unit-norm eigenvectors $u_1,u_2,\dotsc,u_d\in \Re^N$;
 \STATE Set $\hat{S}$ to the $d\times d$ diagonal matrix $\mathrm{diag}(s_1,\dotsc,s_d)$;
-\STATE Set $\hat{U} = [u_1,\dotsc,u_d]\in \Re{N\times d}$;
+\STATE Set $\hat{U} = [u_1,\dotsc,u_d]\in \Re^{N\times d}$;
 \STATE Set $\mathrm{lowrank}_d(A)$ to $\hat{U}\hat{S}\hat{U}^T$;
 \end{algorithmic}
 \end{algorithm}
@@ -512,10 +512,10 @@ Details are discussed in Section~\ref{section:diag_aug}.
 \REQUIRE Adjacency matrices $A^{(1)}, A^{(2)}, \cdots, A^{(M)}$, with each $A^{(m)} \in \{0,1\}^{N \times N}$
 \ENSURE Estimate $\hat{P}\in[0,1]^{N\times N}$
 \STATE Calculate the sample mean $\bar{A} = \frac{1}{M}\sum\limits_{m = 1}^M A^{(m)}$;
-\STATE Calculate the scaled degree matrix $D^{(0)} = \mathrm{diag}(\bar{A} \bm{1})/(n-1)$;
+\STATE Calculate the scaled degree matrix $D^{(0)} = \mathrm{diag}(\bar{A} \bm{1})/(N-1)$;
 \STATE Select the dimension $d$ based on the eigenvalues of $\bar{A} + D^{(0)}$; (see Section~\ref{section:dim_select})
 \STATE Set $\tilde{P}^{(0)}$ to $\mathrm{lowrank}_d(\bar{A} + D^{(0)})$; (see Algorithm~\ref{algo:lowrank})
-\STATE Set $D^{(1)}$ to $ \mathrm{diag}(\tilde{P})$, the diagonal matrix with diagonal matching $\tilde{P}$; 
+\STATE Set $D^{(1)}$ to $ \mathrm{diag}(\tilde{P}^{(0)})$, the diagonal matrix with diagonal matching $\tilde{P}^{(0)}$; 
 \STATE Set $\tilde{P}^{(1)}$ to $\mathrm{lowrank}_d(\bar{A} + D^{(1)})$; (see Algorithm~\ref{algo:lowrank})
 \STATE Set $\hat{P}$ to $\tilde{P}^{(1)}$ with values $<0$ set to $0$ and values $>1$ set to $1$.
 \end{algorithmic}
@@ -537,7 +537,7 @@ The estimates are based on a sample of size $M=3$ and in this instance visual in
 
 \subsection{Asymptotic Theory}
 \label{section:theoretical_result}
-To estimate the mean of a collection of graphs, we consider the two estimators from Section~\ref{section:model}: the entry-wise sample mean $\bar{A}$ and the low-rank $\hat{P}$ motivated by the RDPG.
+To estimate the mean of a collection of graphs, we consider the two estimators from Section~\ref{sec:estimator}: the entry-wise sample mean $\bar{A}$ and the low-rank $\hat{P}$ motivated by the RDPG.
 In this section, we analyze the performance of these two estimators under the SBM by computing the entry-wise relative efficiency (RE), defined as $\mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) = \frac{\mathrm{MSE}(\hat{P}_{ij})}{\mathrm{MSE}(\bar{A}_{ij})}$.
 Specifically, we consider the asymptotic relative efficiency as the number of vertices $N\to\infty$ but with the number of graphs $M$ fixed.
 Somewhat surprising, the asymptotic relative efficiency will not depend on this fixed sample size $M$.
@@ -610,9 +610,9 @@ Note that the maximum value for the relative efficiency in a two-block model is 
 \includegraphics[width=1\textwidth]{Rho.pdf}
 \caption{{\bf Asymptotic scaled relative efficiency $N\cdot RE(\bar{A},\hat{P})$ in a two-block SBM.}
 For each distinct pair of edge probabilities in a two block model, the scaled relative efficiency only depends on the proportion of vertices in each block.
-We show the scaled asymptotic relative efficiency as $\rho_1$ changes from $0,1$ for pairs of vertices where either both are in block 1 or one is in block one and one is in block two. 
+We show the scaled asymptotic relative efficiency as $\rho_1$ changes from $0,1$ for pairs of vertices where either both are in block one or one is in block one and one is in block two. 
 These curves all intersect at a scaled relative efficiency of 4 when $\rho_1=1/2=\rho_2$.
-Improvements using low-rank methods are greater for larger blocks, such as for $B_{11}$ when $\rho_1=$ is close to 1, while the improvements are smaller for block pairs with relatively few vertex pairs such as $B_{11}$ when $\rho_1$ is small and $B_{12}$ when $\rho_1$ is near 0 or 1
+Improvements using low-rank methods are greater for larger blocks, such as for $B_{11}$ when $\rho_1$ is close to 1, while the improvements are smaller for block pairs with relatively few vertex pairs such as $B_{11}$ when $\rho_1$ is small and $B_{12}$ when $\rho_1$ is near 0 or 1
 .
 Note that the curve for $B_{22}$ would be the same as that for $B_{11}$ but reflected around the vertical line when $\rho_1=1/2$.
 % Simulated results for scaled RE, i.e. $N \cdot \mathrm{RE}_{st}(\bar{A}, \hat{P})$ with $N = 500$ and $M = 100$ of 1000 Monte Carlo replicates while changing $\rho_1$ from 0.1 to 0.9. Scaled relative efficiency in average with different $N$ and fixed $M$ based on 1000 Monte Carlo replicates. Different types of lines denote the simulated values associated with the edges we are averaging over. Notice that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Fig~\ref{fig:RE} as expected.}
@@ -633,7 +633,7 @@ If instead of assuming that the graphs follow a SBM distribution we assume the g
 While there is no compact analytical formula for the relative efficiency of $\hat{P}$ versus $\bar{A}$ in the general RDPG case, using the same ideas as in Theorem~\ref{thm:ARE}, we can show that $\mathrm{RE}(\bar{A}_{ij},\hat{P}_{ij}) = O(1/N)$.
 
 \begin{proposition}
-Suppose that $A^{(1)},A^{(2)},\dotsc,A^{(M)}$ are distributed iid from and RDPG distribution with common latent positions $X_1,\dotsc,X_n$, which are distributed iid from some distribution.
+Suppose that $A^{(1)},A^{(2)},\dotsc,A^{(M)}$ are distributed iid from an RDPG distribution with common latent positions $X_1,\dotsc,X_n$, which are distributed iid from some distribution.
 As the number of vertices $N$ tends to $\infty$, it holds for any $i\neq j$ that 
 \[
     \mathrm{RE}(\bar{A}_{ij},\hat{P}_{ij}) \leq O(1/N).
@@ -646,7 +646,7 @@ The proof of this proposition closely follows the proofs of Lemma~\ref{lm:VarPha
 As we noted above, if the graphs are distributed according to an SBM or an RDPG, the relative efficiency is approximately invariant to the number of graphs $M$ when $N$ is large.
 If on the other hand, the graphs are generated according to a full-rank independent edge model, then the relative efficiency can change more dramatically as $M$ changes. 
 The reason for this is because for larger $M$, more of the eigenvectors of $\bar{A}$ will begin to concentrate around the eigenvectors of the mean graph.
-This leads to the fact that the optimal embedding dimension for estimating the mean will increase, making $\bar{A}$ and and the low-rank approximation at the optimal dimension closer together. 
+This leads to the fact that the optimal embedding dimension for estimating the mean will increase, making $\bar{A}$ and the low-rank approximation at the optimal dimension closer together. 
 As a result, $\mathrm{RE}(\bar{A},\hat{P})$ will increase as $M$ increases for full-rank models.
 Indeed, for large $M$ we will have $\mathrm{RE}(\bar{A},\hat{P})$ since we cannot guarantee that $\hat{P}$ will choose the optimal dimension.
 \end{remark}
@@ -757,7 +757,7 @@ For each atlas and each sample size we compare the \citet{zhu2006automatic} with
 We omit confidence intervals for the estimated relative efficiencies since all confidence intervals had lengths less than $0.015$, indicating that all relative efficiencies are significantly different from 1.
 
 Again we can see that the largest improvements using $\hat{P}$ occur when $m$ is small and $N$ is large. 
-On the other hand, once $m=10$, $\bar{A}$ tends to do nearly as well or better than $\hat{P}$. 
+On the other hand, once $M=10$, $\bar{A}$ tends to do nearly as well or better than $\hat{P}$. 
 Nonetheless, $\hat{P}$ offers certain advantages, especially since low-rank estimates can often be more easily interpretable by considering the latent position representation described in Section~\ref{section:sbm_rdpg}.
 
 \begin{figure}[!htb]
@@ -781,22 +781,22 @@ These plots show the mean square error for $\bar{A}$ (solid line) and $\hat{P}$ 
 
 \begin{tabular}{rccc}\toprule
         % & $m=1$  & $m=5$  & $m=10$ \\\toprule
-\multicolumn{1}{l}{\textbf{JHU}} & $m=1$  & $m=5$  & $m=10$  \\\midrule
+\multicolumn{1}{l}{\textbf{JHU}} & $M=1$  & $M=5$  & $M=10$  \\\midrule
 ZG      & 0.54 & 0.81 & 1.14 \\
 USVT    & 0.56 & 0.84 & 1.12 \\\midrule
-\multicolumn{1}{l}{\textbf{Desikan}} & $m=1$  & $m=5$  & $m=10$  \\ \midrule
+\multicolumn{1}{l}{\textbf{Desikan}} & $M=1$  & $M=5$  & $M=10$  \\ \midrule
 ZG      & 0.52 & 0.81 & 1.14 \\
 USVT    & 0.50 & 0.81 & 1.09 \\\midrule
-\multicolumn{1}{l}{\textbf{CPAC200}} & $m=1$  & $m=5$  & $m=10$  \\\midrule
+\multicolumn{1}{l}{\textbf{CPAC200}} & $M=1$  & $M=5$  & $M=10$  \\\midrule
 ZG      & 0.51 & 0.68 & 0.89 \\
 USVT    & 0.52 & 0.79 & 0.99 \\\bottomrule
 \end{tabular}
     \caption{{\bf Relative efficiencies of $\bar{A}$ versus $\hat{P}$ for the CoRR data set.}
     For each atlas, JHU, Desikan, and CPAC 200, we sampled graphs which we used to compute $\bar{A}$ and $\hat{P}$.
-     We compared different sample sizes $m$ and different dimension selection procedures, ZG and USVT.
+     We compared different sample sizes $M$ and different dimension selection procedures, ZG and USVT.
     For each of the two methods for computing $\hat{P}$, we estimated their relative efficiencies with respect to the sample mean $\bar{A}$.
     Confidence intervals all had lengths less than $0.015$ and hence we omitted them for clarity.
-    Overall, the relative efficiencies are greater for smaller sample sizes $m$ and larger number of vertices $N$. 
+    Overall, the relative efficiencies are greater for smaller sample sizes $M$ and larger number of vertices $N$. 
     } 
 \end{table}
 
@@ -1039,7 +1039,7 @@ The resulting graphs are undirected, unweighted and have no self-loops.
 Here we provide an outline of the proof Lemma~\ref{lm:VarPhat} which provides the approximate MSE of $\hat{P}$ in the stochastic blockmodel case.
 The result depends on using the asymptotic results for the distribution of eigenvectors from \citet{athreya2013limit} which extend to the multiple graph setting in a straightforward way.
 
-The first key observation, is that since $\bar{A}$ is computed from iid observations each with expectation $P$, $\bar{A}$ is unbiased for $P$ and $\mathrm{Var}(A_{ij}) = \frac{1}{M}P_{ij}(1-P_{ij}$.
+The first key observation, is that since $\bar{A}$ is computed from iid observations each with expectation $P$, $\bar{A}$ is unbiased for $P$ and $\mathrm{Var}(A_{ij}) = \frac{1}{M}P_{ij}(1-P_{ij})$.
 The results of \citet{athreya2013limit} provide a central limit theorem for estimates of the latent position in a RDPG model for a single graph.
 Since the variance of each entry is scaled by $1/M$ in $\bar{A}$, the analogous result for $\bar{A}$ is that the estimated latent positions will follow an approximately normal distribution with variance scaled by $1/M$ compared to the variance for a single graph. 
     
@@ -1274,14 +1274,14 @@ Xi-Nian Zuo, Jeffrey~S Anderson, Pierre Bellec, Rasmus~M Birn, Bharat~B Biswal,
 
 \section{Proofs for Theory Results}
 Here we present the proofs of the results in from Section~\ref{section:theoretical_result}. To keep the ideas clear and concise, we leave out some details which are only slight changes to previous works.
-We assume the block memberships $\tau_i$ are drawn iid from a multinomial distribution with block membership probabilities given by $\rho\in[0,1]^K$ where $\sum_i \rho_=1$.
+We assume the block memberships $\tau_i$ are drawn iid from a multinomial distribution with block membership probabilities given by $\rho\in[0,1]^K$ where $\sum_i \rho_i =1$.
 We will also assume that for a given $N$, the block memberships are fixed for all graphs.
 
-Denote matrix of between block edge probabilities by $B = \nu \nu^T\in[0,1]^{K\times K}$ which we assume has rank $k$ and is positive definite. 
+Denote matrix of between block edge probabilities by $B = \nu \nu^T\in[0,1]^{K\times K}$ which we assume has rank $K$ and is positive definite. 
 By definition, the mean of the collection of graphs generated from this SBM is $P$, where $P_{ij} = B_{\tau_i, \tau_j}$. 
 
 We observe $M$ graphs on $N$ vertices $A^{(1)}, \cdots, A^{(M)}$ sampled independently from the SBM conditioned on $\tau$.
-Define $\bar{A} = \frac{1}{m} \sum_{t=1}^m A^{(t)}$. Let $\hat{U} \hat{S} \hat{U}^T$ be the best rank-$d$ positive semidefinite approximation of $\bar{A}$, then we define $\hat{P} = \hat{X} \hat{X}^T$, where $\hat{X} = \hat{U} \hat{S}^{1/2}$.
+Define $\bar{A} = \frac{1}{M} \sum_{t=1}^M A^{(t)}$. Let $\hat{U} \hat{S} \hat{U}^T$ be the best rank-$d$ positive semidefinite approximation of $\bar{A}$, then we define $\hat{P} = \hat{X} \hat{X}^T$, where $\hat{X} = \hat{U} \hat{S}^{1/2}$.
 
 
 
@@ -1385,16 +1385,16 @@ Since $\hat{P}_{ij} = \hat{X}_i^T \hat{X}_j$ is a noisy version of the dot produ
 \]
 and
 \begin{align*}
-	& n \cdot \mathrm{Var} (\hat{P}_{ij}) \\
-    = & \frac{1}{m} \left( \nu_s^T \Sigma(\nu_t) \nu_s + \nu_t^T \Sigma(\nu_s) \nu_t^T \right)
-    + \frac{1}{m^2 n} \left( tr(\Sigma(\nu_s) \Sigma(\nu_t)) \right) +o(1)\\
-    = & \frac{1}{m} \left( \nu_s^T \Sigma(\nu_t) \nu_s + \nu_t^T \Sigma(\nu_s) \nu_t^T \right)+o(1) \\
-    = & \frac{1/\rho_s + 1/\rho_t}{m} P_{ij}(1-P_{ij}) + o(1).
+	& N \cdot \mathrm{Var} (\hat{P}_{ij}) \\
+    = & \frac{1}{M} \left( \nu_s^T \Sigma(\nu_t) \nu_s + \nu_t^T \Sigma(\nu_s) \nu_t^T \right)
+    + \frac{1}{M^2 N} \left( tr(\Sigma(\nu_s) \Sigma(\nu_t)) \right) +o(1)\\
+    = & \frac{1}{M} \left( \nu_s^T \Sigma(\nu_t) \nu_s + \nu_t^T \Sigma(\nu_s) \nu_t^T \right)+o(1) \\
+    = & \frac{1/\rho_s + 1/\rho_t}{M} P_{ij}(1-P_{ij}) + o(1).
 \end{align*}
 Since $\hat{P}_{ij} = \hat{X}_i^T \hat{X}_j$ is asymptotically unbiased for $P_{ij}$, when $n$ is large enough, we have
 \[
     E[(\hat{P}_{ij} - P_{ij})^2] = \mathrm{Var}(\hat{P}_{ij}) \approx
-    \frac{1/\rho_s + 1/\rho_t}{m n} P_{ij}(1-P_{ij})+o(1).
+    \frac{1/\rho_s + 1/\rho_t}{M N} P_{ij}(1-P_{ij})+o(1).
 \]
 \end{proof}
 
