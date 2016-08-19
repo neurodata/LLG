@@ -319,17 +319,17 @@ This population mean is becoming more and more important both in statistical inf
 While hypothesis testing is the end goal of their work, estimation is a key intermediate step which may be improved by accounting for underlying structure in the mean matrix. 
 Thus improving the estimation procedures for the mean graph is not only important by itself, but also can be applied to help improve other statistical inference procedures.
 
-The element-wise sample mean is a reasonable estimator if we consider the general independent edge model (IEM) \cite{bollobas2007phase} without taking any additional structure into account. 
+The element-wise sample mean is a reasonable estimator if we consider the general independent edge model (IEM) \citep{bollobas2007phase} without taking any additional structure into account. 
 However, with only a small sample size, such as when the sample size is much less than the number of vertices, it does not perform very well.
 Intuitively, an estimator incorporating structure in the distribution of graphs, assuming the estimator is computationally tractable, is preferable to the entry-wise sample mean. 
 In general, we don't have any knowledge about this structure so it can be hard to take advantage of in practice.
 
 
 
-One of the most important structures in graphs is the community structure in which vertices are clustered into groups that share similar connectivity structure. The stochastic blockmodel (SBM) \cite{holland1983stochastic} is one model that captures this structural property and is widely used in modeling networks.
-More generally, the latent positions model (LPM) \cite{hoff2002latent}, provides a way to parameterize the graph structure by latent positions associated with each vertex. 
+One of the most important structures in graphs is the community structure in which vertices are clustered into groups that share similar connectivity structure. The stochastic blockmodel (SBM) \citep{holland1983stochastic} is one model that captures this structural property and is widely used in modeling networks.
+More generally, the latent positions model (LPM) \citep{hoff2002latent}, provides a way to parameterize the graph structure by latent positions associated with each vertex. 
 Latent position models can capture strong community structure like the stochastic blockmodel, but may also allow for more variance within communities and other structures.
-One example of a LPM which captures this middle ground is the random dot product graph (RDPG) \cite{young2007random, nickel2007random} which motivates our estimator. 
+One example of a LPM which captures this middle ground is the random dot product graph (RDPG) \citep{young2007random, nickel2007random} which motivates our estimator. 
 % In this paper, we analyze our estimator in terms of RDPG specifically.
 
 Using estimates of the latent positions based on a truncated eigen-decomposition of the adjacency matrix, we propose an estimator which captures the low-rank structure of the mean graph for the RDPG model.
@@ -339,7 +339,7 @@ In this study, we show via theory, simulations and real data analysis that the l
 
 In Section~\ref{section:model} we outline a the nested collection of models which consider for our theoretical and simulations and in Section~\ref{sec:estimator} we decribe the entry-wise sample mean and introduce our specific low-rank estimator, which accounts for the unknown dimension and attempts to correct for other issues found in real world problems.
 Our main results are presented in Section~\ref{sec:result} where we present theorems and simulations for the stochastic blockmodel, an investigation of a connectome dataset and a synthetic data analysis. 
-We conclude with a discussion of these results in Section~\ref{section:discussion}  and with details on our proposed method and data.
+We conclude with a discussion of these results in Section~\ref{sec:discussion}  and with details on our proposed method and the data which was analyzed in Section~\ref{sec:method}.
 
 
 \section{Models}
@@ -371,11 +371,11 @@ For this case, we aim to estimate the mean graph $P=\Ex[A^{(m)}]$ base on the ob
 
 \subsection{Random Dot Product Graph}
 In graphs, the adjacencies between vertices generally depend on unobserved properties of the corresponding vertices. For example, in a connectomics setting, the two brain regions with similar properties will have similar connectivity patterns to other regions of the brain.
-The latent positions model (LPM) proposed by Hoff et. al. (2002) \cite{hoff2002latent} captures such structure, where each vertex is associated with a latent position that influences the adjacencies for that vertex.
+The latent positions model (LPM) proposed by Hoff et. al. (2002) \citep{hoff2002latent} captures such structure, where each vertex is associated with a latent position that influences the adjacencies for that vertex.
 In this model, each vertex $i$ has an associated latent vector $X_i \in \Re^d$.
 Based on the latent positions, the existence of edges are conditionally independent with probability that only depends on the latent vectors of the incident vertices through a link function. If $d$ is much smaller than the number of vertices $N$ and the link function is known, LPMs are more parsimonious models compared to IEM, requiring only $dN$ parameters rather then $\binom{N}{2}$.
 
-A specific instance of a LPM that we examine in this work is the random dot product graph model (RDPG) \cite{young2007random, nickel2007random} where the link function is the dot product, so the probability of an edge being present between two nodes is the dot product of their latent vectors.
+A specific instance of a LPM that we examine in this work is the random dot product graph model (RDPG) \citep{young2007random, nickel2007random} where the link function is the dot product, so the probability of an edge being present between two nodes is the dot product of their latent vectors.
 The direction of the latent position is determined by properties of that vertex and vertices whose latent positions point in similar directions are more likely to have an edge between them than vertices whose latent positions point in orthogonal directions.
 Similarly, the magnitude of the latent position encodes the vertices overall tendency to form edges, with larger magnitudes leading to more edges.
 
@@ -395,7 +395,7 @@ These properties lead us to our proposed estimator.
 
 \subsection{Stochastic Block Model as an Random Dot Product Graph}
 \label{section:sbm_rdpg}
-One of the most important structures for graphs is the community structure in which vertices are clustered into different communities such that vertices of the same community behave similarly. This structural property is captured by the stochastic blockmodel (SBM) \cite{holland1983stochastic}, where each vertex is assigned to a block and the probability that an edge exists between two vertices depends only on their respective block memberships.
+One of the most important structures for graphs is the community structure in which vertices are clustered into different communities such that vertices of the same community behave similarly. This structural property is captured by the stochastic blockmodel (SBM) \citep{holland1983stochastic}, where each vertex is assigned to a block and the probability that an edge exists between two vertices depends only on their respective block memberships.
 
 The SBM is parameterized by the number of blocks $K$ (generally much less than the number of vertices $N$), the block probability matrix $B \in [0,1]^{K \times K}$, and the vector of block memberships
  % and block proportion vector $\rho \in (0,1)^K$ with $\sum_{k=1}^K \rho_k = 1$. 
@@ -454,7 +454,7 @@ By visual inspection, it is clear that the low-rank estimate $\hat{P}$ more clos
 \end{figure}
 
 
-\subsection{Estimator $\bar{A}$}
+\subsection[Element-wise sample mean]{Element-wise sample mean $\bar{A}$}
 \label{sec:abar}
 The most natural estimator to consider is to take the average of the observed adjacency matrices which yields the element-wise sample mean.
 This estimator, defined as $\bar{A}=\frac{1}{M}\sum_{m=1}^M A^{(m)}$, is the  maximum likelihood estimator (MLE) for the mean graph $P$ if the graphs are sampled from an IEM distribution.
@@ -466,7 +466,7 @@ If the graphs are distributed according to a RDPG or SBM, then $\bar{A}$ is no l
 The performance can be especially poor when the sample size $M$ is small, such as when $M\ll N$.
 For example, when $M=1$, $\bar{A}$ is simple the binary adjacency matrix $A^{(1)}$, which is an inaccurate estimate for an arbitrary $P$ compared to estimates which exploit underlying structure, such as occurs for the RDPG.
 
-\subsection{Low-Rank Estimator $\hat{P}$}
+\subsection[Low-Rank Estimator]{Low-Rank Estimator $\hat{P}$}
 \label{sec:phat}
 
 Motivated by the low-rank structure of the RDPG mean matrix, we propose the estimator $\hat{P}$ based on the spectral decomposition of $\bar{A}$ which yields a low rank approximation of $\bar{A}$.
@@ -775,10 +775,7 @@ These plots show the mean square error for $\bar{A}$ (solid line) and $\hat{P}$ 
 \end{figure}
 
 \begin{table}[!tb]
-
-    \label{tab:corr_re}
     \centering
-
 \begin{tabular}{rccc}\toprule
         % & $m=1$  & $m=5$  & $m=10$ \\\toprule
 \multicolumn{1}{l}{\textbf{JHU}} & $M=1$  & $M=5$  & $M=10$  \\\midrule
@@ -798,6 +795,7 @@ USVT    & 0.52 & 0.79 & 0.99 \\\bottomrule
     Confidence intervals all had lengths less than $0.015$ and hence we omitted them for clarity.
     Overall, the relative efficiencies are greater for smaller sample sizes $M$ and larger number of vertices $N$. 
     } 
+    \label{tab:corr_re}
 \end{table}
 
 
@@ -1026,9 +1024,9 @@ Relative efficiency is a useful metric for comparing estimators because it will 
 
 \subsection{Dataset Description}
 \label{section:data}
-The original dataset is from the Emotion and Creativity One Year Retest Dataset provided by Qiu, Zhang and Wei from Southwest University available at the Consortium for Reliability and Reproducibility (CoRR) \cite{zuo2014open, gorgolewski2015high}. It is comprised of 235 subjects, all of whom were college students. Each subject underwent two sessions of anatomical, resting state DTI scans, spaced one year apart. Due to incomplete data, only 454 are available.
+The original dataset is from the Emotion and Creativity One Year Retest Dataset provided by Qiu, Zhang and Wei from Southwest University available at the Consortium for Reliability and Reproducibility (CoRR) \citep{zuo2014open, gorgolewski2015high}. It is comprised of 235 subjects, all of whom were college students. Each subject underwent two sessions of anatomical, resting state DTI scans, spaced one year apart. Due to incomplete data, only 454 are available.
 
-When deriving MR connectomes, the NeuroData team parcellates the brain into groups of voxels as defined by anatomical atlases \cite{neurodata, kiar2016graph}. The atlases are defined either physiologically by neuroanatomists (Desikan and JHU), or are generated using an automated segmentation algorithm (CPAC200).
+When deriving MR connectomes, the NeuroData team parcellates the brain into groups of voxels as defined by anatomical atlases \citep{neurodata, kiar2016graph}. The atlases are defined either physiologically by neuroanatomists (Desikan and JHU), or are generated using an automated segmentation algorithm (CPAC200).
 % The graphs we are using are processed by NeuroData team from DTI data of the original dataset generated with different atlases (Desikan, JHU and CPAC200), each containing different region/node definitions. 
 Once the voxels in the original image space are grouped into regions, an edge is placed between two regions when there is at least one white-matter tract, derived using a tractography algorithm, connecting the corresponding two parts of the brain.
 The resulting graphs are undirected, unweighted and have no self-loops.
