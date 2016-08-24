@@ -111,7 +111,7 @@
 
 \usepackage{caption}
 \usepackage{subcaption}
-\usepackage{natbib}
+
 \usepackage{bm}
 
 \newtheorem{fact}{Fact}[section]
@@ -296,17 +296,17 @@ In modern settings, we take averages almost everywhere, from data in Euclidean s
 The mean of a population of graphs is a high dimensional object, consisting of $O(N^2)$ parameters for a graph with $N$ vertices.
 Estimating high dimensional estimands with a small sample size using naive unbiased methods often leads to inaccurate estimates with very high variance.
 By exploiting the bias-variance trade-off, it is often fruitful to develop estimators which have some bias but greatly reduced variance.
-When these estimators are biased towards low-dimensional structures which well approximate the full dimensional population mean, major improvements can be realized \citep{trunk1979problem}.
+When these estimators are biased towards low-dimensional structures which well approximate the full dimensional population mean, major improvements can be realized \cite{trunk1979problem}.
 
 
-Additionally, in a striking result, \citet{stein1956inadmissibility} and \citet{james1961estimation} showed the arithmetic average should not always be the first choice and is inadmissible in even simple settings by today's standards. 
+Additionally, in a striking result, Stein and James \cite{stein1956inadmissibility,james1961estimation} showed the arithmetic average should not always be the first choice and is inadmissible in even simple settings by today's standards. 
 In particular, James and Stein showed that the sample mean for a multivariate normal distribution with at least three dimensions is inadmissible and can be strictly improved by carefully biasing the  estimate towards any given fixed point. 
-Twenty-seven years later, \citet{gutmann1982stein} proved that this phenomenon cannot occur when the sample spaces are finite.
+Twenty-seven years later, Gutmann \cite{gutmann1982stein} proved that this phenomenon cannot occur when the sample spaces are finite.
 But even when  the sample mean is admissible, this doesn't mean that other estimators should not be used in all cases.
 In many situations where other structural information is hypothesized, for instance a collection of graphs as considered in this paper, other estimators may be preferable.
 
 In complex data settings such as shape data, language data, or graph data, we also must take care in how we define the mean.
-As with real valued data, one may want to define the mean of a population of graphs to be a graph such as for the median graph \citep{jiang2001median}.
+As with real valued data, one may want to define the mean of a population of graphs to be a graph such as for the median graph \cite{jiang2001median}.
 However, this may be too restrictive for populations of graphs where there is high variation in which edges appear. 
 Instead, for a collection of graphs sampled from a larger population, we define the mean graph as the weighted adjacency matrix with weights given by the proportion of times the corresponding edge appears in the population. 
 As we will describe below, this definition of the mean graph is the expectation of the adjacency matrix.
@@ -315,21 +315,21 @@ This population mean is becoming more and more important both in statistical inf
 
 
 % Nowadays, people care about information that can be extracted from the networks through different ways in neuroscience.
-\citet{ginestet2014hypothesis} proposed a way to test if there is a difference between the distributions for two groups of networks.  
+Ginestet et al. \cite{ginestet2014hypothesis} proposed a way to test if there is a difference between the distributions for two groups of networks.  
 While hypothesis testing is the end goal of their work, estimation is a key intermediate step which may be improved by accounting for underlying structure in the mean matrix. 
 Thus, improving the estimation procedures for the mean graph is not only important by itself, but also can be applied to help improve other statistical inference procedures.
 
-The element-wise sample mean is a reasonable estimator if we consider the general independent edge model (IEM) \citep{bollobas2007phase} without taking any additional structure into account. 
+The element-wise sample mean is a reasonable estimator if we consider the general independent edge model (IEM) \cite{bollobas2007phase} without taking any additional structure into account. 
 However, with only a small sample size, such as when the sample size is much less than the number of vertices, it does not perform very well.
 Intuitively, an estimator incorporating structure in the distribution of graphs, assuming the estimator is computationally tractable, is preferable to the entry-wise sample mean. 
 In general, we don't have any knowledge about this structure so it can be hard to take advantage of in practice.
 
 
 
-One of the most important structures in graphs is the community structure in which vertices are clustered into groups that share similar connectivity structure. The stochastic blockmodel (SBM) \citep{holland1983stochastic} is one model that captures this structural property and is widely used in modeling networks.
-More generally, the latent positions model (LPM) \citep{hoff2002latent}, provides a way to parameterize the graph structure by latent positions associated with each vertex. 
+One of the most important structures in graphs is the community structure in which vertices are clustered into groups that share similar connectivity structure. The stochastic blockmodel (SBM) \cite{holland1983stochastic} is one model that captures this structural property and is widely used in modeling networks.
+More generally, the latent positions model (LPM) \cite{hoff2002latent}, provides a way to parameterize the graph structure by latent positions associated with each vertex. 
 Latent position models can capture strong community structure like the stochastic blockmodel, but may also allow for more variance within communities and other structures.
-One example of an LPM which captures this middle ground is the random dot product graph (RDPG) \citep{young2007random, nickel2007random} which motivates our estimator. 
+One example of an LPM which captures this middle ground is the random dot product graph (RDPG) \cite{young2007random, nickel2007random} which motivates our estimator. 
 % In this paper, we analyze our estimator in terms of RDPG specifically.
 
 Using estimates of the latent positions based on a truncated eigen-decomposition of the adjacency matrix, we propose an estimator which captures the low-rank structure of the mean graph for the RDPG model.
@@ -364,18 +364,18 @@ In Section~\ref{sec:estimator}, we present two estimators motivated by these mod
 
 
 \subsection{Independent Edge Model}
-The first model we consider is the independent edge model (IEM) with parameter $P \in [0,1]^{N\times N}$ \citep{bollobas2007phase}.
+The first model we consider is the independent edge model (IEM) with parameter $P \in [0,1]^{N\times N}$ \cite{bollobas2007phase}.
 An edge exists between vertex $i$ and vertex $j$ with probability $P_{ij}$ and each edge is present independently of all other edges. 
 For this case, we aim to estimate the mean graph $P=\Ex[A^{(m)}]$ based on the observed adjacency matrices $A^{(1)},\dotsc,A^{(M)}$.
 
 
 \subsection{Random Dot Product Graph}
 In graphs, the adjacencies between vertices generally depend on unobserved properties of the corresponding vertices. For example, in a connectomics setting, the two brain regions with similar properties will have similar connectivity patterns to other regions of the brain.
-The latent positions model (LPM) proposed by Hoff et. al. (2002) \citep{hoff2002latent} captures such structure, where each vertex is associated with a latent position that influences the adjacencies for that vertex.
+The latent positions model (LPM) proposed by Hoff et. al. (2002) \cite{hoff2002latent} captures such structure, where each vertex is associated with a latent position that influences the adjacencies for that vertex.
 In this model, each vertex $i$ has an associated latent vector $X_i \in \Re^d$.
 Conditioned on the latent positions, the existence of each edge is independent and the probability the edge is present only depends on the latent vectors of the incident vertices through a link function. If $d$ is much smaller than the number of vertices $N$ and the link function is known, LPMs are more parsimonious models compared to IEM, requiring only $dN$ parameters rather than $\binom{N}{2}$.
 
-A specific instance of an LPM that we examine in this work is the random dot product graph model (RDPG) \citep{young2007random, nickel2007random} where the link function is the dot product, so the probability of an edge being present between two nodes is the dot product of their latent vectors.
+A specific instance of an LPM that we examine in this work is the random dot product graph model (RDPG) \cite{young2007random, nickel2007random} where the link function is the dot product, so the probability of an edge being present between two nodes is the dot product of their latent vectors.
 The direction of the latent position is determined by properties of that vertex, and vertices whose latent positions point in similar directions are more likely to have an edge between them than vertices whose latent positions point in orthogonal directions.
 Similarly, the magnitudes of the latent position encode the vertices' overall tendency to form edges, with a larger magnitude leading to more edges incident with the vertex.
 
@@ -395,7 +395,7 @@ These properties lead us to our proposed estimator.
 
 \subsection{Stochastic Block Model as a Random Dot Product Graph}
 \label{section:sbm_rdpg}
-One of the most important structures for graphs is the community structure in which vertices are clustered into different communities such that vertices of the same community behave similarly. This structural property is captured by the stochastic blockmodel (SBM) \citep{holland1983stochastic}, where each vertex is assigned to a block and the probability that an edge exists between two vertices depends only on their respective block memberships.
+One of the most important structures for graphs is the community structure in which vertices are clustered into different communities such that vertices of the same community behave similarly. This structural property is captured by the stochastic blockmodel (SBM) \cite{holland1983stochastic}, where each vertex is assigned to a block and the probability that an edge exists between two vertices depends only on their respective block memberships.
 
 The SBM is parameterized by the number of blocks $K$ (generally much less than the number of vertices $N$), the block probability matrix $B \in [0,1]^{K \times K}$, and the vector of block memberships
  % and block proportion vector $\rho \in (0,1)^K$ with $\sum_{k=1}^K \rho_k = 1$. 
@@ -470,14 +470,14 @@ For example, when $M=1$, $\bar{A}$ is simply the binary adjacency matrix $A^{(1)
 \label{sec:phat}
 
 Motivated by the low-rank structure of the RDPG mean matrix, we propose the estimator $\hat{P}$ based on the spectral decomposition of $\bar{A}$ which yields a low rank approximation of $\bar{A}$.
-This estimator is similar to the estimator proposed by \citet{chatterjee2015matrix} but additionally
+This estimator is similar to the estimator proposed by Chaterjee \cite{chatterjee2015matrix} but additionally
 we propose adjustments to canonical low-rank methods which serve to improve the performance for the specific task of estimating the mean graph. 
 Additionally, we consider an alternative dimension selection technique as discussed in Section~\ref{section:dim_select}.
 
 For a given dimension $d$ we consider the estimator $\mathrm{lowrank}_d(\bar{A})$ defined as the best rank-$d$ positive-semidefinite approximation of $\bar{A}$.
 Since the graphs are symmetric, we can compute the eigen-decomposition of $\bar{A}$ as $\hat{U} \hat{S} \hat{U}^T + \tilde{U}\tilde{S}\tilde{U}^T$, where $\hat{S}$ is a diagonal matrix with non-increasing entries along the diagonal corresponding to the largest $d$ eigenvalues of $A$, and $\hat{U}$ has columns given by the corresponding eigenvectors.
 The $d$-dimensional adjacency spectral embedding (ASE) of $\bar{A}$ is given by $\hat{X}=\hat{U} \hat{S}^{1/2}\in \Re^{N \times d}$.
-For an RDPG, the rows of $\hat{X}$ are estimates of the latent vectors for each vertex \citep{sussman2014consistent}.
+For an RDPG, the rows of $\hat{X}$ are estimates of the latent vectors for each vertex \cite{sussman2014consistent}.
 Using the adjacency spectral embedding, we have that the low-rank approximation of $\bar{A}$ is $\hat{X} \hat{X}^T=\hat{U}\hat{S}\hat{U}^T$.
 Algorithm~\ref{algo:lowrank} gives the steps to compute this low-rank approximation.
 
@@ -495,11 +495,11 @@ Algorithm~\ref{algo:lowrank} gives the steps to compute this low-rank approximat
 \end{algorithm}
 
 To compute our estimator $\hat{P}$, we also need to specify what rank $d$ to use and there are various ways of dealing with dimension selection. 
-In this paper, we use an elbow selection method proposed in \citet{zhu2006automatic} and the universal singular value thresholding (USVT) method \citep{chatterjee2015matrix}. 
+In this paper, we use an elbow selection method proposed in Zhu and Ghodsi \cite{zhu2006automatic} and the universal singular value thresholding (USVT) method \cite{chatterjee2015matrix}. 
 Details for these methods are discussed in Section~\ref{section:dim_select}.
 
 Moreover, since the adjacency matrices are hollow, with zeros along the diagonal, there is a missing data problem that leads to inaccuracies if we compute $\hat{P}$ based only on $\bar{A}$. 
-To compensate for this issue, we use an iterative method developed by \citet{scheinerman2010modeling}. 
+To compensate for this issue, we use an iterative method developed in \cite{scheinerman2010modeling}. 
 Details are discussed in Section~\ref{section:diag_aug}.
 
 
@@ -560,7 +560,7 @@ and for large enough $N$, we have
 \]
 \end{lemma}
 The first part of this Lemma gives the form of the asymptotic variance of $\hat{P}$ and the second part ensures that the estimator is asymptotically unbiased for $P$.
-The proof of this lemma is outlined in Section~\ref{section:outline_proof} and is based on results for the variance of the adjacency spectral embedding from \citet{athreya2013limit}. From the result, we can see that the MSE of $\hat{P}_{ij}$ is of order $O(M^{-1}N^{-1})$ approximately.
+The proof of this lemma is outlined in Section~\ref{section:outline_proof} and is based on results for the variance of the adjacency spectral embedding from \cite{athreya2013limit}. From the result, we can see that the MSE of $\hat{P}_{ij}$ is of order $O(M^{-1}N^{-1})$ approximately.
 
 Moreover, since $\bar{A}_{ij}$ is the sample mean of $M$ independent Bernoulli random variables with parameter $P_{ij}$, we have
 \[
@@ -718,9 +718,9 @@ However, overall these differences are nearly indistinguishable for unscaled rel
 {\color{red} Dan: I haven't changed the past tense/present tense. Maybe just keep present tense for consistency?}
 In practice, graphs do not follow the independent edge model, let alone an RDPG or SBM, but the mean of a collection of graphs is still of interest for these cases.
 To demonstrate that the estimator $\hat{P}$ is still useful in such cases, we test its performance on structural connectomic data. 
-The graphs are based on diffusion tensor MR images collected and available at the Consortium for Reliability and Reproducibility (CoRR) \citep{zuo2014open, gorgolewski2015high} (see Section~\ref{section:data}).
+The graphs are based on diffusion tensor MR images collected and available at the Consortium for Reliability and Reproducibility (CoRR) \cite{zuo2014open, gorgolewski2015high} (see Section~\ref{section:data}).
 
-The dataset contains 454 different brain scans, each of which was processed to yield an undirected, unweighted graph with no self-loops, using the pipeline describe in \citet{gray2013migraine} and \citet{kiar2016m2g}.
+The dataset contains 454 different brain scans, each of which was processed to yield an undirected, unweighted graph with no self-loops, using the pipeline describe in \cite{gray2013migraine} and \cite{kiar2016m2g}.
 The vertices of the graphs represent different regions in the brain defined according to an atlas.
 We used three atlases, the JHU atlas with 48 vertices, the Desikan atlas with 70 vertices, and the  CPAC200 atlas with 200 vertices.
 An edge exists between two vertices whenever there is at least one white-matter tract connecting the corresponding two regions of the brain. 
@@ -753,7 +753,7 @@ When $M$ is 1 or 5, $\bar{A}$ has large variance which leads to large $\hat{\mat
 With a larger $M$, the performance of $\bar{A}$ improves so that its performance is frequently superior but nearly identical to $\hat{P}$.
 
 For a more specific comparison of the performance of $\hat{P}$ and $\bar{A}$ in the most realistic situation where the rank $d$ must be chosen based on data, Table~\ref{tab:corr_re} shows estimated relative efficiencies of $\hat{P}$ versus $\bar{A}$.
-For each atlas and each sample size, we compare the \citet{zhu2006automatic} with the USVT method and note that both perform reasonably well relative to the full-dimensional $\bar{A}$.
+For each atlas and each sample size, we compare the Zhu and Ghodsi method \cite{zhu2006automatic} with the USVT method \cite{chatterjee2015matrix} and note that both perform reasonably well relative to the full-dimensional $\bar{A}$.
 We omit confidence intervals for the estimated relative efficiencies since all confidence intervals had lengths less than $0.015$, indicating that all relative efficiencies, aside from the relative efficiency for the CPAC200 atlas at $M=10$, are significantly different from 1.
 
 Again we can see that the largest improvements using $\hat{P}$ occur when $m$ is small and $N$ is large. 
@@ -955,7 +955,7 @@ These results illustrate that $\hat{P}$ performs well even when the low-rank ass
 One of the key observations from our real data analysis was that the largest improvements using the low-rank method occurred when the number of graphs $M$ was small, and that it provided only minor improvements or even degraded performance slightly when $M$ is large. 
 However, even in large scale studies the low-rank methods will be useful for estimating graph means for subpopulations, e.g. the population of females over 60 with some college education.
 Using the element-wise sample mean for such small strata, which may have fewer than ten subjects, will frequently result in a degradation of performance.
-Similarly, \citet{durante2014nonparametric} used low-rank deviations from a full rank population mean to model collections of graphs and our methods could be easily adapted to those ideas.
+Similarly, Durante et al. \cite{durante2014nonparametric} used low-rank deviations from a full rank population mean to model collections of graphs and our methods could be easily adapted to those ideas.
 
 We also note that low-rank methods can often be more easily interpreted.
 By representing a low-rank matrix in terms of the latent position, where each vertex is represented as a vector in $\Re^d$ and the entries of the matrix are given by the inner products of these vectors (see Section~\ref{section:sbm_rdpg}), one can analyze and visualize the geometry of these vectors in order to interpret how each vertex is behaving in the context of the larger graph. 
@@ -972,7 +972,7 @@ Additionally, such a representation allows the use of techniques from multivaria
 While the low-rank methods considered in this paper will often offer substantial improvements, further refinements of these methods which account for the particular traits of connectomics data would be useful to improve estimation further.
 For example, we assume that the adjacency matrix is observed without contamination, however in practice there will be noise in the observed graph and one may seek to account for this noise with more robust methods.
 This may be especially fruitful when each graph has weighted edges and the weights themselves have noisy or heavy-tailed distributions.
-Rank-based methods and robust likelihood methods could be very useful in that case \citep{huber2009robust,qin2013maximum}. 
+Rank-based methods and robust likelihood methods could be very useful in that case \cite{huber2009robust,qin2013maximum}. 
 
  % With contaminations, robust estimators like ML$q$E is preferred. If an estimator can not only inherit robustness from the robust estimators but also has small variance by taking advantage of the low rank structure of the graphs, it will be very useful.
 
@@ -992,11 +992,11 @@ If instead one is interested in learning directly about the mean of a population
 
 \subsection{Choosing Dimension}
 \label{section:dim_select}
-Often in dimensionality reduction techniques, the choice for dimension $d$, relies on analyzing the set of the ordered eigenvalues, looking for a ``gap'' or ``elbow'' in the scree-plot. \citet{zhu2006automatic} present an automated method for finding this gap in the scree-plot that takes only the ordered eigenvalues as an input and uses Gaussian mixture modeling to find these gaps.
+Often in dimensionality reduction techniques, the choice for dimension $d$, relies on analyzing the set of the ordered eigenvalues, looking for a ``gap'' or ``elbow'' in the scree-plot. Zhu and Ghodsi \cite{zhu2006automatic} present an automated method for finding this gap in the scree-plot that takes only the ordered eigenvalues as an input and uses Gaussian mixture modeling to find these gaps.
 The mixture modeling results in multiple candidate dimensions or elbows, and our analysis indicated that underestimating the dimension is much more harmful than overestimating the dimension.
 For this reason, we use the 3rd elbow in the experiments performed for this work.
 
-Universal Singular Value Thresholding (USVT) is a simple estimation procedure proposed by \citet{chatterjee2015matrix} that can work for any matrix that has ``a little bit of structure''. 
+Universal Singular Value Thresholding (USVT) is a simple estimation procedure proposed in \cite{chatterjee2015matrix} that can work for any matrix that has ``a little bit of structure''. 
 In our setting, it selects the dimension $d$ as the number of singular values that are greater than a constant $c$ times $\sqrt{N/M}$.
 The specific constant $c$ must be selected carefully based on the mean and variance of the entries, and since again we found that overestimating the dimension was not overly harmful, we chose a relatively small value of $c=0.7$.
 
@@ -1012,8 +1012,8 @@ The graphs examined in this work have no self-loops and thus the diagonal entrie
 However, when computing the low-rank approximation, these structural zeros lead to increased errors in the estimation of the mean graph. 
 While this problem has been investigated in the single graph setting, with multiple graphs, the problem is exacerbated since the variance of the other entries is lower, so the relative impact of the bias in the diagonal entries is higher.
 
-\citet{marchette2011vertex}  proposed the simple method of imputing the diagonals to be equal to the average of the non-diagonal entries for the corresponding row.
-Earlier, \citet{scheinerman2010modeling} proposed using an iterative method to impute the diagonal entries.
+Marchette et al. \cite{marchette2011vertex}  proposed the simple method of imputing the diagonals to be equal to the average of the non-diagonal entries for the corresponding row.
+Earlier, Scheinerman and Tucker \cite{scheinerman2010modeling} proposed using an iterative method to impute the diagonal entries.
 In this work, we combine these two ideas by first using the row-average method  (see Step 3 of Algorithm~\ref{algo:basic}) and then using one step of the iterative method (see Step 6 of Algorithm~\ref{algo:basic}).
 Note that when computing errors, we omit the diagonal entries since these are known to be zero.
 
@@ -1027,9 +1027,9 @@ Relative efficiency is a useful metric for comparing estimators because it will 
 
 \subsection{Dataset Description}
 \label{section:data}
-The original dataset is from the Emotion and Creativity One Year Retest Dataset provided by Qiu, Zhang and Wei from Southwest University available at the Consortium for Reliability and Reproducibility (CoRR) \citep{zuo2014open, gorgolewski2015high}. It is comprised of 235 subjects, all of whom were college students. Each subject underwent two sessions of anatomical, resting state DTI scans, spaced one year apart. Due to incomplete data, only 454 scans are available.
+The original dataset is from the Emotion and Creativity One Year Retest Dataset provided by Qiu, Zhang and Wei from Southwest University available at the Consortium for Reliability and Reproducibility (CoRR) \cite{zuo2014open, gorgolewski2015high}. It is comprised of 235 subjects, all of whom were college students. Each subject underwent two sessions of anatomical, resting state DTI scans, spaced one year apart. Due to incomplete data, only 454 scans are available.
 
-When deriving MR connectomes, the NeuroData team parcellates the brain into groups of voxels as defined by anatomical atlases \citep{neurodata, kiar2016graph}. The atlases are defined either physiologically by neuroanatomists (Desikan and JHU), or are generated using an automated segmentation algorithm (CPAC200).
+When deriving MR connectomes, the NeuroData team parcellates the brain into groups of voxels as defined by anatomical atlases \cite{neurodata, kiar2016graph}. The atlases are defined either physiologically by neuroanatomists (Desikan and JHU), or are generated using an automated segmentation algorithm (CPAC200).
 % The graphs we are using are processed by NeuroData team from DTI data of the original dataset generated with different atlases (Desikan, JHU and CPAC200), each containing different region/node definitions. 
 Once the voxels in the original image space are grouped into regions, an edge is placed between two regions when there is at least one white-matter tract, derived using a tractography algorithm, connecting the corresponding two parts of the brain.
 The resulting graphs are undirected, unweighted, and have no self-loops.
@@ -1038,19 +1038,19 @@ The resulting graphs are undirected, unweighted, and have no self-loops.
 \subsection{Outline for the Proof of the Theorems}
 \label{section:outline_proof}
 Here we provide an outline of the proof of Lemma~\ref{lm:VarPhat} which provides the approximate MSE of $\hat{P}$ in the stochastic blockmodel case.
-The result depends on using the asymptotic results for the distribution of eigenvectors from \citet{athreya2013limit} which extend to the multiple graph setting in a straightforward way.
+The result depends on using the asymptotic results for the distribution of eigenvectors from \cite{athreya2013limit} which extend to the multiple graph setting in a straightforward way.
 
 The first key observation is that since $\bar{A}$ is computed from iid observations each with expectation $P$, $\bar{A}$ is unbiased for $P$ and $\mathrm{Var}(A_{ij}) = \frac{1}{M}P_{ij}(1-P_{ij})$.
-The results of \citet{athreya2013limit} provide a central limit theorem for estimates of the latent position in an RDPG model for a single graph.
+The results of \cite{athreya2013limit} provide a central limit theorem for estimates of the latent position in an RDPG model for a single graph.
 Since the variance of each entry is scaled by $1/M$ in $\bar{A}$, the analogous result for $\bar{A}$ is that the estimated latent positions will follow an approximately normal distribution with variance scaled by $1/M$ compared to the variance for a single graph. 
     
 % When comparing two estimators, the first thing we need to consider is consistency.
 % It is easy to see that $\bar{A}$ is unbiased as an estimate of $P$. 
-% Moreover, since two latent positions are conditionally asymptotically independent by extended version of Theorem 1 in \citet{athreya2013limit}, we know $\hat{P}$ is consistent, as well as $\bar{A}$.
+% Moreover, since two latent positions are conditionally asymptotically independent by extended version of Theorem 1 in \cite{athreya2013limit}, we know $\hat{P}$ is consistent, as well as $\bar{A}$.
 
 % Thus the relative efficiency between $\hat{P}$ and $\bar{A}$, which is equivalent to the ratio of mean square errors in this case, is a good indicate in comparison.
 
-Since $\hat{P}_{ij} = \hat{X}_i^T \hat{X}_j$ is a noisy version of the dot product of $\nu_s^T \nu_t$ from Section~\ref{section:sbm_rdpg} and each $\hat{X}_i$ is approximately independent and normal, we can use common results for the variance of the inner product of two independent multivariate normals \citep{brown1977means}.
+Since $\hat{P}_{ij} = \hat{X}_i^T \hat{X}_j$ is a noisy version of the dot product of $\nu_s^T \nu_t$ from Section~\ref{section:sbm_rdpg} and each $\hat{X}_i$ is approximately independent and normal, we can use common results for the variance of the inner product of two independent multivariate normals \cite{brown1977means}.
 After simplifications that occur in the stochastic blockmodel setting, we can derive that the variance of $\hat{P}_{ij}$ converges to $\left( 1/\rho_{\tau_i} + 1/\rho_{\tau_j} \right) P_{ij} (1-P_{ij})/(N \cdot M)$ as $N \rightarrow \infty$. 
 Since the variance of $\bar{A}_{ij}$ is $P_{ij} (1-P_{ij})/M$, the relative efficiency between $\hat{P}_{ij}$ and $\bar{A}_{ij}$ is approximately $(\rho_{\tau_i}^{-1} + \rho_{\tau_j}^{-1})/N$ when $N$ is sufficiently large.
     
@@ -1065,210 +1065,169 @@ contract N66001-14-1-4028.
 
 \nolinenumbers
 
-% Either type in your references using
-% \begin{thebibliography}{}
-% \bibitem{}
-% Text
-% \end{thebibliography}
-%
-% or
-%
-% Compile your BiBTeX database using our plos2015.bst
-% style file and paste the contents of your .bbl file
-% here.
-% 
+\bibliographystyle{plos2015}
+
 \begin{thebibliography}{10}
-\providecommand{\natexlab}[1]{#1}
-\providecommand{\url}[1]{\texttt{#1}}
-\expandafter\ifx\csname urlstyle\endcsname\relax
-  \providecommand{\doi}[1]{doi: #1}\else
-  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem[neu()]{neurodata}
-Neurodata’s mri to graphs pipeline.
-\newblock \url{http://m2g.io}.
-\newblock Accessed: 2016-05-23.
+\bibitem{trunk1979problem}
+Trunk GV.
+\newblock A problem of dimensionality: A simple example.
+\newblock Pattern Analysis and Machine Intelligence, IEEE Transactions on.
+  1979;(3):306--307.
 
-\bibitem[Athreya et~al.(2013)Athreya, Priebe, Tang, Lyzinski, Marchette, and
-  Sussman]{athreya2013limit}
-Avanti Athreya, CE~Priebe, M~Tang, V~Lyzinski, DJ~Marchette, and DL~Sussman.
-\newblock A limit theorem for scaled eigenvectors of random dot product graphs.
-\newblock \emph{Sankhya A}, pages 1--18, 2013.
-
-\bibitem[Bollob{\'a}s et~al.(2007)Bollob{\'a}s, Janson, and
-  Riordan]{bollobas2007phase}
-B{\'e}la Bollob{\'a}s, Svante Janson, and Oliver Riordan.
-\newblock The phase transition in inhomogeneous random graphs.
-\newblock \emph{Random Structures \& Algorithms}, 31\penalty0 (1):\penalty0
-  3--122, 2007.
-
-\bibitem[Brown and Rutemiller(1977)]{brown1977means}
-Gerald~G Brown and Herbert~C Rutemiller.
-\newblock Means and variances of stochastic vector products with applications
-  to random linear models.
-\newblock \emph{Management Science}, 24\penalty0 (2):\penalty0 210--216, 1977.
-
-\bibitem[Chatterjee et~al.(2015)]{chatterjee2015matrix}
-Sourav Chatterjee et~al.
-\newblock Matrix estimation by universal singular value thresholding.
-\newblock \emph{The Annals of Statistics}, 43\penalty0 (1):\penalty0 177--214,
-  2015.
-
-\bibitem[Durante et~al.(2014)Durante, Dunson, and
-  Vogelstein]{durante2014nonparametric}
-Daniele Durante, David~B Dunson, and Joshua~T Vogelstein.
-\newblock Nonparametric bayes modeling of populations of networks.
-\newblock \emph{arXiv preprint arXiv:1406.7851}, 2014.
-
-\bibitem[Ginestet et~al.(2014)Ginestet, Balanchandran, Rosenberg, and
-  Kolaczyk]{ginestet2014hypothesis}
-Cedric~E Ginestet, Prakash Balanchandran, Steven Rosenberg, and Eric~D
-  Kolaczyk.
-\newblock Hypothesis testing for network data in functional neuroimaging.
-\newblock \emph{arXiv preprint arXiv:1407.5525}, 2014.
-
-\bibitem[Gorgolewski et~al.(2015)Gorgolewski, Mendes, Wilfling, Wladimirow,
-  Gauthier, Bonnen, Ruby, Trampel, Bazin, Cozatl, et~al.]{gorgolewski2015high}
-Krzysztof~J Gorgolewski, Natacha Mendes, Domenica Wilfling, Elisabeth
-  Wladimirow, Claudine~J Gauthier, Tyler Bonnen, Florence~JM Ruby, Robert
-  Trampel, Pierre-Louis Bazin, Roberto Cozatl, et~al.
-\newblock A high resolution 7-tesla resting-state fmri test-retest dataset with
-  cognitive and physiological measures.
-\newblock \emph{Scientific data}, 2, 2015.
-
-\bibitem[Gutmann(1982)]{gutmann1982stein}
-Sam Gutmann.
-\newblock Stein's paradox is impossible in problems with finite sample space.
-\newblock \emph{The Annals of Statistics}, pages 1017--1020, 1982.
-
-\bibitem[Hoff et~al.(2002)Hoff, Raftery, and Handcock]{hoff2002latent}
-Peter~D Hoff, Adrian~E Raftery, and Mark~S Handcock.
-\newblock Latent space approaches to social network analysis.
-\newblock \emph{Journal of the american Statistical association}, 97\penalty0
-  (460):\penalty0 1090--1098, 2002.
-
-\bibitem[Holland et~al.(1983)Holland, Laskey, and
-  Leinhardt]{holland1983stochastic}
-Paul~W Holland, Kathryn~Blackmond Laskey, and Samuel Leinhardt.
-\newblock Stochastic blockmodels: First steps.
-\newblock \emph{Social networks}, 5\penalty0 (2):\penalty0 109--137, 1983.
-
-\bibitem[Huber and Ronchetti(2009)]{huber2009robust}
-Peter~J. Huber and Elvezio~M. Ronchetti.
-\newblock \emph{Robust statistics}.
-\newblock Wiley Series in Probability and Statistics. John Wiley \& Sons, Inc.,
-  Hoboken, NJ, second edition, 2009.
-
-\bibitem[James and Stein(1961)]{james1961estimation}
-W.~James and Charles Stein.
-\newblock Estimation with quadratic loss.
-\newblock In \emph{Proceedings of the {F}ourth {B}erkeley {S}ymposium on
-  {M}athematical {S}tatistics and {P}robability, {V}ol. {I}}, pages 361--379.
-  Univ. California Press, Berkeley, Calif., 1961.
-
-\bibitem[Jiang et~al.(2001)Jiang, M{\"u}unger, and Bunke]{jiang2001median}
-Xiaoyi Jiang, Andreas M{\"u}unger, and Horst Bunke.
-\newblock On median graphs: Properties, algorithms, and applications.
-\newblock \emph{IEEE Transactions on Pattern Analysis and Machine
-  Intelligence}, 23\penalty0 (10):\penalty0 1144--1151, 2001.
-
-\bibitem[Kiar(2016)]{kiar2016graph}
-Gregory Kiar.
-\newblock Gremlin: Graph estimation from mr images leading to inference in
-  neuroscience.
-\newblock 2016.
-
-\bibitem[Kiar et~al.(In Preparation)Kiar, Roncal, Mhembere, Bridgeford, Burns,
-  Priebe, and Vogelstein]{kiar2016m2g}
-Gregory Kiar, William~Gray Roncal, Disa Mhembere, Eric Bridgeford, Randal
-  Burns, Carey Priebe, and Joshua~T. Vogelstein.
-\newblock m2g: A reliable and robust open-source one-click pipeline for mri to
-  graph connectome estimation.
-\newblock In Preparation.
-
-\bibitem[Marchette et~al.(2011)Marchette, Priebe, and
-  Coppersmith]{marchette2011vertex}
-David Marchette, Carey Priebe, and Glen Coppersmith.
-\newblock Vertex nomination via attributed random dot product graphs.
-\newblock In \emph{Proceedings of the 57th ISI World Statistics Congress},
-  volume~6, page~16, 2011.
-
-\bibitem[Nickel(2007)]{nickel2007random}
-Christine Leigh~Myers Nickel.
-\newblock \emph{Random dot product graphs: A model for social networks},
-  volume~68.
-\newblock 2007.
-
-
-\bibitem[Qin and Priebe(2013)]{qin2013maximum}
-Yichen Qin and Carey~E Priebe.
-\newblock Maximum l q-likelihood estimation via the expectation-maximization
-  algorithm: A robust estimation of mixture models.
-\newblock \emph{Journal of the American Statistical Association}, 108\penalty0
-  (503):\penalty0 914--928, 2013.
-
-\bibitem[Roncal et~al.(2013)Roncal, Koterba, Mhembere, Kleissas, Vogelstein,
-  Burns, Bowles, Donavos, Ryman, Jung, Wu, Calhoun, and
-  Vogelstein]{gray2013migraine}
-W.~Gray Roncal, Z.~H. Koterba, D.~Mhembere, D.~M. Kleissas, J.~T. Vogelstein,
-  R.~Burns, A.~R. Bowles, D.~K. Donavos, S.~Ryman, R.~E. Jung, L.~Wu,
-  V.~Calhoun, and R.~J. Vogelstein.
-\newblock Migraine: Mri graph reliability analysis and inference for
-  connectomics.
-\newblock In \emph{Global Conference on Signal and Information Processing
-  (GlobalSIP), 2013 IEEE}, pages 313--316, Dec 2013.
-
-\bibitem[Scheinerman and Tucker(2010)]{scheinerman2010modeling}
-Edward~R Scheinerman and Kimberly Tucker.
-\newblock Modeling graphs using dot product representations.
-\newblock \emph{Computational Statistics}, 25\penalty0 (1):\penalty0 1--16,
-  2010.
-
-\bibitem[Stein(1956)]{stein1956inadmissibility}
-Charles Stein.
+\bibitem{stein1956inadmissibility}
+Stein C.
 \newblock Inadmissibility of the usual estimator for the mean of a multivariate
   normal distribution.
-\newblock In \emph{Proceedings of the {T}hird {B}erkeley {S}ymposium on
-  {M}athematical {S}tatistics and {P}robability, vol. {I}}, pages 197--206.
-  University of California Press, Berkeley and Los Angeles, 1956.
+\newblock In: Proceedings of the {T}hird {B}erkeley {S}ymposium on
+  {M}athematical {S}tatistics and {P}robability, vol. {I}. University of
+  California Press, Berkeley and Los Angeles; 1956. p. 197--206.
 
-\bibitem[Sussman et~al.(2014)Sussman, Tang, and Priebe]{sussman2014consistent}
-Daniel~L Sussman, Minh Tang, and Carey~E Priebe.
+\bibitem{james1961estimation}
+James W, Stein C.
+\newblock Estimation with quadratic loss.
+\newblock In: Proceedings of the {F}ourth {B}erkeley {S}ymposium on
+  {M}athematical {S}tatistics and {P}robability, {V}ol. {I}. Univ. California
+  Press, Berkeley, Calif.; 1961. p. 361--379.
+
+\bibitem{gutmann1982stein}
+Gutmann S.
+\newblock Stein's paradox is impossible in problems with finite sample space.
+\newblock The Annals of Statistics. 1982; p. 1017--1020.
+
+\bibitem{jiang2001median}
+Jiang X, M{\"u}unger A, Bunke H.
+\newblock On Median Graphs: Properties, Algorithms, and Applications.
+\newblock IEEE Transactions on Pattern Analysis and Machine Intelligence.
+  2001;23(10):1144--1151.
+
+\bibitem{ginestet2014hypothesis}
+Ginestet CE, Balanchandran P, Rosenberg S, Kolaczyk ED.
+\newblock Hypothesis Testing For Network Data in Functional Neuroimaging.
+\newblock arXiv preprint arXiv:14075525. 2014;.
+
+\bibitem{bollobas2007phase}
+Bollob{\'a}s B, Janson S, Riordan O.
+\newblock The phase transition in inhomogeneous random graphs.
+\newblock Random Structures \& Algorithms. 2007;31(1):3--122.
+
+\bibitem{holland1983stochastic}
+Holland PW, Laskey KB, Leinhardt S.
+\newblock Stochastic blockmodels: First steps.
+\newblock Social networks. 1983;5(2):109--137.
+
+\bibitem{hoff2002latent}
+Hoff PD, Raftery AE, Handcock MS.
+\newblock Latent space approaches to social network analysis.
+\newblock Journal of the american Statistical association.
+  2002;97(460):1090--1098.
+
+\bibitem{young2007random}
+Young SJ, Scheinerman ER.
+\newblock Random dot product graph models for social networks.
+\newblock In: Algorithms and models for the web-graph. Springer; 2007. p.
+  138--149.
+
+\bibitem{nickel2007random}
+Nickel CLM.
+\newblock Random dot product graphs: A model for social networks. vol.~68;
+  2007.
+
+\bibitem{chatterjee2015matrix}
+Chatterjee S, et~al.
+\newblock Matrix estimation by universal singular value thresholding.
+\newblock The Annals of Statistics. 2015;43(1):177--214.
+
+\bibitem{sussman2014consistent}
+Sussman DL, Tang M, Priebe CE.
 \newblock Consistent latent position estimation and vertex classification for
   random dot product graphs.
-\newblock \emph{IEEE transactions on pattern analysis and machine
-  intelligence}, 36\penalty0 (1):\penalty0 48--57, 2014.
+\newblock IEEE transactions on pattern analysis and machine intelligence.
+  2014;36(1):48--57.
 
-\bibitem[Trunk(1979)]{trunk1979problem}
-G.~V. Trunk.
-\newblock A problem of dimensionality: A simple example.
-\newblock \emph{Pattern Analysis and Machine Intelligence, IEEE Transactions
-  on}, \penalty0 (3):\penalty0 306--307, 1979.
-
-
-\bibitem[Young and Scheinerman(2007)]{young2007random}
-Stephen~J Young and Edward~R Scheinerman.
-\newblock Random dot product graph models for social networks.
-\newblock In \emph{Algorithms and models for the web-graph}, pages 138--149.
-  Springer, 2007.
-
-\bibitem[Zhu and Ghodsi(2006)]{zhu2006automatic}
-Mu~Zhu and Ali Ghodsi.
+\bibitem{zhu2006automatic}
+Zhu M, Ghodsi A.
 \newblock Automatic dimensionality selection from the scree plot via the use of
   profile likelihood.
-\newblock \emph{Computational Statistics \& Data Analysis}, 51\penalty0
-  (2):\penalty0 918--930, 2006.
+\newblock Computational Statistics \& Data Analysis. 2006;51(2):918--930.
 
-\bibitem[Zuo et~al.(2014)Zuo, Anderson, Bellec, Birn, Biswal, Blautzik,
-  Breitner, Buckner, Calhoun, Castellanos, et~al.]{zuo2014open}
-Xi-Nian Zuo, Jeffrey~S Anderson, Pierre Bellec, Rasmus~M Birn, Bharat~B Biswal,
-  Janusch Blautzik, John~CS Breitner, Randy~L Buckner, Vince~D Calhoun,
-  F~Xavier Castellanos, et~al.
+\bibitem{scheinerman2010modeling}
+Scheinerman ER, Tucker K.
+\newblock Modeling graphs using dot product representations.
+\newblock Computational Statistics. 2010;25(1):1--16.
+
+\bibitem{athreya2013limit}
+Athreya A, Priebe C, Tang M, Lyzinski V, Marchette D, Sussman D.
+\newblock A limit theorem for scaled eigenvectors of random dot product graphs.
+\newblock Sankhya A. 2013; p. 1--18.
+
+\bibitem{zuo2014open}
+Zuo XN, Anderson JS, Bellec P, Birn RM, Biswal BB, Blautzik J, et~al.
 \newblock An open science resource for establishing reliability and
   reproducibility in functional connectomics.
-\newblock \emph{Scientific data}, 1, 2014.
+\newblock Scientific data. 2014;1.
+
+\bibitem{gorgolewski2015high}
+Gorgolewski KJ, Mendes N, Wilfling D, Wladimirow E, Gauthier CJ, Bonnen T,
+  et~al.
+\newblock A high resolution 7-Tesla resting-state fMRI test-retest dataset with
+  cognitive and physiological measures.
+\newblock Scientific data. 2015;2.
+
+\bibitem{gray2013migraine}
+Roncal WG, Koterba ZH, Mhembere D, Kleissas DM, Vogelstein JT, Burns R, et~al.
+\newblock MIGRAINE: MRI Graph Reliability Analysis and Inference for
+  Connectomics.
+\newblock In: Global Conference on Signal and Information Processing
+  (GlobalSIP), 2013 IEEE; 2013. p. 313--316.
+
+\bibitem{kiar2016m2g}
+Kiar G, Roncal WG, Mhembere D, Bridgeford E, Burns R, Priebe C, et~al.
+\newblock m2g: A reliable and robust open-source one-click pipeline for MRI to
+  graph connectome estimation. In Preparation;.
+
+\bibitem{durante2014nonparametric}
+Durante D, Dunson DB, Vogelstein JT.
+\newblock Nonparametric Bayes Modeling of Populations of Networks.
+\newblock arXiv preprint arXiv:14067851. 2014;.
+
+\bibitem{huber2009robust}
+Huber PJ, Ronchetti EM.
+\newblock Robust statistics.
+\newblock 2nd ed. Wiley Series in Probability and Statistics. John Wiley \&
+  Sons, Inc., Hoboken, NJ; 2009.
+
+\bibitem{qin2013maximum}
+Qin Y, Priebe CE.
+\newblock Maximum L q-Likelihood Estimation via the Expectation-Maximization
+  Algorithm: A Robust Estimation of Mixture Models.
+\newblock Journal of the American Statistical Association.
+  2013;108(503):914--928.
+
+\bibitem{marchette2011vertex}
+Marchette D, Priebe C, Coppersmith G.
+\newblock Vertex nomination via attributed random dot product graphs.
+\newblock In: Proceedings of the 57th ISI World Statistics Congress. vol.~6;
+  2011. p.~16.
+
+\bibitem{neurodata}
+NeuroData’s MRI to Graphs Pipeline;.
+\newblock \url{http://m2g.io}.
+
+\bibitem{kiar2016graph}
+Kiar G.
+\newblock GREMLIN: Graph Estimation from MR Images Leading to Inference in
+  Neuroscience. 2016;.
+
+\bibitem{brown1977means}
+Brown GG, Rutemiller HC.
+\newblock Means and variances of stochastic vector products with applications
+  to random linear models.
+\newblock Management Science. 1977;24(2):210--216.
 
 \end{thebibliography}
+
+
 
 \appendix
 
@@ -1286,10 +1245,10 @@ Define $\bar{A} = \frac{1}{M} \sum_{t=1}^M A^{(t)}$. Let $\hat{U} \hat{S} \hat{U
 
 
 
-The proofs presented here will rely on a central limit theorem developed in \citet{athreya2013limit}. 
+The proofs presented here will rely on a central limit theorem developed in \cite{athreya2013limit}. 
 We modify the theorem slightly to account for the multiple graph setting and present it in the special case of the stochastic blockmodel.
 
-\begin{theorem}[Corrolary of Theorem 1 in \citet{athreya2013limit}]\label{thm:clt_ext}
+\begin{theorem}[Corrolary of Theorem 1 in \cite{athreya2013limit}]\label{thm:clt_ext}
   In the setting above, let $X=[X_1,\dotsc,X_N]^T\in\Re^{K\times d}$ have row $i$ equal to $X_i=\nu_{\tau_i}$ (recall that $\tau_i$ are drawn from $[K]$ according to the probabilities $\rho$).
 	Then there exists an orthogonal matrix $W$ such that for each row $i$ and $j$ and any $z \in \Re^{d}$, conditioned on $\tau_i=s$ and $\tau_j=t$,
   \begin{equation}
@@ -1377,7 +1336,7 @@ and
 
 % The results above are actually based on the \href{https://www.overleaf.com/2962543bbfkxq}{extended version of Avanti's CLT}.
 
-Also, Corollary 4.11 in \citet{athreya2013limit} says $\hat{X}_i$ and $\hat{X}_j$ are asymptotically independent. Thus, conditioning on $X_i = \nu_s$ and $X_j = \nu_t$, we have $\lim_{n\to\infty}\Ex[\hat{X}_i^T \hat{X}_j] = \lim_{n\to\infty}\Ex[(W_n \hat{X}_i)^T] \Ex[W_n \hat{X}_j] = \nu_s^T \nu_t = P_{ij}$.
+Also, Corollary 4.11 in \cite{athreya2013limit} says $\hat{X}_i$ and $\hat{X}_j$ are asymptotically independent. Thus, conditioning on $X_i = \nu_s$ and $X_j = \nu_t$, we have $\lim_{n\to\infty}\Ex[\hat{X}_i^T \hat{X}_j] = \lim_{n\to\infty}\Ex[(W_n \hat{X}_i)^T] \Ex[W_n \hat{X}_j] = \nu_s^T \nu_t = P_{ij}$.
 
 Since $\hat{P}_{ij} = \hat{X}_i^T \hat{X}_j$ is a noisy version of the dot product of $\nu_s^T \nu_t$, combined with Lemma~\ref{lm:mseForm} and the results above, by Equation 5 in Brown and Rutemiller (1977), conditioning on $X_i = \nu_s$ and $X_j = \nu_t$, we have
 \[
