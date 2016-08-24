@@ -339,7 +339,7 @@ In this study, we show via theory, simulations, and real data analysis that the 
 
 In Section~\ref{section:model}, we outline a nested collection of models which we consider for our theorems and simulations, and in Section~\ref{sec:estimator} we describe the entry-wise sample mean and introduce our specific low-rank estimator, which accounts for the unknown dimension and attempts to correct for other issues found in real world problems.
 Our main results are presented in Section~\ref{sec:result} where we present theorems and simulations for the stochastic blockmodel, an investigation of a connectome dataset, and a synthetic data analysis. 
-We conclude with a discussion of these results in Section~\ref{sec:discussion}  and with details on our proposed method and the data which was analyzed in Section~\ref{sec:method}.
+We conclude with a discussion of these results in Section~\ref{sec:discussion}  and with details on our proposed method and the data which is analyzed in Section~\ref{sec:method}.
 
 
 \section{Models}
@@ -351,7 +351,7 @@ For structural brain imaging, an edge may represent the presence of anatomical c
 Similarly, for functional data, an edge between two regions may represent the presence of correlated brain activity between the two regions. 
 
 
-For the purpose of this paper, we will also assume that the graphs are sampled independently and identically from some distribution.
+For the purpose of this paper, we also assume that the graphs are sampled independently and identically from some distribution.
 To this end, the mean graph is the expectation of each adjacency matrix.
 \begin{definition}[Mean Graph]
 Suppose that $A^{(1)},\dotsc,A^{(M)}\stackrel{iid}{\sim} \mathcal{G}$ for some random graph distribution $\mathcal{G}$, with $A^{(m)}\in\{0,1\}^{N\times N}$ for each $m$.
@@ -403,7 +403,7 @@ $\tau\in\{1,\dotsc,K\}^N$, where for each $i \in [N]$, $\tau_i = k$ means vertex
 
 % We will assume each vertex is assigned its block independently according to the probability vector $\rho$, so $\Pr[tau_i = k] = \rho_k$. 
 Conditioned on $\tau$, each entry of the adjacency matrix $A_{ij}$ is independently sampled from the Bernoulli distribution with parameter $B_{\tau_i,\tau_j}$.
-To ensure that the SBM can be considered as an RDPG, we will impose that the $B$ matrix for the SBM is positive semidefinite. 
+To ensure that the SBM can be considered as an RDPG, we impose that the $B$ matrix for the SBM is positive semidefinite. 
 For notational convenience we will refer to the sub-model of the SBM with positive semidefinite $B$ matrix as the SBM.
 
 In order to analyze the estimator $\hat{P}$ motivated by RDPG, we will represent the SBM as an RDPG by
@@ -715,20 +715,19 @@ However, overall these differences are nearly indistinguishable for unscaled rel
 
 
 \subsection{CoRR Brain Graphs: Cross-Validation}\label{sec:corr_data}
-{\color{red} Dan: I haven't changed the past tense/present tense. Maybe just keep present tense for consistency?}
 In practice, graphs do not follow the independent edge model, let alone an RDPG or SBM, but the mean of a collection of graphs is still of interest for these cases.
-To demonstrate that the estimator $\hat{P}$ is still useful in such cases, we test its performance on structural connectomic data. 
+To demonstrate that the estimator $\hat{P}$ is still useful in such cases, we tested its performance on structural connectomic data. 
 The graphs are based on diffusion tensor MR images collected and available at the Consortium for Reliability and Reproducibility (CoRR) \cite{zuo2014open, gorgolewski2015high} (see Section~\ref{section:data}).
 
-The dataset contains 454 different brain scans, each of which was processed to yield an undirected, unweighted graph with no self-loops, using the pipeline describe in \cite{gray2013migraine} and \cite{kiar2016m2g}.
+The dataset contains 454 different brain scans, each of which was processed to yield an undirected, unweighted graph with no self-loops, using the pipeline described in \cite{gray2013migraine} and \cite{kiar2016m2g}.
 The vertices of the graphs represent different regions in the brain defined according to an atlas.
 We used three atlases, the JHU atlas with 48 vertices, the Desikan atlas with 70 vertices, and the  CPAC200 atlas with 200 vertices.
 An edge exists between two vertices whenever there is at least one white-matter tract connecting the corresponding two regions of the brain. 
 Further details of the dataset are provided in Section~\ref{section:data}.
 
-In order to evaluate the performance of the two estimators, we use a cross validation on the 454 graphs of each size. 
+In order to evaluate the performance of the two estimators, we used a cross validation on the 454 graphs of each size. 
 Specifically, for a given atlas, each Monte Carlo replicate corresponds to sampling $M$ graphs out of the 454 and computing the low-rank estimator $\hat{P}$ and the sample mean $\bar{A}$ using the $M$ selected graphs. 
-We then compare these estimates to the sample mean for the remaining $454-M$ adjacency matrices.
+We then compared these estimates to the sample mean for the remaining $454-M$ adjacency matrices.
 While we cannot interpret this mean graph as the probability matrix for an IEM distribution (see Section~\ref{sec:sim_iem}), the sample mean for the remaining graphs does give the proportion of times each pair of vertices are adjacent in the population from which the graphs were sampled.
 
 While in previous sections we evaluated the mean squared error for either an individual entry or for an entire block in the SBM, in this section and the next section we will focus on the overall error for estimating the mean graph.
@@ -736,7 +735,7 @@ In particular we will use the average of the mean squared error across all pairs
 As in the previous section, we will not use analytical evaluations of the MSE and instead estimate the MSE and relative efficiencies via Monte Carlo simulations.
 % By observing 454 graphs generated by the atlas being picked, we use $\hat{P}$ to estimate the mean graph $P$, which is the proportions of the existence of a white-matter tract connecting different parts of the brain. Since $P$ is unknown in practice, we perform a cross-validation study to compare $\bar{A}$ and $\hat{P}$. For each Monte Carlo replicate, we first fix the sample size $M$ and randomly sample $M$ graphs from the total 454 graphs in the dataset. We assure $M$ to be relatively small such that the entry-wise mean of the remaining $(454 - M)$ graphs is a valid approximation of the true probability matrix $P$ we are estimating. Then we can calculate $\bar{A}$ and $\hat{P}$ based on the $M$ samples and compare their performance based on the estimated probability matrix.
 
-We run 1000 simulations on each of the three atlases for each sample size $M=1,5,10$.
+We ran 1000 simulations on each of the three atlases for each sample size $M=1,5,10$.
 We also considered all possible dimensions for $\hat{P}$ by ranging $d$ from 1 to $N$ in order to investigate the impact of the dimension selection procedures.
 We plot $\hat{\mathrm{MSE}}$ of $\bar{A}$ and $\hat{P}$ in Fig.~\ref{fig:realdata}.
 The horizontal axis gives dimension $d$, which only impacts $\hat{P}$, which is why estimated MSE of $\bar{A}$ is shown as flat.
@@ -800,7 +799,7 @@ USVT    & 0.52 & 0.79 & 0.99 \\\bottomrule
 
 
 
-To further illustrate the differences between the two estimators, we consider a single random sample of size $M=5$ based on the Desikan atlas.
+To further illustrate the differences between the two estimators, we considered a single random sample of size $M=5$ based on the Desikan atlas.
 We calculated $\bar{A}$ and $\hat{P}$, using  Zhu and Ghodsi's 3rd elbow to select $d=11$. 
 In Fig.~\ref{fig:Matrix_desikan_m5}, the estimates $\bar{A}$ and $\hat{P}$ as well as the sample mean of 454 graphs (as a close estimate of $P$) are plotted. 
 Since the sample size is small, there are a lot of pairs of vertices with no edges or 5 edges in the 5 observations.
@@ -814,7 +813,7 @@ Nonetheless, $\hat{P}$ typically outperforms $\bar{A}$.
 
 To investigate the difference in performance with respect to the geometry of the brain, 
 in Fig.~\ref{fig:Diff_between_desikan} we plot the 50 edges with the largest differences $|\bar{A}_{ij} - P_{ij}| - |\hat{P}_{ij} - P_{ij}|$ according to the location of the corresponding regions in the brain. Red edges indicate that $\hat{P}$ overestimates $P$, while blue means that $\hat{P}$ underestimates $P$. The edge width is determined by the estimation error for $\hat{P}$, where pairs with larger estimation error are represented by thicker lines.
-We also highlight the five regions corresponding to vertices that contribute most to the difference, meaning the vertices $i$ with the largest value of $\sum_j (|\bar{A} - P| - |\hat{P} - P|)_{ij}$.
+We also highlight the five regions corresponding to vertices that contribute most to the difference, meaning the vertices $i$ with the largest value of $\sum_j (|\bar{A}_{ij} - P_{ij}| - |\hat{P}_{ij} - P_{ij}|)$.
 Notably, three of these top five regions form a contiguous group of regions.
 The top five regions are the inferior temporal, middle temporal, and transverse temporal regions in the left hemisphere and the parahippocampal and parsopercularis regions in the right hemisphere of the Desikan atlas.
 
@@ -828,7 +827,7 @@ For example, there are some pairs of vertices that are adjacent for all samples 
 \includegraphics[height=.18\textheight]{P_desikan.pdf} 
 \includegraphics[height=.182\textheight]{Abar_desikan_m5.pdf} 
 \includegraphics[height=.186\textheight]{Phat_desikan_m5.pdf}
-\caption{{\bf Heat maps of the population mean, the sample mean, the estimator $\hat{P}$.}
+\caption{{\bf Heat maps of the population mean, the sample mean, and the estimator $\hat{P}$.}
 These heat maps indicate the sample mean for the remaining $454-5$ graphs (left), sample mean for the 5 sampled graphs (center), and $\hat{P}$ for the 5 sampled graphs with dimension $d=11$ selected using the Zhu and Ghodsi method (right).
 Darker pixels indicate a higher probability of an edge between the given vertices.
 Note that $\hat{P}$ appears to better estimate the true probability matrix $P$, especially for edges between the two hemispheres, in the upper right and corresponding lower left block.
@@ -843,7 +842,7 @@ Note that $\hat{P}$ appears to better estimate the true probability matrix $P$, 
   \includegraphics[height=.4\linewidth]{Diff3_desikan_m5.pdf}
 \end{center}
 
-\caption{{\bf Heat plot of absolute estimation error for $\bar{A}$ and $\hat{P}$ (lower triangle) and absolute errors above 0.4 (upper triangle).}
+\caption{{\bf Heat plot of absolute estimation error for $\bm{\bar{A}}$ and $\bm{\hat{P}}$ (lower triangle) and absolute errors above 0.4 (upper triangle).}
 These heat plots show the absolute estimation error $|\bar{A} - P|$ and $|\hat{P} - P|$ for a sample of size $M=5$ from the Desikan dataset.
 The embedding dimension for $\hat{P}$ is $d=11$ selected by the 3rd elbow of the ZG method. The lower triangular matrix shows the actual absolute difference, while the upper triangular matrix only highlights the edges with absolute differences larger than $0.4$. The fact that 18 edges from $\bar{A}$ are highlighted and only six edges from $\hat{P}$ are highlighted indicates that $\hat{P}$ has fewer large outliers compared to $\bar{A}$.
 }
@@ -853,7 +852,7 @@ The embedding dimension for $\hat{P}$ is $d=11$ selected by the 3rd elbow of the
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=1\textwidth]{Diff_between_desikan.png}
-\caption{{\bf Top 5 regions of the brain (vertices in graphs) and top 50 connections between regions (edges in graphs) with the largest differences $|\bar{A} - P| - |\hat{P} - P|$.}
+\caption{{\bf Top 5 regions of the brain (vertices in graphs) and top 50 connections between regions (edges in graphs) with the largest differences $\bm{|\bar{A}_{ij} - P_{ij}| - |\hat{P}_{ij} - P_{ij}|}$.}
 Red edges indicate that $\hat{P}$ overestimate $P$ while blue means that $\hat{P}$ underestimates $P$. The edge width is determined by the estimation error. Connections with larger estimation error are represented by thicker lines. This figure shows the regions and connections of the brain where $\hat{P}$ outperforms $\bar{A}$ the most for estimating $P$.}
 \label{fig:Diff_between_desikan}
 \end{figure}
@@ -916,7 +915,7 @@ Red edges indicate that $\hat{P}$ overestimate $P$ while blue means that $\hat{P
 \subsection{Synthetic Data Analysis for Full Rank IEM}\label{sec:sim_iem}
 
 While the theory we have developed is based on the assumption that the mean graph is low rank, as we have seen in Section~\ref{sec:corr_data}, $\hat{P}$ often performs well even when this assumption is false. 
-To further illuminate this point, we perform a synthetic data analysis under a full-rank independent edge model where we use the sample mean of the 454 graphs in the Desikan dataset as the probability matrix $P$.
+To further illuminate this point, we performed a synthetic data analysis under a full-rank independent edge model where we used the sample mean of the 454 graphs in the Desikan dataset as the probability matrix $P$.
 As in the previous section, we simulated datasets of size $M=1,5$, and $10$ and used $\bar{A}$ and $\hat{P}$, where we varied the rank of $\hat{P}$ from $1$ to $70$.
 
 Fig.~\ref{fig:sim_desikan} shows the resulting estimated MSE for $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for simulated data based on the full rank probability matrix $P$ shown in the left panel of Fig.~\ref{fig:Matrix_desikan_m5}.
@@ -934,9 +933,9 @@ From this observation, we can postulate that the degradation in the performance 
 \centering
 \includegraphics[width=1\textwidth]{sim_desikan.pdf}
 \caption{{\bf Comparison of $\hat{P}$ and $\bar{A}$ for synthetic data analysis.}
-As in Fig.~\ref{fig:RE}, this figure show $\hat{\mathrm{MSE}}$ for $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for simulated data with different sample sizes $M$ based on the sample mean for the Desikan dataset. Again, the average of dimensions selected by the USVT method (square) and the ZG method (triangle) tend to nearly approximate the optimal dimension. 
+As in Fig.~\ref{fig:RE}, this figure shows $\hat{\mathrm{MSE}}$ for $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for simulated data with different sample sizes $M$ based on the sample mean for the Desikan dataset. Again, the average of dimensions selected by the USVT method (square) and the ZG method (triangle) tend to nearly approximate the optimal dimension. 
 Overall, we see that the structure of these plots well approximates the structure for the real data indicating that performance for the independent edge model will tend to translate in structure to non-independent edge scenarios. 
-On the other hand, the relative efficiency $\hat{\mathrm{RE}}(\bar{A},\hat{P})$ is lower for this synthetic data analysis then for the CoRR data.}
+On the other hand, the relative efficiency $\hat{\mathrm{RE}}(\bar{A},\hat{P})$ is lower for this synthetic data analysis than for the CoRR data.}
 \label{fig:sim_desikan}
 \end{figure}
 
@@ -952,7 +951,7 @@ In particular, we show that for a stochastic blockmodel with fixed number of blo
 Moreover, our estimator outperforms the entry-wise MLE in a cross validation analysis of the CoRR brain graphs and in low- and full-rank simulation settings.
 These results illustrate that $\hat{P}$ performs well even when the low-rank assumption is violated and that $\hat{P}$ is robust and can be applied in practice.
 
-One of the key observations from our real data analysis was that the largest improvements using the low-rank method occurred when the number of graphs $M$ was small, and that it provided only minor improvements or even degraded performance slightly when $M$ is large. 
+One of the key observations from our real data analysis was that the largest improvements using the low-rank method occurred when the number of graphs $M$ was small, and that it provided only minor improvements or even degraded performance slightly when $M$ was large. 
 However, even in large scale studies the low-rank methods will be useful for estimating graph means for subpopulations, e.g. the population of females over 60 with some college education.
 Using the element-wise sample mean for such small strata, which may have fewer than ten subjects, will frequently result in a degradation of performance.
 Similarly, Durante et al. \cite{durante2014nonparametric} used low-rank deviations from a full rank population mean to model collections of graphs and our methods could be easily adapted to those ideas.
@@ -994,7 +993,7 @@ If instead one is interested in learning directly about the mean of a population
 \label{section:dim_select}
 Often in dimensionality reduction techniques, the choice for dimension $d$, relies on analyzing the set of the ordered eigenvalues, looking for a ``gap'' or ``elbow'' in the scree-plot. Zhu and Ghodsi \cite{zhu2006automatic} present an automated method for finding this gap in the scree-plot that takes only the ordered eigenvalues as an input and uses Gaussian mixture modeling to find these gaps.
 The mixture modeling results in multiple candidate dimensions or elbows, and our analysis indicated that underestimating the dimension is much more harmful than overestimating the dimension.
-For this reason, we use the 3rd elbow in the experiments performed for this work.
+For this reason, we used the 3rd elbow in the experiments performed for this work.
 
 Universal Singular Value Thresholding (USVT) is a simple estimation procedure proposed in \cite{chatterjee2015matrix} that can work for any matrix that has ``a little bit of structure''. 
 In our setting, it selects the dimension $d$ as the number of singular values that are greater than a constant $c$ times $\sqrt{N/M}$.
@@ -1232,14 +1231,14 @@ Brown GG, Rutemiller HC.
 \appendix
 
 \section{Proofs for Theory Results}
-Here we present the proofs of the results in Section~\ref{section:theoretical_result}. To keep the ideas clear and concise, we leave out some details which are only slight changes to previous works.
+Here we present the proofs of the results in Section~\ref{section:theoretical_result}. To keep the ideas clear and concise, we leave {\color{red} RT: present tense?} out some details which are only slight changes to previous works.
 We assume the block memberships $\tau_i$ are drawn iid from a multinomial distribution with block membership probabilities given by $\rho\in[0,1]^K$ where $\sum_i \rho_i =1$.
 We will also assume that for a given $N$, the block memberships are fixed for all graphs.
 
 Denote matrix of between-block edge probabilities by $B = \nu \nu^T\in[0,1]^{K\times K}$ which we assume has rank $K$ and is positive definite. 
 By definition, the mean of the collection of graphs generated from this SBM is $P$, where $P_{ij} = B_{\tau_i, \tau_j}$. 
 
-We observe $M$ graphs on $N$ vertices $A^{(1)}, \cdots, A^{(M)}$ sampled independently from the SBM conditioned on $\tau$.
+We observe {\color{red} RT: present tense?} $M$ graphs on $N$ vertices $A^{(1)}, \cdots, A^{(M)}$ sampled independently from the SBM conditioned on $\tau$.
 Define $\bar{A} = \frac{1}{M} \sum_{t=1}^M A^{(t)}$. Let $\hat{U} \hat{S} \hat{U}^T$ be the best rank-$d$ positive semidefinite approximation of $\bar{A}$, then we define $\hat{P} = \hat{X} \hat{X}^T$, where $\hat{X} = \hat{U} \hat{S}^{1/2}$.
 
 
