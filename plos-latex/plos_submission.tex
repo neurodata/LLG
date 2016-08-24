@@ -306,7 +306,7 @@ But even when  the sample mean is admissible, this doesn't mean that other estim
 In many situations where other structural information is hypothesized, for instance a collection of graphs as considered in this paper, other estimators may be preferable.
 
 In complex data settings such as shape data, language data, or graph data, we also must take care in how we define the mean.
-As with real valued data, one may want to define the mean of a population of graphs to itself {\color{red} Dan: not sure about ``to itself'' here} be a graph such as for the median graph \citep{jiang2001median}.
+As with real valued data, one may want to define the mean of a population of graphs to be a graph such as for the median graph \citep{jiang2001median}.
 However, this may be too restrictive for populations of graphs where there is high variation in which edges appear. 
 Instead, for a collection of graphs sampled from a larger population, we define the mean graph as the weighted adjacency matrix with weights given by the proportion of times the corresponding edge appears in the population. 
 As we will describe below, this definition of the mean graph is the expectation of the adjacency matrix.
@@ -373,11 +373,11 @@ For this case, we aim to estimate the mean graph $P=\Ex[A^{(m)}]$ based on the o
 In graphs, the adjacencies between vertices generally depend on unobserved properties of the corresponding vertices. For example, in a connectomics setting, the two brain regions with similar properties will have similar connectivity patterns to other regions of the brain.
 The latent positions model (LPM) proposed by Hoff et. al. (2002) \citep{hoff2002latent} captures such structure, where each vertex is associated with a latent position that influences the adjacencies for that vertex.
 In this model, each vertex $i$ has an associated latent vector $X_i \in \Re^d$.
-Based on the latent positions, the existence of edges are {\color{red} Dan: are or is?} conditionally independent with {\color{red} Dan: maybe we don't need to add ``a'' here?} probability that only depends on the latent vectors of the incident vertices through a link function. If $d$ is much smaller than the number of vertices $N$ and the link function is known, LPMs are more parsimonious models compared to IEM, requiring only $dN$ parameters rather than $\binom{N}{2}$.
+Conditioned on the latent positions, the existence of each edge is independent and the probability the edge is present only depends on the latent vectors of the incident vertices through a link function. If $d$ is much smaller than the number of vertices $N$ and the link function is known, LPMs are more parsimonious models compared to IEM, requiring only $dN$ parameters rather than $\binom{N}{2}$.
 
 A specific instance of an LPM that we examine in this work is the random dot product graph model (RDPG) \citep{young2007random, nickel2007random} where the link function is the dot product, so the probability of an edge being present between two nodes is the dot product of their latent vectors.
 The direction of the latent position is determined by properties of that vertex, and vertices whose latent positions point in similar directions are more likely to have an edge between them than vertices whose latent positions point in orthogonal directions.
-Similarly, the magnitude of the latent position encodes the vertices overall tendency to form edges, with larger magnitudes leading to more edges. {\color{red} Dan: Not sure about this one}
+Similarly, the magnitudes of the latent position encode the vertices' overall tendency to form edges, with a larger magnitude leading to more edges incident with the vertex.
 
 Formally, let $\mathcal{X} \subset \Re^d$ be a set such that $x, y \in \mathcal{X}$ implies $\left \langle  x,y \right \rangle =\sum_i x_i y_i \in [0, 1]$.
 Let $X_1,\dotsc,X_n\in \mathcal{X}$ and write $X = [X_1|\cdots|X_N]^T \in \Re^{N \times d}$.
@@ -385,7 +385,7 @@ A random graph $G$ with adjacency matrix $A$ is said to be an RDPG if
 \[
     \Pr[A|X] = \prod_{i<j} \left \langle X_i, X_j \right \rangle^{A_{ij}} \left( 1 - \left \langle X_i, X_j \right \rangle \right)^{1 - A_{ij}}.
 \]
-In the RDPG model, each vertex $i$ is associated with latent position $X_i$, and conditioned on the latent positions $X$, {\color{red} Dan: I don't think we need ``and'' here} the edges $A_{ij}$ are distributed independently $ \text{Bern}(\left \langle X_i, X_j \right \rangle)$ for $i<j$. {\color{red} Dan: Not sure about this one}
+In the RDPG model, each vertex $i$ is associated with latent position $X_i$, and conditioned on the latent positions $X$, the entries $A_{ij}$ are distributed independently as $ \text{Bern}(\left \langle X_i, X_j \right \rangle)$ for $i<j$.
 Note that the probability matrix is the outer product of the latent position matrix with itself, $P = X X^T$.
 This imposes two properties on $P$, namely that $P$ is positive-semidefinite and $\mathrm{rank}(P)=\mathrm{rank}(X)\leq d$.
 These properties lead us to our proposed estimator.
@@ -494,7 +494,7 @@ Algorithm~\ref{algo:lowrank} gives the steps to compute this low-rank approximat
 \end{algorithmic}
 \end{algorithm}
 
-To compute our estimator $\hat{P}$, we need to additionally {\color{red} Dan: do we need to change it to ``also''?} specify what rank $d$ to use and there are various ways of dealing with dimension selection. 
+To compute our estimator $\hat{P}$, we also need to specify what rank $d$ to use and there are various ways of dealing with dimension selection. 
 In this paper, we use an elbow selection method proposed in \citet{zhu2006automatic} and the universal singular value thresholding (USVT) method \citep{chatterjee2015matrix}. 
 Details for these methods are discussed in Section~\ref{section:dim_select}.
 
@@ -559,7 +559,7 @@ and for large enough $N$, we have
     \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{M N} P_{ij}(1-P_{ij}).
 \]
 \end{lemma}
-The first part of this Lemma gives the form of the asymptotic variance of $\hat{P}$ and the second part ensures that additionally the estimator is approximately unbiased for $P$. {\color{red} Dan: Is it okay now?}
+The first part of this Lemma gives the form of the asymptotic variance of $\hat{P}$ and the second part ensures that the estimator is asymptotically unbiased for $P$.
 The proof of this lemma is outlined in Section~\ref{section:outline_proof} and is based on results for the variance of the adjacency spectral embedding from \citet{athreya2013limit}. From the result, we can see that the MSE of $\hat{P}_{ij}$ is of order $O(M^{-1}N^{-1})$ approximately.
 
 Moreover, since $\bar{A}_{ij}$ is the sample mean of $M$ independent Bernoulli random variables with parameter $P_{ij}$, we have
@@ -622,7 +622,7 @@ Overall, $\hat{P}$ performs best for large blocks while the improvements may be 
 
 
 
-To illustrate Eq.~\ref{eq:approx_re} of Theorem~\ref{thm:ARE}, Fig.~\ref{fig:RErho} shows $2/\rho_1$ and $1/\rho_1+1/\rho_2$, the scaled asymptotic RE for pairs of vertices with {\color{red} Dan: in?} block one and pairs of vertices in different blocks, respectively, in a  two-block stochastic blockmodel.
+To illustrate Eq.~\ref{eq:approx_re} of Theorem~\ref{thm:ARE}, Fig.~\ref{fig:RErho} shows $2/\rho_1$ and $1/\rho_1+1/\rho_2$, the scaled asymptotic RE for pairs of vertices both in block one and pairs of vertices in different blocks, respectively, in a  two-block stochastic blockmodel.
 We vary $\rho_1$ between 0 and 1 to demonstrate how the number of pairs of vertices with the corresponding block memberships impacts the overall relative efficiency.
 For $N=500$ and $M=100$, estimates of the scaled RE based on simulations agree very closely with their corresponding theoretical values displayed in the figure. Note that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Fig.~\ref{fig:RE} for simulated data.
 
@@ -632,7 +632,7 @@ If instead of assuming that the graphs follow an SBM distribution, we assume the
 While there is no compact analytical formula for the relative efficiency of $\hat{P}$ versus $\bar{A}$ in the general RDPG case, using the same ideas as in Theorem~\ref{thm:ARE}, we can show that $\mathrm{RE}(\bar{A}_{ij},\hat{P}_{ij}) = O(1/N)$.
 
 \begin{proposition}
-Suppose that $A^{(1)},A^{(2)},\dotsc,A^{(M)}$ are distributed iid from an RDPG distribution with common latent positions $X_1,\dotsc,X_n$, which are distributed iid from some distribution. {\color{red} Dan: Not sure about ``distributed iid''}
+Suppose that $A^{(1)},A^{(2)},\dotsc,A^{(M)}$ are independently and identically distributed from an RDPG distribution with common latent positions $X_1,\dotsc,X_n$, which are independently and identically distributed from some distribution.
 As the number of vertices $N\to\infty$, it holds for any $i\neq j$ that 
 \[
     \mathrm{RE}(\bar{A}_{ij},\hat{P}_{ij}) = O(1/N).
@@ -688,7 +688,7 @@ so that $|\{i:\tau_i=1\}|=|\{i:\tau_i=2\}|$ for each $N$.
 When calculating $\hat{P}$, we omit the dimension selection step from Algorithm~\ref{algo:basic} and instead use the true dimension $d = \mathrm{rank}(B) = 2$.
 
 %\subsubsection{Simulation Results}
-To investigate the finite sample relative efficiency, we first sample 1000 Monte Carlo replicates from the above SBM distribution with different numbers of vertices $N$ and a fixed number of graphs $M$. The  relative efficiency $\mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ can be estimated since $P$ is known for this simulation. Since the relative efficiency only depends on the blocks {\color{red} Dan: I think it is with ``s''} memberships of the pair $i,j$, we estimate the relative efficiency for each block pair using
+To investigate the finite sample relative efficiency, we first sample 1000 Monte Carlo replicates from the above SBM distribution with different numbers of vertices $N$ and a fixed number of graphs $M$. The  relative efficiency $\mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ can be estimated since $P$ is known for this simulation. Since the relative efficiency only depends on the block memberships of the pair $i,j$, we estimate the relative efficiency for each block pair using
 \[
     \hat{\mathrm{RE}}_{st}(\bar{A},\hat{P}) = \frac{\sum_{\tau_i=s,\tau_j=t,i \ne j} \hat{\mathrm{MSE}}(\hat{P}_{ij})}{\sum_{\tau_i=s,\tau_j=t,i \ne j} \hat{\mathrm{MSE}}(\bar{A}_{ij})}
 \]
@@ -720,7 +720,7 @@ In practice, graphs do not follow the independent edge model, let alone an RDPG 
 To demonstrate that the estimator $\hat{P}$ is still useful in such cases, we test its performance on structural connectomic data. 
 The graphs are based on diffusion tensor MR images collected and available at the Consortium for Reliability and Reproducibility (CoRR) \citep{zuo2014open, gorgolewski2015high} (see Section~\ref{section:data}).
 
-The dataset contains 454 different brain scans, each of which was processed to yield an undirected, unweighted graph with no self-loops, using the pipeline describe in \citet{gray2013migraine} and \citet{kiar2016m2g}. {\color{red} Dan: Seems that the format is like this? Do we need to add the year?}
+The dataset contains 454 different brain scans, each of which was processed to yield an undirected, unweighted graph with no self-loops, using the pipeline describe in \citet{gray2013migraine} and \citet{kiar2016m2g}.
 The vertices of the graphs represent different regions in the brain defined according to an atlas.
 We used three atlases, the JHU atlas with 48 vertices, the Desikan atlas with 70 vertices, and the  CPAC200 atlas with 200 vertices.
 An edge exists between two vertices whenever there is at least one white-matter tract connecting the corresponding two regions of the brain. 
@@ -813,7 +813,7 @@ Note that approximately $13\%$ of all pairs of vertices are adjacent in all $454
 Nonetheless, $\hat{P}$ typically outperforms $\bar{A}$.
 
 To investigate the difference in performance with respect to the geometry of the brain, 
-in Fig.~\ref{fig:Diff_between_desikan} we plot the 50 edges with the largest differences $|\bar{A} - P| - |\hat{P} - P|$ {\color{red} Dan: Do we need to add subscription $ij$ here?} according to the location of the corresponding regions in the brain. Red edges indicate that $\hat{P}$ overestimates $P$, while blue means that $\hat{P}$ underestimates $P$. The edge width is determined by the estimation error for $\hat{P}$, where pairs with larger estimation error are represented by thicker lines.
+in Fig.~\ref{fig:Diff_between_desikan} we plot the 50 edges with the largest differences $|\bar{A}_{ij} - P_{ij}| - |\hat{P}_{ij} - P_{ij}|$ according to the location of the corresponding regions in the brain. Red edges indicate that $\hat{P}$ overestimates $P$, while blue means that $\hat{P}$ underestimates $P$. The edge width is determined by the estimation error for $\hat{P}$, where pairs with larger estimation error are represented by thicker lines.
 We also highlight the five regions corresponding to vertices that contribute most to the difference, meaning the vertices $i$ with the largest value of $\sum_j (|\bar{A} - P| - |\hat{P} - P|)_{ij}$.
 Notably, three of these top five regions form a contiguous group of regions.
 The top five regions are the inferior temporal, middle temporal, and transverse temporal regions in the left hemisphere and the parahippocampal and parsopercularis regions in the right hemisphere of the Desikan atlas.
@@ -831,7 +831,7 @@ For example, there are some pairs of vertices that are adjacent for all samples 
 \caption{{\bf Heat maps of the population mean, the sample mean, the estimator $\hat{P}$.}
 These heat maps indicate the sample mean for the remaining $454-5$ graphs (left), sample mean for the 5 sampled graphs (center), and $\hat{P}$ for the 5 sampled graphs with dimension $d=11$ selected using the Zhu and Ghodsi method (right).
 Darker pixels indicate a higher probability of an edge between the given vertices.
-Note that $\hat{P}$ appears to better estimate the true probabilities {\color{red} Dan: probability or probabilities?} $P$, especially for edges between the two hemispheres, in the upper right (and lower left) block. {\color{red} Dan: I think parenthesis is good here}
+Note that $\hat{P}$ appears to better estimate the true probability matrix $P$, especially for edges between the two hemispheres, in the upper right and corresponding lower left block.
 }
 \label{fig:Matrix_desikan_m5}
 \end{figure}
@@ -845,7 +845,8 @@ Note that $\hat{P}$ appears to better estimate the true probabilities {\color{re
 
 \caption{{\bf Heat plot of absolute estimation error for $\bar{A}$ and $\hat{P}$ (lower triangle) and absolute errors above 0.4 (upper triangle).}
 These heat plots show the absolute estimation error $|\bar{A} - P|$ and $|\hat{P} - P|$ for a sample of size $M=5$ from the Desikan dataset.
-The embedding dimension for $\hat{P}$ is $d=11$ selected by the 3rd elbow of the ZG method. The lower triangular matrix shows the actual absolute difference, while the upper triangular matrix only highlights the edges with absolute differences larger than $0.4$. The fact that 18 edges from $\bar{A}$ are highlighted and only six edges from $\hat{P}$ are highlighted indicates that $\hat{P}$ suffers from fewer large outliers compared to $\bar{A}$. {\color{red} Dan: Is it less ambiguous?}}
+The embedding dimension for $\hat{P}$ is $d=11$ selected by the 3rd elbow of the ZG method. The lower triangular matrix shows the actual absolute difference, while the upper triangular matrix only highlights the edges with absolute differences larger than $0.4$. The fact that 18 edges from $\bar{A}$ are highlighted and only six edges from $\hat{P}$ are highlighted indicates that $\hat{P}$ has fewer large outliers compared to $\bar{A}$.
+}
 \label{fig:Diff_desikan_m5}
 \end{figure}
 
@@ -921,7 +922,8 @@ As in the previous section, we simulated datasets of size $M=1,5$, and $10$ and 
 Fig.~\ref{fig:sim_desikan} shows the resulting estimated MSE for $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for simulated data based on the full rank probability matrix $P$ shown in the left panel of Fig.~\ref{fig:Matrix_desikan_m5}.
 % Vertical lines at each dimension indicate the 95\% confidence intervals for the MSE.
 We see that the results are very similar to those presented in Section~\ref{sec:corr_data}, though overall $\hat{P}$ performs even better than in the real data experiments. 
-When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including those selected by the Zhu and Ghodsi method while {\color{red} Dan: I don't like ``however''} when $M$ is large enough, both estimators perform well with the decision between the two being less conclusive.
+When $M$ is small, $\hat{P}$ outperforms $\bar{A}$ with a flexible range of the embedding dimension including those selected by the Zhu and Ghodsi method.
+On the other hand, when $M$ is large enough, both estimators perform well with the decision between the two being less conclusive.
 This simulation again shows the robustness of $\hat{P}$ to deviations from the RDPG model, specifically if the probability matrix is full-rank.
 
 We also note that the finite-sample relative efficiency in these cases shows is even more favorable to $\hat{P}$, with relative efficiencies lower than $1/3$ for $M=1$, than for the real data, where relative efficiencies were at best around $1/2$ for $M=1$.
@@ -945,7 +947,7 @@ On the other hand, the relative efficiency $\hat{\mathrm{RE}}(\bar{A},\hat{P})$ 
 % In this paper, we propose using low-rank methods to estimate the mean of a collection of graphs.
 Motivated by the RDPG model, our methodology takes advantage of the low-rank structure of the graphs by applying low-rank approximation to the entry-wise MLE. 
 We give a closed form for the asymptotic relative efficiency between the entry-wise MLE $\bar{A}$ and our estimator $\hat{P}$ in the case of a stochastic blockmodel, demonstrating that when the number of vertices $N$ is sufficiently large, low-rank methods provide a substantial improvement.
-In particular, we show that for a stochastic blockmodel with fixed number of blocks $K$, block size proportion $\rho$, and number of graphs $M$, the low-rank estimator $\hat{P}$ has MSE which is on the {\color{red} Dan: do we need to change it to``an''?} order of $N$ times lower than the MSE for $\bar{A}$.
+In particular, we show that for a stochastic blockmodel with fixed number of blocks $K$, block size proportion $\rho$, and number of graphs $M$, the low-rank estimator $\hat{P}$ has MSE which is on the order of $N$ times lower than the MSE for $\bar{A}$.
 
 Moreover, our estimator outperforms the entry-wise MLE in a cross validation analysis of the CoRR brain graphs and in low- and full-rank simulation settings.
 These results illustrate that $\hat{P}$ performs well even when the low-rank assumption is violated and that $\hat{P}$ is robust and can be applied in practice.
@@ -992,14 +994,15 @@ If instead one is interested in learning directly about the mean of a population
 \label{section:dim_select}
 Often in dimensionality reduction techniques, the choice for dimension $d$, relies on analyzing the set of the ordered eigenvalues, looking for a ``gap'' or ``elbow'' in the scree-plot. \citet{zhu2006automatic} present an automated method for finding this gap in the scree-plot that takes only the ordered eigenvalues as an input and uses Gaussian mixture modeling to find these gaps.
 The mixture modeling results in multiple candidate dimensions or elbows, and our analysis indicated that underestimating the dimension is much more harmful than overestimating the dimension.
-For this reason, we use the 3rd elbow in the experiments performed in {\color{red} Dan: do wee need to change it to ``for''?} this work.
+For this reason, we use the 3rd elbow in the experiments performed for this work.
 
 Universal Singular Value Thresholding (USVT) is a simple estimation procedure proposed by \citet{chatterjee2015matrix} that can work for any matrix that has ``a little bit of structure''. 
 In our setting, it selects the dimension $d$ as the number of singular values that are greater than a constant $c$ times $\sqrt{N/M}$.
 The specific constant $c$ must be selected carefully based on the mean and variance of the entries, and since again we found that overestimating the dimension was not overly harmful, we chose a relatively small value of $c=0.7$.
 
 Overall, selecting the appropriate dimension is a challenging task and numerous methods could be applied successfully depending on the setting.
-On the other hand, we have observed that in our setting, many dimensions will yield nearly optimal mean squared errors. Thus efforts to ensure the selected dimension is in the appropriate range are more important than finding the best dimension. {\color{red} Dan: I have changed this sentence a little bit}
+On the other hand, we have observed that in our setting, many dimensions will yield nearly optimal mean squared errors. 
+Thus efforts to ensure the selected dimension is in the appropriate range are more important than finding the best dimension.
 
 
 
@@ -1214,7 +1217,6 @@ W.~Gray Roncal, Z.~H. Koterba, D.~Mhembere, D.~M. Kleissas, J.~T. Vogelstein,
   connectomics.
 \newblock In \emph{Global Conference on Signal and Information Processing
   (GlobalSIP), 2013 IEEE}, pages 313--316, Dec 2013.
-\newblock \doi{10.1109/GlobalSIP.2013.6736878}.
 
 \bibitem[Scheinerman and Tucker(2010)]{scheinerman2010modeling}
 Edward~R Scheinerman and Kimberly Tucker.
@@ -1275,7 +1277,7 @@ Here we present the proofs of the results in Section~\ref{section:theoretical_re
 We assume the block memberships $\tau_i$ are drawn iid from a multinomial distribution with block membership probabilities given by $\rho\in[0,1]^K$ where $\sum_i \rho_i =1$.
 We will also assume that for a given $N$, the block memberships are fixed for all graphs.
 
-Denote matrix of between {\color{red} Dan: in-between?} block edge probabilities by $B = \nu \nu^T\in[0,1]^{K\times K}$ which we assume has rank $K$ and is positive definite. 
+Denote matrix of between-block edge probabilities by $B = \nu \nu^T\in[0,1]^{K\times K}$ which we assume has rank $K$ and is positive definite. 
 By definition, the mean of the collection of graphs generated from this SBM is $P$, where $P_{ij} = B_{\tau_i, \tau_j}$. 
 
 We observe $M$ graphs on $N$ vertices $A^{(1)}, \cdots, A^{(M)}$ sampled independently from the SBM conditioned on $\tau$.
@@ -1284,7 +1286,7 @@ Define $\bar{A} = \frac{1}{M} \sum_{t=1}^M A^{(t)}$. Let $\hat{U} \hat{S} \hat{U
 
 
 
-The proofs presented here will rely on a central limit theorem developed in {\color{red} Dan: ``in'' instead of ``by''?} \citet{athreya2013limit}. 
+The proofs presented here will rely on a central limit theorem developed in \citet{athreya2013limit}. 
 We modify the theorem slightly to account for the multiple graph setting and present it in the special case of the stochastic blockmodel.
 
 \begin{theorem}[Corrolary of Theorem 1 in \citet{athreya2013limit}]\label{thm:clt_ext}
@@ -1312,7 +1314,7 @@ In the same setting as Theorem~\ref{thm:ARE}, for any $1 \le s, t \le K$, we hav
 \]
 \end{lemma}
 \begin{proof}
-Under the stochastic block model with parameters $(B, \rho)$, we have $X_i \stackrel{iid}{\sim} \sum_{k=1}^K \rho_k \delta_{\nu_k}$, where $\nu = [\nu_1, \cdots, \nu_K]^T$ satisfies $B = \nu \nu^T$. Without loss of generality, we could assume that $\nu = U S$ where $U = [u_1, \cdots, u_K]^T$ is orthonormal in columns and $S$ is a diagonal matrix. Here we can conclude that $\nu_s^T = u_s^T S$. Also {\color{red} Dan: maybe not ``when we''?} define $R = \text{diag}(\rho_1, \cdots, \rho_K)$, then we have
+Under the stochastic block model with parameters $(B, \rho)$, we have $X_i \stackrel{iid}{\sim} \sum_{k=1}^K \rho_k \delta_{\nu_k}$, where $\nu = [\nu_1, \cdots, \nu_K]^T$ satisfies $B = \nu \nu^T$. Without loss of generality, we could assume that $\nu = U S$ where $U = [u_1, \cdots, u_K]^T$ is orthonormal in columns and $S$ is a diagonal matrix. Here we can conclude that $\nu_s^T = u_s^T S$. Defining $R = \text{diag}(\rho_1, \cdots, \rho_K)$, we have
 \[
 	\Delta = \Ex[X_1 X_1^T] = \sum_{k=1}^K \rho_k \nu_k \nu_k^T = \nu^T R \nu = S U^T R U S.
 \]
