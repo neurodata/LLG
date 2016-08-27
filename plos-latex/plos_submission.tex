@@ -1231,14 +1231,14 @@ Brown GG, Rutemiller HC.
 \appendix
 
 \section{Proofs for Theory Results}
-Here we present the proofs of the results in Section~\ref{section:theoretical_result}. To keep the ideas clear and concise, we leave {\color{red} RT: present tense?} out some details which are only slight changes to previous works.
+Here we present the proofs of the results in Section~\ref{section:theoretical_result}. To keep the ideas clear and concise, we leave out some details which are only slight changes to previous works.
 We assume the block memberships $\tau_i$ are drawn iid from a multinomial distribution with block membership probabilities given by $\rho\in[0,1]^K$ where $\sum_i \rho_i =1$.
 We will also assume that for a given $N$, the block memberships are fixed for all graphs.
 
 Denote matrix of between-block edge probabilities by $B = \nu \nu^T\in[0,1]^{K\times K}$ which we assume has rank $K$ and is positive definite. 
 By definition, the mean of the collection of graphs generated from this SBM is $P$, where $P_{ij} = B_{\tau_i, \tau_j}$. 
 
-We observe {\color{red} RT: present tense?} $M$ graphs on $N$ vertices $A^{(1)}, \cdots, A^{(M)}$ sampled independently from the SBM conditioned on $\tau$.
+We observe $M$ graphs on $N$ vertices $A^{(1)}, \cdots, A^{(M)}$ sampled independently from the SBM conditioned on $\tau$.
 Define $\bar{A} = \frac{1}{M} \sum_{t=1}^M A^{(t)}$. Let $\hat{U} \hat{S} \hat{U}^T$ be the best rank-$d$ positive semidefinite approximation of $\bar{A}$, then we define $\hat{P} = \hat{X} \hat{X}^T$, where $\hat{X} = \hat{U} \hat{S}^{1/2}$.
 
 
