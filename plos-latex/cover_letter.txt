@@ -2,21 +2,22 @@ Dear PLOS Computational Biology,
 
 We submit to you our manuscript titled, “Law of Large Graphs”, for publication.
 
-When confronting high dimensional data, even estimating the mean can require careful statistical methods.
-With graph data, the number of parameters for the mean scales quadratically with the number of vertices and so using the standard sample mean may be insufficient, especially in cases with small samples sizes and a large number of vertices.
-Our goal is to propose a new method which will improve the performance for this estimation task in these cases.
+When confronting high dimensional data, even accurately estimating the mean can require careful statistical thinking.
+With graph data, the number of parameters for the mean of a population of graphs scales quadratically with the number of vertices and so using the standard sample mean of the adjacency matrices may be suboptimal.
+The performance can be especially poor in cases with small samples sizes and a large number of vertices.
+Our goal is to propose a method which will improve the performance for this estimation task in these cases.
 As neuroscientists, computational biologists, and social scientists collect graph data based off connections between increasing number vertices, accurate methods to estimate the mean graph become more important. 
-Additionally, even if the number of networks collected in a study is large, researchers will often seek to estimate the mean for a smaller subset of the data. 
+Additionally, even if the number of networks collected in a study is large, researchers will often seek to estimate the mean for smaller subsets of interest. 
 
-We propose a novel method motivated by low-rank graph model which requires minimal tuning as it automatically selects the rank of the data and account for the missing diagonal entries of the adjacency matrix.
+We propose a novel method motivated by a low-rank graph model which requires minimal tuning as it automatically selects the rank of the data and account for the missing diagonal entries of the adjacency matrix.
 We analyze this method and compare it to the naive sample mean via theory, simulations and analysis of connectome data.
-Our theory demonstrates the asymptotic superiority of our method for graph realized from the stochastic blockmodel, one of the most well studied random graph models.
-Our simulations go on to show that in finite sample settings the results closely match the asymptotic theory even for moderate number of vertices.
-Moving beyond the assumptions of our theory, we analyze a collection of graphs derived from diffusion tensor MRI data using atlases with varying number of brain regions and show that for small sample sizes our method offers improvements over the sample mean. 
+Our theory demonstrates the asymptotic superiority of our method for graph realized from the stochastic blockmodel, one of the most well studied random graph models, as we derive asymptotic forms for the mean square error.
+Our simulations go on to show that for finite number of vertices the performance of the estimators closely match the asymptotic theory even for moderate number of vertices.
+Moving beyond the assumptions of our theory, we analyze a collection of graphs derived from diffusion tensor MRI data using atlases with varying number of brain regions and show that for small sample sizes with many vertices our method offers substantial improvements over the standard method. 
 We also present an analogous synthetic data analysis for this data.
 
-Overall, we show that this end-to-end method to estimate the mean of a collection of graphs via low-rank approximations can frequently yield improvements over using standard methods. 
-We believe scientists in a variety of fields will find these methods useful when confronted with collections graphs and the associated analysis will help practitioners decide on the best estimator for their setting.
+Altogether, we show that this end-to-end method for estimating the mean of a collection of graphs via low-rank approximations can frequently yield improvements over using standard methods. 
+We believe scientists in a variety of fields will find these methods useful when confronted with collections graphs and our associated analysis will help practitioners decide on the best estimator for their setting.
 We hope you enjoy reading the manuscript and look forward to your feedback.
 
 Best,
