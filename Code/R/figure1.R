@@ -28,7 +28,7 @@ tau = rep(1:5,round(n*rho))
 P = B[tau,tau]
 diag(P) = 0
 
-pdf("../../Draft/SBM_P.pdf", family="CM Roman", width=4, height=4.4)
+pdf("../../Draft/SBM_P.pdf", family="Times", width=4, height=4.4)
 image(Matrix(P),main=list(label="Probability Matrix"),sub="",
       xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
       lwd=0)
@@ -38,7 +38,7 @@ dev.off()
 g = sample_sbm(n, B, round(n*rho), directed=F, loops=F)
 A = as_adj(g, type="both", sparse=FALSE)
 
-pdf("../../Draft/SBM_A.pdf", family="CM Roman", width=4, height=4.4)
+pdf("../../Draft/SBM_A.pdf", family="Times", width=4, height=4.4)
 image(Matrix(A),main=list(label="Adjacency Matrix"),sub="",
       xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
       lwd=0)
@@ -74,14 +74,14 @@ Phat[Phat<0]<- 0
 Phat[Phat>1]<- 1
 
 
-pdf("../../Draft/SBM_Abar.pdf", family="CM Roman", width=4, height=4.4)
+pdf("../../Draft/SBM_Abar.pdf", family="Times", width=4, height=4.4)
 image(Matrix(Abar),main=list(label="element-wise mean (M=3)"),sub="",
       xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
       lwd=0)
 dev.off()
 
 
-pdf("../../Draft/SBM_Phat.pdf", family="CM Roman", width=4, height=4.4)
+pdf("../../Draft/SBM_Phat.pdf", family="Times", width=4, height=4.4)
 image(Matrix(P_hat),main=list(label="rank-5 approximation (M=3)"),sub="",
       xlab=list(cex=0),ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
       lwd=0)

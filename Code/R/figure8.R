@@ -120,7 +120,7 @@ print(gg)
 
 
 ggsave("../../Draft/sim_desikan.pdf",
-  plot=gg+theme(text=element_text(size=10,family="CM Roman")),
+  plot=gg+theme(text=element_text(size=10,family="Times")),
     width=5.5,height=2.5)
 
 
