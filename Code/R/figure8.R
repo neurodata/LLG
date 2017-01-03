@@ -120,7 +120,11 @@ print(gg)
 
 
 ggsave("../../Draft/sim_desikan.pdf",
+<<<<<<< HEAD
   plot=gg+theme(text=element_text(size=10,family="Times")),
+=======
+  plot=gg+theme(text=element_text(size=10,family="CM Roman")),
+>>>>>>> TangRunze/master
     width=5.5,height=2.5)
 
 

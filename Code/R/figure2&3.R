@@ -136,8 +136,9 @@ p <- ggplot(df,aes(x=n,y=re,linetype=factor(which),alpha=factor(which)))+
 print(p)
 
 ggsave("../../Draft/scaled_RE.pdf",
-    p+theme(text=element_text(size=10,family="Times")),
-      width=5, height=3)
+       p+theme(text=element_text(size=10,family="Times")),
+       # p+theme(text=element_text(size=10,family="CM Roman")),
+       width=5, height=3)
 
 
 p <- ggplot(df %>% filter(which!="Theoretical"),aes(x=n,y=re/n,linetype=factor(which)))+
@@ -151,8 +152,9 @@ p <- ggplot(df %>% filter(which!="Theoretical"),aes(x=n,y=re/n,linetype=factor(w
 print(p)
 
 ggsave("../../Draft/RE.pdf",
-    p+theme(text=element_text(size=10,family="Times")),
-      width=5, height=2)
+       p+theme(text=element_text(size=10,family="Times")),
+       # p+theme(text=element_text(size=10,family="CM Roman")),
+       width=5, height=2)
 
 
 ggplot(df,aes(x=n,y=n*(re-4),linetype=factor(which),alpha=factor(which)))+
@@ -199,7 +201,8 @@ p <- ggplot(df,aes(x=rho,y=re,linetype=factor(which)))+
   #   geom_linerange(aes(ymin=lci,ymax=uci),alpha=.5,size=1)+
   #   geom_vline(data=dim_selection_df,
   #              aes(xintercept=value,color=which,linetype=variable))+
-  scale_linetype_manual(name="",values=c("solid","longdash","dotted"))+
+  scale_linetype_manual(name="",values=c("solid","longdash","dotted"),
+                        labels=c(expression(B[11]), expression(B[12]), expression(B[22])))+
   #   scale_color_discrete(guide=FALSE)+
 #   xlab("N") + ylab("Normalized Relative Efficiency")+
   scale_x_continuous(name="proportion of vertices in block one")+
@@ -217,8 +220,9 @@ p <- ggplot(df,aes(x=rho,y=re,linetype=factor(which)))+
 print(p)
 
 ggsave("../../Draft/rho.pdf",
-    p+theme(text=element_text(size=10,family="Times")),
-      width=5, height=2.5)
+       p+theme(text=element_text(size=10,family="Times")),
+       # p+theme(text=element_text(size=10,family="CM Roman")),
+       width=5, height=2.5)
 
 
 
