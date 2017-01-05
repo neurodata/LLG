@@ -176,16 +176,17 @@ In this study, we show via theory, simulations, and real data analysis that the 
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[height=.18\textheight]{P_desikan.pdf} 
-\includegraphics[height=.182\textheight]{Abar_desikan_m5.pdf} 
-\includegraphics[height=.186\textheight]{Phat_desikan_m5.pdf}
+\includegraphics[height=.2\textheight]{P_desikan.pdf} \hspace{-35pt}
+\includegraphics[height=.201\textheight]{Abar_desikan_m5.pdf} \hspace{-35pt}
+\includegraphics[height=.205\textheight]{Phat_desikan_m5.pdf}
 \caption{{\bf Heat maps of the population mean, the sample mean, and the estimator $\hat{P}$.}
-These heat maps indicate the sample mean for the remaining $454-5$ graphs (left), sample mean for the 5 sampled graphs (center), and $\hat{P}$ for the 5 sampled graphs with dimension $d=11$ selected using the Zhu and Ghodsi method (right).
+These heat maps indicate the population mean for the $454$ graphs (left), sample mean for the 5 sampled graphs (center), and $\hat{P}$ for the 5 sampled graphs with dimension $d=11$ selected using the Zhu and Ghodsi method (right).
 Darker pixels indicate a higher probability of an edge between the given vertices.
 Note that $\hat{P}$ appears to better estimate the true probability matrix $P$, especially for edges between the two hemispheres, in the upper right and corresponding lower left block.
 }
 \label{fig:Matrix_desikan_m5}
 \end{figure}
+
 
 
 In Section~\ref{section:model}, we outline a nested collection of models which we consider for our theorems and simulations, and in Section~\ref{sec:estimator} we describe the entry-wise sample mean and introduce our specific low-rank estimator, which accounts for the unknown dimension and attempts to correct for other issues found in real world problems.
@@ -422,28 +423,59 @@ and for large enough $N$, we have
 \]
 \end{lemma}
 The first part of this Lemma gives the form of the asymptotic variance of $\hat{P}$ and the second part ensures that the estimator is asymptotically unbiased for $P$.
-The proof of this lemma is outlined in Section~\ref{section:outline_proof} and is based on results for the variance of the adjacency spectral embedding from \citet{athreya2013limit}. From the result, we can see that the MSE of $\hat{P}_{ij}$ is of order $O(M^{-1}N^{-1})$ approximately.
+The proof of this lemma is outlined in Section~\ref{section:outline_proof} and is based on results for the variance of the adjacency spectral embedding from \citet{athreya2013limit}. From the result, we can see that the MSE of $\hat{P}_{ij}$ is of order $O(M^{-1}N^{-1})$ approximately. Similar to $\bar{A}$, the estimate will get better as the number of observations $M$ increases. Furthermore, it also benefits from a larger graph because of the use of low-rank structure. That is, $\hat{P}$ will perform better as the number of vertices of the graph $N$ increases.
 
 Moreover, since $\bar{A}_{ij}$ is the sample mean of $M$ independent Bernoulli random variables with parameter $P_{ij}$, we have
 \[
     \Ex[(\bar{A}_{ij} - P_{ij})^2] = \frac{P_{ij}(1-P_{ij})}{M}.
 \]
-This yields the following result.
+Based on this MSE result of $\bar{A}_{ij}$ and the MSE result of $\hat{P}_{ij}$ given by Lemma \ref{lm:VarPhat}, we can conclude the following theorem naturally.
+%\begin{theorem}
+%\label{thm:ARE}
+%In the same setting as in Lemma~\ref{lm:VarPhat}, for any $i$ and $j$, if $\mathrm{rank}(B)=K=d$, the asymptotic relative efficiency (ARE) is 
+%\[
+%    \mathrm{ARE}(\bar{A}_{ij}, \hat{P}_{ij}) = \lim_{N \to \infty} \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) = 0.
+%    \label{eq:sbm_are}
+%\]
+%and for large enough $N$, we have
+%\begin{equation}
+%	    \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) \approx
+%    \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{N}.
+%\label{eq:approx_re}
+%\end{equation}
+%\end{theorem}
 \begin{theorem}
 \label{thm:ARE}
-In the same setting as in Lemma~\ref{lm:VarPhat}, for any $i$ and $j$, if $\mathrm{rank}(B)=K=d$, the asymptotic relative efficiency (ARE) is 
-\[
-    \mathrm{ARE}(\bar{A}_{ij}, \hat{P}_{ij}) = \lim_{N \to \infty} \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) = 0.
-    \label{eq:sbm_are}
-\]
-and for large enough $N$, we have
+In the same setting as in Lemma~\ref{lm:VarPhat}, for any $i$ and $j$, if $\mathrm{rank}(B)=K=d$, then for large enough $N$, we have
 \begin{equation}
 	    \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) \approx
     \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{N}.
 \label{eq:approx_re}
 \end{equation}
+And the asymptotic relative efficiency (ARE) is 
+\[
+    \mathrm{ARE}(\bar{A}_{ij}, \hat{P}_{ij}) = \lim_{N \to \infty} \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) = 0.
+    \label{eq:sbm_are}
+\]
 \end{theorem}
-
+\begin{proof}
+Combine the MSE result of $\bar{A}_{ij}$
+\[
+    \Ex[(\bar{A}_{ij} - P_{ij})^2] = \frac{P_{ij}(1-P_{ij})}{M},
+\]
+and Lemma \ref{lm:VarPhat}, i.e. for large enough $N$,
+\[
+    \Ex[(\hat{P}_{ij} - P_{ij})^2] \approx
+    \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{M N} P_{ij}(1-P_{ij}),
+\]
+we have for large enough $N$,
+\[
+	    \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) = \frac{\mathrm{MSE}(\hat{P}_{ij})}{\mathrm{MSE}(\bar{A}_{ij})}
+	    = \frac{\Ex[(\hat{P}_{ij} - P_{ij})^2]}{\Ex[(\bar{A}_{ij} - P_{ij})^2]}
+	    \approx \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{N}.
+\]
+And the ARE result follows directly by taking the limit of RE as $N\to \infty$.
+\end{proof}
 
 This theorem indicates that under the SBM, $\hat{P}$ is a much better estimate of the mean of the collection of graphs $P$ than $\bar{A}$.
 Note that a relative efficiency less than 1 indicates that $\hat{P}$ should be preferred over $\bar{A}$, so under the above assumptions, as $N\to\infty$, $\hat{P}$ performs far better than $\bar{A}$.
@@ -471,7 +503,7 @@ Note that the maximum value for the relative efficiency in a two-block model is 
 \centering
 \includegraphics[width=1\textwidth]{Rho.pdf}
 \caption{{\bf Asymptotic scaled relative efficiency $N\cdot \mathrm{RE}(\bar{A},\hat{P})$ in a two-block SBM.}
-For each distinct pair of edge probabilities in a two block model, the scaled relative efficiency only depends on the proportion of vertices in each block.
+For each distinct pair of edge probabilities in a two-block SBM specified in Eq.~\ref{eq:sim_setting}, the scaled relative efficiency only depends on the proportion of vertices in each block.
 We show the scaled asymptotic relative efficiency as $\rho_1$ changes from $0,1$ for pairs of vertices where either both are in block one or one is in block one and one is in block two. 
 These curves all intersect at a scaled relative efficiency of 4 when $\rho_1=1/2=\rho_2$.
 Improvements using low-rank methods are greater for larger blocks, such as for $B_{11}$ when $\rho_1$ is close to 1, while the improvements are smaller for block pairs with relatively few vertex pairs such as $B_{11}$ when $\rho_1$ is small and $B_{12}$ when $\rho_1$ is near 0 or 1
@@ -486,7 +518,7 @@ Overall, $\hat{P}$ performs best for large blocks while the improvements may be 
 
 
 To illustrate Eq.~\ref{eq:approx_re} of Theorem~\ref{thm:ARE}, we consider a 2-block SBM with parameters
-\begin{equation*}
+\begin{equation}
 B = \begin{bmatrix}
 0.42 & 0.2 \\
 0.2 & 0.7
@@ -494,7 +526,8 @@ B = \begin{bmatrix}
 ,\qquad \rho = \begin{bmatrix}
 0.5 & 0.5
 \end{bmatrix},
-\end{equation*}
+\label{eq:sim_setting}
+\end{equation}
 so that $|\{i:\tau_i=1\}|=|\{i:\tau_i=2\}|$ for each $N$.
 When calculating $\hat{P}$, we omit the dimension selection step from Algorithm~\ref{algo:basic} and instead use the true dimension $d = \mathrm{rank}(B) = 2$.
 Fig.~\ref{fig:RErho} shows $2/\rho_1$ and $1/\rho_1+1/\rho_2$, the scaled asymptotic RE for pairs of vertices both in block one and pairs of vertices in different blocks, respectively, in the two-block stochastic blockmodel we specified earlier.
@@ -553,7 +586,7 @@ These numerical simulations will also allow us to investigate the finite sample 
 Note that in Section \ref{sec:sim_iem}, we will break the model assumptions slightly and run experiment in a more realistic setting.
 
 %\subsubsection{Simulation Setting}
-Here, we consider the same 2-block SBM as in Fig.~\ref{fig:RErho}. To be clear, we restate the parameters here:
+Here, we consider the same 2-block SBM as in Eq.~\ref{eq:sim_setting}. To be clear, we restate the parameters here:
 \begin{equation*}
 B = \begin{bmatrix}
 0.42 & 0.2 \\
@@ -566,7 +599,7 @@ B = \begin{bmatrix}
 Similarly, when calculating $\hat{P}$, we omit the dimension selection step from Algorithm~\ref{algo:basic} and instead use the true dimension $d = \mathrm{rank}(B) = 2$.
 
 %\subsubsection{Simulation Results}
-To investigate the finite sample relative efficiency, we first sample 1000 Monte Carlo replicates from the above SBM distribution with different numbers of vertices $N$ and a fixed number of graphs $M$. The  relative efficiency $\mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ can be estimated since $P$ is known for this simulation. Since the relative efficiency only depends on the block memberships of the pair $i,j$, we estimate the relative efficiency for each block pair using
+To investigate the finite sample relative efficiency, we first sample 1000 Monte Carlo replicates from the above SBM distribution with different numbers of vertices $N \in \{30, 50, 100, 250, 500, 1000 \}$ and a fixed number of graphs $M = 100$. The  relative efficiency $\mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ can be estimated since $P$ is known for this simulation. Since the relative efficiency only depends on the block memberships of the pair $i,j$, we estimate the relative efficiency for each block pair using
 \[
     \hat{\mathrm{RE}}_{st}(\bar{A},\hat{P}) = \frac{\sum_{\tau_i=s,\tau_j=t,i \ne j} \hat{\mathrm{MSE}}(\hat{P}_{ij})}{\sum_{\tau_i=s,\tau_j=t,i \ne j} \hat{\mathrm{MSE}}(\bar{A}_{ij})}
 \]
@@ -639,7 +672,8 @@ In the figure, we denote the 3rd elbow found by the Zhu and Ghodsi method by a t
 Both dimension selection algorithms tend to select dimensions which nearly minimize the mean squared error.
 % The standard error for the Zhu and Ghodsi and the USVT methods are about $0.9$ and $0.17$ respectively.
 
-When $M$ is 1 or 5, $\bar{A}$ has large variance which leads to large $\hat{\mathrm{MSE}}$. Meanwhile, $\hat{P}$ reduces the variance by taking advantages of inherent low-rank structure of the mean graph. Additionally, we see that there is a large range of dimensions where the performance for $\hat{P}$ is superior to $\bar{A}$. 
+When $M$ is 1 or 5, $\bar{A}$ has large variance which leads to large $\hat{\mathrm{MSE}}$. Meanwhile, $\hat{P}$ reduces the variance by taking advantages of inherent low-rank structure of the mean graph. Such smoothing effect is especially obvious while we only have 1 observation. When $M = 1$, all weights of the graph are either 0 or 1, leading to a very bumpy estimate $\bar{A}$. In this case, $\hat{P}$ smooth the connectomes estimate and improve the performance.
+Additionally, we see that there is a large range of dimensions where the performance for $\hat{P}$ is superior to $\bar{A}$. 
 With a larger $M$, the performance of $\bar{A}$ improves so that its performance is frequently superior but nearly identical to $\hat{P}$.
 
 For a more specific comparison of the performance of $\hat{P}$ and $\bar{A}$ in the most realistic situation where the rank $d$ must be chosen based on data, Table~\ref{tab:corr_re} shows estimated relative efficiencies of $\hat{P}$ versus $\bar{A}$.

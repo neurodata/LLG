@@ -9,6 +9,7 @@ setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 # dataName = "JHU"
 
 dataNameVec = c("JHU", "desikan", "CPAC200")
+dataNameDisplayVec = c("JHU", "Desikan", "CPAC200")
 
 source("function_collection.R")
 require(ggplot2)
@@ -34,16 +35,16 @@ for (iData in 1:length(dataNameVec)) {
   pp[[iData]] <- ggplot(df,aes(x=k,y=eval))+
     geom_line()+
     scale_linetype_manual(name="",values=c("longdash","dotted","dotdash"))+
-    xlab("Order in algebraic") + ylab("Eigenvalue")+
+    xlab("order in algebraic") + ylab("eigenvalue")+
     theme(panel.grid.major = element_line(colour="grey95"),
           panel.grid.minor = element_blank())+
     theme(panel.background = element_rect(fill = 'white', colour = 'grey70'))+
     theme(legend.position="none")+
-    ggtitle(dataName)
+    ggtitle(dataNameDisplayVec[[iData]])
   
   ggsave(paste0("../../Draft/screeplot_", dataName, ".pdf"),
-         # p+theme(text=element_text(size=10,family="Times")),
-         pp[[iData]]+theme(text=element_text(size=10,family="CM Roman")),
+         pp[[iData]]+theme(text=element_text(size=10,family="Times")),
+         # pp[[iData]]+theme(text=element_text(size=10,family="CM Roman")),
          width=2, height=2)
 }
 

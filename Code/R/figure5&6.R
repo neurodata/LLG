@@ -28,6 +28,9 @@ rm(tmpList)
 library(lattice)
 new.palette=colorRampPalette(c("white","black"),space="rgb")
 
+myAt <- seq(0, 1, length.out=20)
+myCkey <- list(at=myAt)
+
 
 add <- function(x) Reduce("+", x)
 P = add(A_all)/M
@@ -35,8 +38,9 @@ P = add(A_all)/M
 pdf("../../Draft/P_desikan.pdf", family="Times", width=4, height=3.5)
 # pdf("../../Draft/P_desikan.pdf", family="CM Roman", width=4, height=3.5)
 image(Matrix(P),main=list(label=TeX('$P$ for Desikan')),sub="",
-            xlab=list(cex=0),ylab=list(cex=0),
-            scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0)
+      xlab=list(cex=0),ylab=list(cex=0),
+      scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
+      at=myAt, lwd=0)
 dev.off()
 
 sampleVec = sample.int(M, m)
@@ -44,8 +48,9 @@ A_bar = add(A_all[sampleVec])/m
 pdf("../../Draft/Abar_desikan_m5.pdf", family="Times", width=4, height=3.5)
 # pdf("../../Draft/Abar_desikan_m5.pdf", family="CM Roman", width=4, height=3.5)
 image(Matrix(A_bar),main=list(label=TeX('$\\bar{A}$ for Desikan with M=5')),
-            sub="",xlab=list(cex=0),ylab=list(cex=0),
-            scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),lwd=0)
+      sub="",xlab=list(cex=0),ylab=list(cex=0),
+      scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
+      at=myAt, lwd=0)
 dev.off()
 
 ####### Estimate dimensions ######
@@ -73,7 +78,7 @@ pdf("../../Draft/Phat_desikan_m5.pdf", family="Times", width=4.5, height=3.5)
 levelplot(P_hat[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
           ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
           main=list(label=TeX('$\\hat{P}$ for Desikan with M=5')),
-          colorkey=list(labels=list()))
+          at=myAt, colorkey=myCkey, lwd=0)
 dev.off()
 print(dHat)
 
@@ -108,11 +113,8 @@ valLow = 0.4
 nv = (Diff_A_bar<valLow)
 nv[upper.tri(nv,diag=T)] = FALSE
 Diff_A_bar[nv] = 0
-<<<<<<< HEAD
 pdf("../../Draft/Diff2_desikan_m5.pdf", family="Times", width=4, height=3.5)
-=======
-pdf("../../Draft/Diff2_desikan_m5.pdf", family="CM Roman", width=4, height=3.5)
->>>>>>> TangRunze/master
+# pdf("../../Draft/Diff2_desikan_m5.pdf", family="CM Roman", width=4, height=3.5)
 levelplot(Diff_A_bar[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
           ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
           main=list(label=TeX('$|\\bar{A} - P|$ for Desikan with M=5')),
@@ -125,7 +127,7 @@ Diff_P_hat[nv] = 0
 <<<<<<< HEAD
 pdf("../../Draft/Diff3_desikan_m5.pdf", family="Times", width=4.5, height=3.5)
 =======
-pdf("../../Draft/Diff3_desikan_m5.pdf", family="CM Roman", width=4.5, height=3.5)
+  pdf("../../Draft/Diff3_desikan_m5.pdf", family="CM Roman", width=4.5, height=3.5)
 >>>>>>> TangRunze/master
 levelplot(Diff_P_hat[1:n,n:1],col.regions=new.palette(20),xlab=list(cex=0),
           ylab=list(cex=0),scales=list(x=list(draw=FALSE),y=list(draw=FALSE)),
@@ -212,18 +214,18 @@ write(s,file="../../Result/Edge_Diff_between_desikan.csv")
 
 label_tex <- function (labels, multi_line = TRUE) 
 {
-    labels <- label_value(labels, multi_line = multi_line)
-    if (multi_line) {
-        lapply(unname(labels), lapply, function(values) {
-            c(TeX(string = as.character(values)))
-        })
-    }
-    else {
-        lapply(labels, function(values) {
-            values <- paste0("list(", values, ")")
-            lapply(values, function(expr) c(TeX(string = expr)))
-        })
-    }
+  labels <- label_value(labels, multi_line = multi_line)
+  if (multi_line) {
+    lapply(unname(labels), lapply, function(values) {
+      c(TeX(string = as.character(values)))
+    })
+  }
+  else {
+    lapply(labels, function(values) {
+      values <- paste0("list(", values, ")")
+      lapply(values, function(expr) c(TeX(string = expr)))
+    })
+  }
 }
 
 
@@ -283,7 +285,7 @@ label_tex <- function (labels, multi_line = TRUE)
 # ggsave("../../Draft/difference_vs_truth_compare.pdf", plot=gg+theme(text=element_text(size=10,family="Times")),
 #     width=6.5,height=3.5)
 =======
-ut <- upper.tri(P)
+  ut <- upper.tri(P)
 df_ex <- data.frame(P=P[ut],A_bar=A_bar[ut],P_hat=P_hat[ut])
 df_ex$id <- 1:sum(ut)
 df_ex$better <- with(df_ex,abs(P_hat-P)<abs(A_bar-P))
@@ -312,7 +314,7 @@ df_ex %>% group_by(P_bin) %>% summarize(conditional_re=mean(A_bar_se)/mean(P_hat
   guides(size=FALSE)
 
 ggsave("../../Draft/difference_vs_truth_compare.pdf", plot=gg+theme(text=element_text(size=10,family="CM Roman")),
-    width=6.5,height=3.5)
+       width=6.5,height=3.5)
 
 ggplot(df_ex,aes(x=P,y=re_fitted))+geom_line()
 
@@ -336,6 +338,5 @@ gg <- ggplot(df_ex_melt, aes(x=P, linetype=estimator, y=(value-P)^2))+
 print(gg)
 
 ggsave("../../Draft/difference_vs_truth_compare.pdf", plot=gg+theme(text=element_text(size=10,family="CM Roman")),
-    width=6.5,height=3.5)
->>>>>>> TangRunze/master
+       width=6.5,height=3.5)
 

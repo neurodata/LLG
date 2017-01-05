@@ -5,7 +5,7 @@ setwd("/Users/Runze/Documents/GitHub/LLG/Code/R")
 
 pp <- list()
 
-isSVD <- 1
+isSVD <- 0
 
 lSize = .8
 legendSize = 1.5
