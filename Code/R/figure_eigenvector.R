@@ -8,6 +8,7 @@ m = 5
 dataName = "desikan"
 set.seed(12345)
 
+
 source("function_collection.R")
 tmpList = read_data(dataName, DA=F, newGraph=F)
 A_all = tmpList[[1]]
@@ -30,7 +31,7 @@ A_bar_diag_aug = diag_aug(A_bar)
 
 # ZG
 nElbow = 3
-evalVec = ase(A_bar_diag_aug, ceiling(n*3/5), isSVD)[[1]]
+evalVec = ase(A_bar, ceiling(n*3/5), isSVD)[[1]]
 dZG = getElbows(evalVec, n=nElbow, plot=F)[[nElbow]]
 
 A.ase = ase(A_bar_diag_aug, dZG, isSVD)
@@ -59,23 +60,6 @@ xHat <- A.ase[[3]] %*% diag(sqrt(A.ase[[1]]))
 
 # sum(xHat[, 12]^2)
 
-# eVecNorm <- sapply(1:n, function(i) {return(sqrt(sum(xHat[i,]^2)))})
-# heatmap(Matrix(eVecNorm, nrow = 1))
-# s = ""
-# for (i in 1:(n-1)) {
-#   for (j in (i+1):n) {
-#     if (nv[i,j]==F) {
-#       s = paste0(s,",",i,",",j,",",P_hat[i,j]-P[i,j])
-#     }
-#   }
-# }
-# s = substr(s,2,nchar(s))
-# write(s,file="../../Result/Edge_Diff_between_desikan.csv")
-
-
-
-
-
 require(ggplot2)
 
 df <- data.frame(value=c(xHat),
@@ -97,12 +81,25 @@ df <- data.frame(x=xHat[,1], y=xHat[,2])
 gg <- ggplot(df, aes(x, y)) + 
   geom_point() + 
   scale_fill_gradient(low = "white", high = "grey10") + 
-  xlab("dimension") + ylab("vertex")
+  xlab("1st dimension") + ylab("2nd dimension")
 
-ggsave("../../Draft/eigenvector.pdf",
+ggsave("../../Draft/eigenvector_scatter.pdf",
        plot=gg+theme(text=element_text(size=10,family="Times")),
        # plot=gg+theme(text=element_text(size=10,family="CM Roman")),
-       width=3.5,height=6.5)
+       width=3.5,height=3)
+
+
+
+
+xHat
+s = ""
+for (j in 1:2) {
+  for (i in 1:n) {
+    s = paste0(s,",",xHat[i,j])
+  }
+}
+s = substr(s,2,nchar(s))
+write(s,file="../../Result/eigenvector.csv")
 
 
 

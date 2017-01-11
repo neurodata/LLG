@@ -231,13 +231,13 @@ A specific instance of an LPM that we examine in this work is the random dot pro
 The direction of the latent position is determined by properties of that vertex, and vertices whose latent positions point in similar directions are more likely to have an edge between them than vertices whose latent positions point in orthogonal directions.
 Similarly, the magnitudes of the latent position encode the vertices' overall tendency to form edges, with a larger magnitude leading to more edges incident with the vertex.
 
-Formally, let $\mathcal{X} \subset \Re^d$ be a set such that $x, y \in \mathcal{X}$ implies $\left \langle  x,y \right \rangle =\sum_i x_i y_i \in [0, 1]$.
-Let $X_1,\dotsc,X_n\in \mathcal{X}$ and write $X = [X_1|\cdots|X_N]^{\top} \in \Re^{N \times d}$.
-A random graph $G$ with adjacency matrix $A$ is said to be an RDPG if
+Formally, let $\mathcal{X} \subset \Re^d$ be a set such that $x, y \in \mathcal{X}$ implies $x^{\top} y =\sum_{i = 1}^d x_i y_i \in [0, 1]$.
+Let $X_1,\dotsc,X_N\in \mathcal{X}$ and write $X = [X_1|\cdots|X_N]^{\top} \in \Re^{N \times d}$.
+A random graph $G$ with adjacency matrix $A$ is said to be an RDPG if for any adjacency matrix $a$ of the same size,
 \[
-    \Pr[A|X] = \prod_{i<j} \left \langle X_i, X_j \right \rangle^{A_{ij}} \left( 1 - \left \langle X_i, X_j \right \rangle \right)^{1 - A_{ij}}.
+    \Pr[A = a|X] = \prod_{i<j} (X_i^{\top} X_j)^{a_{ij}} ( 1 - (X_i^{\top} X_j))^{1 - a_{ij}}.
 \]
-In the RDPG model, each vertex $i$ is associated with latent position $X_i$, and conditioned on the latent positions $X$, the entries $A_{ij}$ are distributed independently as $ \text{Bernoulli}(\left \langle X_i, X_j \right \rangle)$ for $i<j$.
+In the RDPG model, each vertex $i$ is associated with latent position $X_i$, and conditioned on the latent positions $X$, the entries $A_{ij}$ are distributed independently as $ \text{Bernoulli}(X_i^{\top} X_j)$ for $i<j$.
 Note that the probability matrix is the outer product of the latent position matrix with itself, $P = X X^{\top}$.
 This imposes two properties on $P$, namely that $P$ is positive-semidefinite and $\mathrm{rank}(P)=\mathrm{rank}(X)\leq d$.
 These properties lead us to our proposed estimator.
@@ -263,7 +263,7 @@ For notational convenience we will refer to the sub-model of the SBM with positi
 
 In order to analyze the estimator $\hat{P}$ motivated by RDPG, we will represent the SBM as an RDPG by
 decomposing $B$ as $\nu \nu^{\top}$, where $\nu \in \Re^{K \times d}$ with rows given by $\nu_1^{\top}, \dotsc, \nu_K^{\top}$ and each row $\nu_k^{\top}$ is the shared latent position for all vertices assigned to block $k$. 
-For $X \in \Re^{N \times d}$ with rows given by $X_1^{\top} = \nu_{\tau_1}^{\top}, \dotsc, X_N^{\top} = \nu_{\tau_N}^{\top}$, we have
+For $X \in \Re^{N \times d}$ with rows given by $X_1^{\top} = \nu_{\tau_1}^{\top}, \dotsc, X_N^{\top} = \nu_{\tau_N}^{\top}$, since $\tau_i$ and $\tau_j$ represent the blocks that vertex $i$ and vertex $j$ belong to respectively, we have
 \[
     \Pr[A_{ij} = 1|\tau] = B_{\tau_i, \tau_j} = \nu_{\tau_i}^{\top} \nu_{\tau_j}^{\phantom{\top}} \in [0, 1].
 \]
@@ -332,13 +332,31 @@ Motivated by the low-rank structure of the RDPG mean matrix, we propose the esti
 This estimator is similar to the estimator proposed by \citet{chatterjee2015matrix} but additionally
 we propose adjustments to canonical low-rank methods which serve to improve the performance for the specific task of estimating the mean graph. 
 Additionally, we consider an alternative dimension selection technique as discussed in Section~\ref{section:dim_select}.
+To summarize, our overall strategy to computer $\hat{P}$ is described in Algorithm \ref{algo:basic}. The key component of this algorithm is the low-rank estimator. Details of this vital step to compute the actual low-rank approximation is in Algorithm \ref{algo:lowrank}.
+
+\begin{algorithm}[H]
+\caption{Algorithm to compute $\hat{P}$}
+\label{algo:basic}
+\begin{algorithmic}[1]
+\REQUIRE Adjacency matrices $A^{(1)}, A^{(2)}, \cdots, A^{(M)}$, with each $A^{(m)} \in \{0,1\}^{N \times N}$
+\ENSURE Estimate $\hat{P}\in[0,1]^{N\times N}$
+\STATE Calculate the sample mean $\bar{A} = \frac{1}{M}\sum\limits_{m = 1}^M A^{(m)}$;
+\STATE Calculate the scaled degree matrix $D^{(0)} = \mathrm{diag}(\bar{A} \bm{1})/(N-1)$;
+\STATE Select the dimension $d$ based on the eigenvalues of $\bar{A} + D^{(0)}$; (see Section~\ref{section:dim_select})
+\STATE Set $\tilde{P}^{(0)}$ to $\mathrm{lowrank}_d(\bar{A} + D^{(0)})$; (see Algorithm~\ref{algo:lowrank})
+\STATE Set $D^{(1)}$ to $ \mathrm{diag}(\tilde{P}^{(0)})$, the diagonal matrix with diagonal matching $\tilde{P}^{(0)}$; 
+\STATE Set $\tilde{P}^{(1)}$ to $\mathrm{lowrank}_d(\bar{A} + D^{(1)})$; (see Algorithm~\ref{algo:lowrank})
+\STATE Set $\hat{P}$ to $\tilde{P}^{(1)}$ with values $<0$ set to $0$ and values $>1$ set to $1$.
+\end{algorithmic}
+\end{algorithm}
+
 
 For a given dimension $d$ we consider the estimator $\mathrm{lowrank}_d(\bar{A})$ defined as the best rank-$d$ positive-semidefinite approximation of $\bar{A}$.
 Since the graphs are symmetric, we can compute the eigen-decomposition of $\bar{A}$ as $\hat{U} \hat{S} \hat{U}^{\top} + \tilde{U}\tilde{S}\tilde{U}^{\top}$, where $\hat{S}$ is a diagonal matrix with non-increasing entries along the diagonal corresponding to the largest $d$ eigenvalues of $\bar{A}$, and $\hat{U}$ has columns given by the corresponding eigenvectors. Similarly, $\tilde{S}$ is the diagonal matrix with non-increasing entries along the diagonal corresponding to the rest $N - d$ eigenvalues of $\bar{A}$, and $\tilde{U}$ has the columns given by the corresponding eigenvectors.
 The $d$-dimensional adjacency spectral embedding (ASE) of $\bar{A}$ is given by $\hat{X}=\hat{U} \hat{S}^{1/2}\in \Re^{N \times d}$.
 For an RDPG, the rows of $\hat{X}$ are estimates of the latent vectors for each vertex \citep{sussman2014consistent}.
 Using the adjacency spectral embedding, we have that the low-rank approximation of $\bar{A}$ is $\hat{X} \hat{X}^{\top}=\hat{U}\hat{S}\hat{U}^{\top}$.
-Algorithm~\ref{algo:lowrank} gives the steps to compute this low-rank approximation.
+Algorithm~\ref{algo:lowrank} gives the steps to compute this low-rank approximation for a general symmetric matrix $A$.
 
 \begin{algorithm}[H]
 \caption{Algorithm to compute the rank-$d$ approximation of a matrix.}
@@ -362,21 +380,7 @@ To compensate for this issue, we use an iterative method developed in \citet{sch
 Details are discussed in Section~\ref{section:diag_aug}.
 
 
-\begin{algorithm}[H]
-\caption{Algorithm to compute $\hat{P}$}
-\label{algo:basic}
-\begin{algorithmic}[1]
-\REQUIRE Adjacency matrices $A^{(1)}, A^{(2)}, \cdots, A^{(M)}$, with each $A^{(m)} \in \{0,1\}^{N \times N}$
-\ENSURE Estimate $\hat{P}\in[0,1]^{N\times N}$
-\STATE Calculate the sample mean $\bar{A} = \frac{1}{M}\sum\limits_{m = 1}^M A^{(m)}$;
-\STATE Calculate the scaled degree matrix $D^{(0)} = \mathrm{diag}(\bar{A} \bm{1})/(N-1)$;
-\STATE Select the dimension $d$ based on the eigenvalues of $\bar{A} + D^{(0)}$; (see Section~\ref{section:dim_select})
-\STATE Set $\tilde{P}^{(0)}$ to $\mathrm{lowrank}_d(\bar{A} + D^{(0)})$; (see Algorithm~\ref{algo:lowrank})
-\STATE Set $D^{(1)}$ to $ \mathrm{diag}(\tilde{P}^{(0)})$, the diagonal matrix with diagonal matching $\tilde{P}^{(0)}$; 
-\STATE Set $\tilde{P}^{(1)}$ to $\mathrm{lowrank}_d(\bar{A} + D^{(1)})$; (see Algorithm~\ref{algo:lowrank})
-\STATE Set $\hat{P}$ to $\tilde{P}^{(1)}$ with values $<0$ set to $0$ and values $>1$ set to $1$.
-\end{algorithmic}
-\end{algorithm}
+
 
 
 Algorithm~\ref{algo:basic} gives the steps involved to compute the low-rank estimate $\hat{P}$.
@@ -423,7 +427,7 @@ and for large enough $N$, we have
 \]
 \end{lemma}
 The first part of this Lemma gives the form of the asymptotic variance of $\hat{P}$ and the second part ensures that the estimator is asymptotically unbiased for $P$.
-The proof of this lemma is outlined in Section~\ref{section:outline_proof} and is based on results for the variance of the adjacency spectral embedding from \citet{athreya2013limit}. From the result, we can see that the MSE of $\hat{P}_{ij}$ is of order $O(M^{-1}N^{-1})$ approximately. Similar to $\bar{A}$, the estimate will get better as the number of observations $M$ increases. Furthermore, it also benefits from a larger graph because of the use of low-rank structure. That is, $\hat{P}$ will perform better as the number of vertices of the graph $N$ increases.
+The proof of this lemma is outlined in Section~\ref{section:outline_proof} and is based on results for the variance of the adjacency spectral embedding from \citet{athreya2013limit}. From Lemma \ref{lm:VarPhat}, we can see that the MSE of $\hat{P}_{ij}$ is of order $O(M^{-1}N^{-1})$ approximately. Similar to $\bar{A}$, the estimate will get better as the number of observations $M$ increases. Furthermore, it also benefits from a larger graph because of the use of low-rank structure. That is, $\hat{P}$ will perform better as the number of vertices of the graph $N$ increases.
 
 Moreover, since $\bar{A}_{ij}$ is the sample mean of $M$ independent Bernoulli random variables with parameter $P_{ij}$, we have
 \[
@@ -529,6 +533,7 @@ B = \begin{bmatrix}
 \label{eq:sim_setting}
 \end{equation}
 so that $|\{i:\tau_i=1\}|=|\{i:\tau_i=2\}|$ for each $N$.
+Note that this simulation only focus on the rank-2 setting primarily for the interpretability.
 When calculating $\hat{P}$, we omit the dimension selection step from Algorithm~\ref{algo:basic} and instead use the true dimension $d = \mathrm{rank}(B) = 2$.
 Fig.~\ref{fig:RErho} shows $2/\rho_1$ and $1/\rho_1+1/\rho_2$, the scaled asymptotic RE for pairs of vertices both in block one and pairs of vertices in different blocks, respectively, in the two-block stochastic blockmodel we specified earlier.
 We vary $\rho_1$ between 0 and 1 to demonstrate how the number of pairs of vertices with the corresponding block memberships impacts the overall relative efficiency.
@@ -771,7 +776,7 @@ Since the sample size is small, there are a lot of pairs of vertices with no edg
 This leads to the white and black pixels in the image corresponding to $\bar{A}$.
 On the other hand, $\hat{P}$ has a finer gradient of values which in this case leads to a more accurate estimate.
 
-Moreover, Fig.~\ref{fig:Diff_desikan_m5} shows the values for the absolute estimation error $|\bar{A} - P|$ and $|\hat{P}-P|$. In addition, we include the absolute difference $|\bar{A} - \hat{P}|$ to show the overall difference between the two estimates. The lower triangular sections show the actual absolute difference while the upper triangular matrix highlights the vertex pairs with absolute differences larger than 0.4. 
+Moreover, for the same sample discussed above, Fig.~\ref{fig:Diff_desikan_m5} shows the values for the absolute estimation error $|\bar{A} - P|$ and $|\hat{P}-P|$. In addition, we include the absolute difference $|\bar{A} - \hat{P}|$ to show the overall difference between the two estimates. The lower triangular sections show the actual absolute difference while the upper triangular matrix highlights the vertex pairs with absolute differences larger than 0.4. 
 There are 18 edges from $\bar{A}$ and 6 edges from $\hat{P}$ being highlighted in the figure, further indicating the superior performance of $\hat{P}$.
 Note that approximately $13\%$ of all pairs of vertices are adjacent in all $454$ graphs and hence $\bar{A}$ will always have zero error for those pairs of vertices.
 Nonetheless, $\hat{P}$ typically outperforms $\bar{A}$.
@@ -913,8 +918,22 @@ Similarly, \citet{durante2014nonparametric} used low-rank deviations from a full
 
 We also note that low-rank methods can often be more easily interpreted.
 By representing a low-rank matrix in terms of the latent position, where each vertex is represented as a vector in $\Re^d$ and the entries of the matrix are given by the inner products of these vectors (see Section~\ref{section:sbm_rdpg}), one can analyze and visualize the geometry of these vectors in order to interpret how each vertex is behaving in the context of the larger graph. 
+Now we take the CoRR dataset experiment as an example and consider the same sample of size $M=5$ based on the Desikan atlas as discussed in Section~\ref{sec:corr_data}. Our estimator $\hat{P}$ is based on the estimated latent positions $\hat{X} \in \mathbb{R}^{N\times d}$, where $N=70$ is the number of vertices and $d=11$ is the dimension selected by the Zhu and Ghodsi's method. Now we plot $\hat{X}$ in Fig.~\ref{fig:eigenvector}, with each row to be the estimated latent position for the corresponding vertex. From the second column, we can see clear distinction of the left and right hemisphere as conveyed in the second dimension.
+
+researchers are interested in the other hypothesis structure in other subspace, you could try to visualize these with this method.
+
 Additionally, such a representation allows the use of techniques from multivariate analysis to further study the estimated population mean.
 
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=.8\textwidth]{eigenvector.pdf}
+\caption{{\bf Comparison of $\hat{P}$ and $\bar{A}$ for synthetic data analysis.}
+As in Fig.~\ref{fig:RE}, this figure shows $\hat{\mathrm{MSE}}$ for $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for simulated data with different sample sizes $M$ based on the sample mean for the Desikan dataset. Again, the average of dimensions selected by the USVT method (square) and the ZG method (triangle) tend to nearly approximate the optimal dimension. 
+Overall, we see that the structure of these plots well approximates the structure for the real data indicating that performance for the independent edge model will tend to translate in structure to non-independent edge scenarios. 
+On the other hand, the relative efficiency $\hat{\mathrm{RE}}(\bar{A},\hat{P})$ is lower for this synthetic data analysis than for the CoRR data.}
+\label{fig:eigenvector}
+\end{figure}
 
 
 % \subsection{Future Work}
@@ -993,7 +1012,7 @@ The resulting graphs are undirected, unweighted, and have no self-loops.
 \subsection{Outline for the Proof of the Theorems}
 \label{section:outline_proof}
 Here we provide an outline of the proof of Lemma~\ref{lm:VarPhat} which provides the approximate MSE of $\hat{P}$ in the stochastic blockmodel case.
-The result depends on using the asymptotic results for the distribution of eigenvectors from \citet{athreya2013limit} which extend to the multiple graph setting in a straightforward way.
+The result depends on using the asymptotic results (see Theorem \ref{thm:clt_ext}) for the distribution of eigenvectors from \citet{athreya2013limit} which extend to the multiple graph setting in a straightforward way.
 
 The first key observation is that since $\bar{A}$ is computed from iid observations each with expectation $P$, $\bar{A}$ is unbiased for $P$ and $\mathrm{Var}(A_{ij}) = \frac{1}{M}P_{ij}(1-P_{ij})$.
 The results of \citet{athreya2013limit} provide a central limit theorem for estimates of the latent position in an RDPG model for a single graph.
