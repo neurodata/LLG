@@ -39,13 +39,15 @@ d = dZG
 xHat <- A.ase[[3]] %*% diag(sqrt(A.ase[[1]]))
 # PHat <- regularize(xHat %*% t(xHat))
 
-require(hisemi)
-theta <- 2*pi/8
-# R12 <- matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), ncol=2)
-# R <- directSum(R12, diag(d-2))
-R <- directSum(cos(theta), diag(d-2), cos(theta))
-R[d, 1] <- sin(theta)
-R[1, d] <- -sin(theta)
+# sum(xHat[, 12]^2)
+# 
+# require(hisemi)
+# theta <- 2*pi/8
+# # R12 <- matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), ncol=2)
+# # R <- directSum(R12, diag(d-2))
+# R <- directSum(cos(theta), diag(d-2), cos(theta))
+# R[d, 1] <- sin(theta)
+# R[1, d] <- -sin(theta)
 
 # yHat <- xHat %*% R
 # min(yHat)
@@ -53,8 +55,9 @@ R[1, d] <- -sin(theta)
 # min(yHat[, 1:2])
 # max(yHat[, 1:2])
 
-xHat <- xHat %*% R
+# xHat <- xHat %*% R
 
+# sum(xHat[, 12]^2)
 
 # eVecNorm <- sapply(1:n, function(i) {return(sqrt(sum(xHat[i,]^2)))})
 # heatmap(Matrix(eVecNorm, nrow = 1))
@@ -89,3 +92,20 @@ ggsave("../../Draft/eigenvector.pdf",
        # plot=gg+theme(text=element_text(size=10,family="CM Roman")),
        width=3.5,height=6.5)
 
+
+df <- data.frame(x=xHat[,1], y=xHat[,2])
+gg <- ggplot(df, aes(x, y)) + 
+  geom_point() + 
+  scale_fill_gradient(low = "white", high = "grey10") + 
+  xlab("dimension") + ylab("vertex")
+
+ggsave("../../Draft/eigenvector.pdf",
+       plot=gg+theme(text=element_text(size=10,family="Times")),
+       # plot=gg+theme(text=element_text(size=10,family="CM Roman")),
+       width=3.5,height=6.5)
+
+
+
+
+# hc <- hclust(dist(xHat))
+# plot(hc)

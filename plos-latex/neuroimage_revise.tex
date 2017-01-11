@@ -223,7 +223,7 @@ For this case, we aim to estimate the mean graph $P=\Ex[A^{(m)}]$ based on the o
 
 \subsection{Random Dot Product Graph}
 In graphs, the adjacencies between vertices generally depend on unobserved properties of the corresponding vertices. For example, in a connectomics setting, the two brain regions with similar properties will have similar connectivity patterns to other regions of the brain.
-The latent positions model (LPM) proposed by Hoff et. al. (2002) \citep{hoff2002latent} captures such structure, where each vertex is associated with a latent position that influences the adjacencies for that vertex.
+The latent positions model (LPM) proposed by \citet{hoff2002latent} captures such structure, where each vertex is associated with a latent position that influences the adjacencies for that vertex.
 In this model, each vertex $i$ has an associated latent vector $X_i \in \Re^d$.
 Conditioned on the latent positions, the existence of each edge is independent and the probability the edge is present only depends on the latent vectors of the incident vertices through a link function. If $d$ is much smaller than the number of vertices $N$ and the link function is known, LPMs are more parsimonious models compared to IEM, requiring only $dN$ parameters rather than $\binom{N}{2}$.
 
@@ -262,10 +262,10 @@ To ensure that the SBM can be considered as an RDPG, we impose that the $B$ matr
 For notational convenience we will refer to the sub-model of the SBM with positive semidefinite $B$ matrix as the SBM.
 
 In order to analyze the estimator $\hat{P}$ motivated by RDPG, we will represent the SBM as an RDPG by
-decomposing $B$ as $\nu \nu^{\top}$, where $\nu \in \Re^{K \times d}$ and each row $\nu_k$ is the shared latent position for all vertices assigned to block $k$. 
-For $X \in \Re^{N \times d}$ with rows given by $X_i = \nu_{\tau_i}$, we have
+decomposing $B$ as $\nu \nu^{\top}$, where $\nu \in \Re^{K \times d}$ with rows given by $\nu_1^{\top}, \dotsc, \nu_K^{\top}$ and each row $\nu_k^{\top}$ is the shared latent position for all vertices assigned to block $k$. 
+For $X \in \Re^{N \times d}$ with rows given by $X_1^{\top} = \nu_{\tau_1}^{\top}, \dotsc, X_N^{\top} = \nu_{\tau_N}^{\top}$, we have
 \[
-    \Pr[A_{ij} = 1|\tau] = B_{\tau_i, \tau_j} = \nu_{\tau_i}^{\top} \nu_{\tau_j}^{\phantom{\top}}.
+    \Pr[A_{ij} = 1|\tau] = B_{\tau_i, \tau_j} = \nu_{\tau_i}^{\top} \nu_{\tau_j}^{\phantom{\top}} \in [0, 1].
 \]
 In this way, the SBM can be seen as an RDPG where all vertices in the same block will have identical latent positions.
 
@@ -636,21 +636,31 @@ We used three atlases, the JHU atlas with 48 vertices, the Desikan atlas with 70
 An edge exists between two vertices whenever there is at least one white-matter tract connecting the corresponding two regions of the brain. 
 Further details of the dataset are provided in Section~\ref{section:data}.
 
-As discussed in Remark \ref{remark:low_rank}, we first check if the dataset has the low-rank property. In Fig.~\ref{fig:screeplot}, we plot the eigenvalues of the mean graph of all 454 graphs (with diagonal augmentation) in decreasing algebraic order for three different atlases. For all three atlases, the eigenvalues first decrease dramatically and then stay around 0. So the information is mostly contained in the first few dimensions. Such quasi low-rank property could be used by $\hat{P}$ to improve $\bar{A}$.
+As discussed in Remark \ref{remark:low_rank}, we first check if the dataset has the low-rank property. In Fig.~\ref{fig:screeplot}, we plot the eigenvalues of the mean graph of all 454 graphs (with diagonal augmentation) in decreasing algebraic order for three different atlases. For all three atlases, the eigenvalues first decrease dramatically and then stay around 0. In addition, we also plot the histograms in Fig.~\ref{fig:histogram}. From the figures we can see many eigenvalues are around zero, with a few large eigenvalues. So the information is mostly contained in the first few dimensions. Such quasi low-rank property could be used by $\hat{P}$ to improve $\bar{A}$.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[height=.2\textheight]{screeplot_JHU.pdf} 
 \includegraphics[height=.2\textheight]{screeplot_desikan.pdf} 
 \includegraphics[height=.2\textheight]{screeplot_CPAC200.pdf}
 \caption{{\bf Screeplot of the population mean.}
-These screeplots shows the eigenvalues of the mean graph of all 454 graphs with diagonal augmentation in decreasing algebraic order for three atlases.
+These screeplots show the eigenvalues of the mean graph of all 454 graphs with diagonal augmentation in decreasing algebraic order for three atlases. Many eigenvalues are around zero, which lead to a quasi low-rank structure.
 }
 \label{fig:screeplot}
 \end{figure}
 
+\begin{figure}[!htbp]
+\centering
+\includegraphics[height=.2\textheight]{hist_JHU.pdf} 
+\includegraphics[height=.2\textheight]{hist_desikan.pdf} 
+\includegraphics[height=.2\textheight]{hist_CPAC200.pdf}
+\caption{{\bf Histogram of the population mean.}
+These figures show the histograms of the eigenvalues of the mean graph of all 454 graphs with diagonal augmentation. Many eigenvalues are around zero, which lead to a quasi low-rank structure.
+}
+\label{fig:histogram}
+\end{figure}
 
 In order to evaluate the performance of the two estimators, we used a cross validation on the 454 graphs of each size. 
-Specifically, for a given atlas, each Monte Carlo replicate corresponds to sampling $M$ graphs out of the 454 and computing the low-rank estimator $\hat{P}$ and the sample mean $\bar{A}$ using the $M$ selected graphs. 
+Specifically, for a given atlas, each Monte Carlo replicate corresponds to sampling $M$ graphs out of the 454 and computing the low-rank estimator $\hat{P}$ and the sample mean $\bar{A}$ using the $M$ selected graphs.
 We then compared these estimates to the sample mean for the remaining $454-M$ adjacency matrices.
 While we cannot interpret this mean graph as the probability matrix for an IEM distribution (see Section~\ref{sec:sim_iem}), the sample mean for the remaining graphs does give the proportion of times each pair of vertices are adjacent in the population from which the graphs were sampled.
 
@@ -659,13 +669,13 @@ In particular we will use the average of the mean squared error across all pairs
 As in the previous section, we will not use analytical evaluations of the MSE and instead estimate the MSE and relative efficiencies via Monte Carlo simulations.
 % By observing 454 graphs generated by the atlas being picked, we use $\hat{P}$ to estimate the mean graph $P$, which is the proportions of the existence of a white-matter tract connecting different parts of the brain. Since $P$ is unknown in practice, we perform a cross-validation study to compare $\bar{A}$ and $\hat{P}$. For each Monte Carlo replicate, we first fix the sample size $M$ and randomly sample $M$ graphs from the total 454 graphs in the dataset. We assure $M$ to be relatively small such that the entry-wise mean of the remaining $(454 - M)$ graphs is a valid approximation of the true probability matrix $P$ we are estimating. Then we can calculate $\bar{A}$ and $\hat{P}$ based on the $M$ samples and compare their performance based on the estimated probability matrix.
 
-We ran 1000 simulations on each of the three atlases for each sample size $M=1,5,10$.
+We ran 1000 simulations on each of the three atlases for sample size $M=5,10, 50$. However, for $M=1$, we only have 454 different possibilities. So instead of running 1000 simulations, we looked through all 454 possible sample with size 1.
 We also considered all possible dimensions for $\hat{P}$ by ranging $d$ from 1 to $N$ in order to investigate the impact of the dimension selection procedures.
 We plot $\hat{\mathrm{MSE}}$ of $\bar{A}$ and $\hat{P}$ in Fig.~\ref{fig:realdata}.
 The horizontal axis gives dimension $d$, which only impacts $\hat{P}$, which is why estimated MSE of $\bar{A}$ is shown as flat.
 
 When $d$ is small, $\hat{P}$ underestimates the dimension and throws away important information, which leads to relatively poor performance. When $d=N$, $\hat{P}$ is equal to $\bar{A}$, so that the curve for $\hat{\mathrm{MSE}}$ for $\hat{P}$ ends at $\hat{\mathrm{MSE}}(\bar{A})$. 
-In practice, we use algorithms like Zhu and Ghodsi's method or USVT to select the dimension $d$ (see Section~\ref{section:dim_select}). 
+In practice, we use algorithms like Zhu and Ghodsi's method or USVT to select the dimension $d$. These methods are neither computationally advanced nor requiring sophisticated algorithms. Details are discussed in Section~\ref{section:dim_select}. 
 In the figure, we denote the 3rd elbow found by the Zhu and Ghodsi method by a triangle, and denote the dimension selected by USVT with threshold 0.7 by a square. 
 % (with largest 95\% confidence interval length to be $3.5$)
 % (with largest 95\% confidence interval length to be $0.7$) 
@@ -690,7 +700,7 @@ In addition, $\hat{P}$ offers certain advantages, especially since low-rank esti
 \includegraphics[width=1\textwidth]{corr_data_MSE_jhu.pdf}\\
 \includegraphics[width=1\textwidth]{corr_data_MSE_desikan.pdf}\\
 \includegraphics[width=1\textwidth]{corr_data_MSE_CPAC200.pdf}
-\caption{{\bf Comparison of $\hat{\mathrm{MSE}}$ of $\hat{P}$ and $\bar{A}$ for three atlases at three sample sizes for the CoRR data.}
+\caption{{\bf Comparison of $\hat{\mathrm{MSE}}$ of $\hat{P}$ and $\bar{A}$ for three atlases at four sample sizes for the CoRR data.}
 These plots show the mean squared error for $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for three dataset (JHU, Desikan, and CPAC200) while embedding the graphs into different dimensions and with different sample sizes $M$. The average dimensions chosen by the 3rd elbow of Zhu and Ghodsi is denoted by a triangle
  % (with largest 95\% confidence interval length to be $3.5$), 
  and those chosen by USVT with threshold equaling 0.7 is denoted by a square.
@@ -699,29 +709,58 @@ These plots show the mean squared error for $\bar{A}$ (solid line) and $\hat{P}$
 \label{fig:realdata}
 \end{figure}
 
+
 \begin{table}[!tb]
     \centering
-\begin{tabular}{rccc}\toprule
+\begin{tabular}{lcccc}\toprule
         % & $m=1$  & $m=5$  & $m=10$ \\\toprule
-\multicolumn{1}{l}{\textbf{JHU}} & $M=1$  & $M=5$  & $M=10$  \\\midrule
-ZG      & 0.54 & 0.81 & 1.14 \\
-USVT    & 0.56 & 0.84 & 1.12 \\\midrule
-\multicolumn{1}{l}{\textbf{Desikan}} & $M=1$  & $M=5$  & $M=10$  \\ \midrule
-ZG      & 0.52 & 0.81 & 1.14 \\
-USVT    & 0.50 & 0.81 & 1.09 \\\midrule
-\multicolumn{1}{l}{\textbf{CPAC200}} & $M=1$  & $M=5$  & $M=10$  \\\midrule
-ZG      & 0.51 & 0.68 & 0.89 \\
-USVT    & 0.52 & 0.79 & 0.99 \\\bottomrule
+\multicolumn{1}{l}{\textbf{JHU}} & $M=1$  & $M=5$  & $M=10$ & $M=50$  \\\midrule
+ZG      & 0.053 & 0.004 & -0.002 & -0.006  \\
+USVT    & 0.051 & 0.004 & -0.001 & -0.007 \\\midrule
+\multicolumn{1}{l}{\textbf{Desikan}} & $M=1$  & $M=5$  & $M=10$ & $M=50$  \\ \midrule
+ZG      & 0.053 & 0.004 & -0.002 & -0.007 \\
+USVT    & 0.056 & 0.004 & -0.001 & -0.006 \\\midrule
+\multicolumn{1}{l}{\textbf{CPAC200}} & $M=1$  & $M=5$  & $M=10$ & $M=50$  \\\midrule
+ZG      & 0.037 & 0.005 & 0.001 & -0.002 \\
+USVT    & 0.036 & 0.003 & 0.000 & -0.003 \\\bottomrule
+\end{tabular}
+    \caption{{\bf Difference between $\hat{\mathrm{MSE}}$ of $\bar{A}$ and $\hat{\mathrm{MSE}}$ of $\hat{P}$ for three atlases at four sample sizes for the CoRR data.}
+    To give concrete numbers of the experiment results displayed in Fig.~\ref{fig:realdata}, we list $\hat{\mathrm{MSE}}$ of $\bar{A}$ minus $\hat{\mathrm{MSE}}$ of $\hat{P}$ in the table. A positive number means $\hat{P}$ outperforms $\bar{A}$.
+     We compared different sample sizes $M$ and different dimension selection procedures, ZG and USVT.
+    Confidence intervals all had lengths less than $0.015$, and hence we omitted them for clarity.
+    Overall, the relative efficiencies are greater for smaller sample sizes $M$ and larger number of vertices $N$. 
+    } 
+    \label{tab:corr_mse}
+\end{table}
+
+
+
+
+\begin{table}[!tb]
+    \centering
+\begin{tabular}{lcccc}\toprule
+        % & $m=1$  & $m=5$  & $m=10$ \\\toprule
+\multicolumn{1}{l}{\textbf{JHU}} & $M=1$  & $M=5$  & $M=10$ & $M=50$  \\\midrule
+ZG      & 0.54 & 0.81 & 1.14 & 3.44  \\
+USVT    & 0.57 & 0.85 & 1.12 & 3.62 \\\midrule
+\multicolumn{1}{l}{\textbf{Desikan}} & $M=1$  & $M=5$  & $M=10$ & $M=50$  \\ \midrule
+ZG      & 0.53 & 0.81 & 1.15 & 3.76 \\
+USVT    & 0.50 & 0.81 & 1.09 & 3.34 \\\midrule
+\multicolumn{1}{l}{\textbf{CPAC200}} & $M=1$  & $M=5$  & $M=10$ & $M=50$  \\\midrule
+ZG      & 0.52 & 0.69 & 0.90 & 2.44 \\
+USVT    & 0.53 & 0.80 & 0.99 & 2.54 \\\bottomrule
 \end{tabular}
     \caption{{\bf Relative efficiencies of $\bar{A}$ versus $\hat{P}$ for the CoRR data set.}
     For each atlas, JHU, Desikan, and CPAC 200, we sampled graphs which we used to compute $\bar{A}$ and $\hat{P}$.
      We compared different sample sizes $M$ and different dimension selection procedures, ZG and USVT.
     For each of the two methods for computing $\hat{P}$, we estimated their relative efficiencies with respect to the sample mean $\bar{A}$.
-    Confidence intervals all had lengths less than $0.015$, and hence we omitted them for clarity.
-    Overall, the relative efficiencies are greater for smaller sample sizes $M$ and larger number of vertices $N$. 
+    For $M = 1, 5, 10$, all confidence intervals had lengths less than $0.008$, while for $M=10$ the confidence intervals had length less than $0.046$, and hence we omitted them for clarity.
+    Overall, the relative efficiencies are greater for smaller sample sizes $M$ and larger number of vertices $N$. Although for $M=50$ the RE is large, from Table~\ref{tab:corr_mse} we can see this is due to the small MSE of $\bar{A}$ as the denominator. In this case the actual difference of the performance between $\bar{A}$ and $\hat{P}$ is quite small.
     } 
     \label{tab:corr_re}
 \end{table}
+
+
 
 
 
@@ -732,7 +771,7 @@ Since the sample size is small, there are a lot of pairs of vertices with no edg
 This leads to the white and black pixels in the image corresponding to $\bar{A}$.
 On the other hand, $\hat{P}$ has a finer gradient of values which in this case leads to a more accurate estimate.
 
-Moreover, Fig.~\ref{fig:Diff_desikan_m5} shows the values for the absolute estimation error $|\bar{A} - P|$ and $|\hat{P}-P|$. The lower triangular sections show the actual absolute difference while the upper triangular matrix highlights the vertex pairs with absolute differences larger than 0.4. 
+Moreover, Fig.~\ref{fig:Diff_desikan_m5} shows the values for the absolute estimation error $|\bar{A} - P|$ and $|\hat{P}-P|$. In addition, we include the absolute difference $|\bar{A} - \hat{P}|$ to show the overall difference between the two estimates. The lower triangular sections show the actual absolute difference while the upper triangular matrix highlights the vertex pairs with absolute differences larger than 0.4. 
 There are 18 edges from $\bar{A}$ and 6 edges from $\hat{P}$ being highlighted in the figure, further indicating the superior performance of $\hat{P}$.
 Note that approximately $13\%$ of all pairs of vertices are adjacent in all $454$ graphs and hence $\bar{A}$ will always have zero error for those pairs of vertices.
 Nonetheless, $\hat{P}$ typically outperforms $\bar{A}$.
