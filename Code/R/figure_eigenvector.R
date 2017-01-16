@@ -104,5 +104,7 @@ write(s,file="../../Result/eigenvector.csv")
 
 
 
-# hc <- hclust(dist(xHat))
-# plot(hc)
+hc <- hclust(dist(xHat))
+plot(hc)
+
+
