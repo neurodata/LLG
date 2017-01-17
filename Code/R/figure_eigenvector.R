@@ -91,15 +91,27 @@ ggsave("../../Draft/eigenvector_scatter.pdf",
 
 
 
-xHat
-s = ""
-for (j in 1:2) {
-  for (i in 1:n) {
-    s = paste0(s,",",xHat[i,j])
-  }
-}
-s = substr(s,2,nchar(s))
-write(s,file="../../Result/eigenvector.csv")
+# xHat
+# s = ""
+# for (j in 1:2) {
+#   for (i in 1:n) {
+#     s = paste0(s,",",xHat[i,j])
+#   }
+# }
+# s = substr(s,2,nchar(s))
+# write(s,file="../../Result/eigenvector.csv")
+# 
+# 
+# 
+# xHat
+# s = ""
+# for (j in 2) {
+#   for (i in 1:n) {
+#     s = paste0(s,",",xHat[i,j])
+#   }
+# }
+# s = substr(s,2,nchar(s))
+# write(s,file="../../Result/eigenvector_dim2.csv")
 
 
 
