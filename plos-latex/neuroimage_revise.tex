@@ -109,7 +109,7 @@ Daniel L. Sussman\textsuperscript{3*}}
 Estimating the mean of a population of graphs based on a sample is a core problem in network science.
 Often, this problem is especially difficult because the sample or cohort size is relatively small as compared to the number of parameters to estimate. 
 While using the element-wise sample mean of the adjacency matrices is a common approach, this method does not exploit any underlying graph structure.
-We propose using a low-rank method together with tools for dimension selection and diagonal augmentation to improve performance over the naive methodology for small sample sizes.
+We propose using a low-rank method together with tools for dimension selection and diagonal augmentation to smooth the estimates and improve performance over the naive methodology for small sample sizes.
 Theoretical results for the stochastic blockmodel show that this method will offer major improvements when there are many vertices.
 Similarly, in analyzing human connectome data, we demonstrate that the low-rank methods outperform the standard sample mean for many settings.
 These results indicate that low-rank methods should be an important part of the tool box for researchers studying populations of graphs.\\
@@ -132,7 +132,7 @@ By exploiting a bias-variance trade-off, it is often fruitful to develop estimat
 When these estimators are biased towards low-dimensional structures which well approximate the full dimensional population mean, major improvements can be realized \citep{trunk1979problem}.
 
 
-In statistical decision theory, we say that a procedure $\delta^{\prime}$ improves another procedure $\delta$ if and only if the risk of $\delta^{\prime}$ is no bigger than the risk of $\delta$ all the time, and strictly less than the risk of $\delta$ for in some situations. If there exists a decision procedure $\delta^{\prime}$ which improves $\delta$, then $\delta$ is said to be inadmissible. So generally, inadmissible procedure is not preferred since there is another choice which is always ``better'' than it.
+In statistical decision theory, we say that a procedure $\delta^{\prime}$ improves another procedure $\delta$ if and only if the risk of $\delta^{\prime}$ is no bigger than the risk of $\delta$ all the time, and strictly less than the risk of $\delta$ in some situations. If there exists a decision procedure $\delta^{\prime}$ which improves $\delta$, then $\delta$ is said to be inadmissible. Generally, inadmissible procedure is not preferred since there is another choice which is always ``better'' than it.
 However, in a striking result, \citet{stein1956inadmissibility} and \citet{james1961estimation} showed the arithmetic average should not always be the first choice and is inadmissible in even simple settings by today's standards. 
 In particular, James and Stein showed that the sample mean for a multivariate normal distribution with at least three dimensions is inadmissible and can be strictly improved by carefully biasing the  estimate towards any given fixed point. 
 Twenty-seven years later, \citet{gutmann1982stein} proved that this phenomenon cannot occur when the sample spaces are finite.
@@ -153,11 +153,11 @@ This population mean is becoming more and more important both in statistical inf
 While hypothesis testing is the end goal of their work, estimation is a key intermediate step which may be improved by accounting for underlying structure in the mean matrix. 
 Thus, improving the estimation procedures for the mean graph is not only important by itself, but also can be applied to help improve other statistical inference procedures.
 
-To better illustrate the idea, we take the CoRR brain graphs with Desikan atlases as an example. The dataset contains 454 brain scans with 70 vertices. Each vertex represents a region defined by the Desikan atlases, while an edge exists between two vertices if there is at least one white-matter tract connecting the corresponding regions of the brain. More details are given in Section \ref{sec:corr_data} and Section \ref{section:data}. By observing $M$ graphs sampled from the 454 graphs, our goal is to estimate the mean graph of the population $P$, defined as the entry-wise mean of all the 454 graphs. We plot the population mean graph $P$ on the left panel in Fig.~\ref{fig:Matrix_desikan_m5}.
+To better illustrate the idea, we take the CoRR brain graphs with Desikan atlases as an example. The dataset contains 454 brain scans with 70 vertices. Each vertex represents a region defined by the Desikan atlases, while an edge exists between two vertices if there is at least one white-matter tract connecting the corresponding regions of the brain. More details about this dataset are given in Section \ref{sec:corr_data} and Section \ref{section:data}. By observing $M$ graphs sampled from the 454 graphs, our goal is to estimate the mean graph of the population $P$, defined as the entry-wise mean of all the 454 graphs. We plot the population mean graph $P$ on the left panel in Fig.~\ref{fig:Matrix_desikan_m5}.
 
 The element-wise sample mean is a reasonable estimator if we consider the general independent edge model (IEM) \citep{bollobas2007phase} without taking any additional structure into account. 
 However, with only a small sample size, such as when the sample size is much less than the number of vertices, it does not perform very well.
-Now take a sample of size $M=5$ in the CoRR dataset example, we calculate the entry-wise sample mean $\bar{A}$ and plot in the center of Fig.~\ref{fig:Matrix_desikan_m5}. We can see $\bar{A}$ gives a fair estimate of $P$. However, since the sample size is small, there are a lot of pairs of vertices with no edges or 5 edges in the 5 observations. This leads to the white and black pixels in the image corresponding to $\bar{A}$.
+Now take a sample of size $M=5$ in the CoRR dataset example with Desikan atlases mentioned above, then we calculate the entry-wise sample mean $\bar{A}$ and plot it in the center of Fig.~\ref{fig:Matrix_desikan_m5}. We can see $\bar{A}$ gives a fair estimate of $P$. However, since the sample size is small, there are a lot of pairs of vertices with no edges or 5 edges in the 5 observations. This leads to the white and black pixels in the image corresponding to $\bar{A}$.
 On the other hand, $\hat{P}$ has a finer gradient of values which in this case leads to a more accurate estimate.
 Intuitively, an estimator incorporating structure in the distribution of graphs, assuming the estimator is computationally tractable, is preferable to the entry-wise sample mean. 
 In general, we don't have any knowledge about this structure so it can be hard to take advantage of in practice.
@@ -170,7 +170,7 @@ Latent position models can capture strong community structure like the stochasti
 One example of an LPM which captures this middle ground is the random dot product graph (RDPG) \citep{young2007random, nickel2007random} which motivates our estimator. It generalizes the positive semi-definite SBM by allowing for mixed membership and degree corrections.
 % In this paper, we analyze our estimator in terms of RDPG specifically.
 
-Using estimates of the latent positions based on a truncated eigen-decomposition of the adjacency matrix, we propose an estimator which captures the low-rank structure of the mean graph for the RDPG model.
+Using estimates of the latent positions based on a truncated eigen-decomposition of the adjacency matrix, we propose an estimator which captures the low-rank structure of the mean graph for the RDPG model. Details about this estimator are discussed in Section~\ref{sec:phat}.
 These estimates will improve performance since they will be biased towards the low-rank structure of the RDPG model and will have much lower overall variance than naive element-wise sample means. Here we consider the same random sample of size $M=5$ based on the Desikan atlas in Fig.~\ref{fig:Matrix_desikan_m5} and plot the estimate $\hat{P}$ in the right panel. Note that compared to the sample mean $\bar{A}$, $\hat{P}$ has a finer gradient of values which in this case leads to a more accurate estimate of the true probability matrix $P$, especially for edges between the two hemispheres, in the upper right and corresponding lower left block.
 In this study, we show via theory, simulations, and real data analysis that the low-rank estimator frequently outperforms the element-wise sample mean, especially in small sample sizes.
 
@@ -180,7 +180,7 @@ In this study, we show via theory, simulations, and real data analysis that the 
 \includegraphics[height=.201\textheight]{Abar_desikan_m5.pdf} \hspace{-35pt}
 \includegraphics[height=.205\textheight]{Phat_desikan_m5.pdf}
 \caption{{\bf Heat maps of the population mean, the sample mean, and the estimator $\hat{P}$.}
-These heat maps indicate the population mean for the $454$ graphs (left), sample mean for the 5 sampled graphs (center), and $\hat{P}$ for the 5 sampled graphs with dimension $d=11$ selected using the Zhu and Ghodsi method (right).
+These heat maps indicate the population mean for the $454$ graphs (left), sample mean for the 5 sampled graphs (center), and $\hat{P}$ for the 5 sampled graphs with dimension $d=11$ selected using the Zhu and Ghodsi method (right). Details about how to construct $\hat{P}$ are discussed in Section~\ref{sec:phat}.
 Darker pixels indicate a higher probability of an edge between the given vertices.
 Note that $\hat{P}$ appears to better estimate the true probability matrix $P$, especially for edges between the two hemispheres, in the upper right and corresponding lower left block.
 }
@@ -232,7 +232,7 @@ The direction of the latent position is determined by properties of that vertex,
 Similarly, the magnitudes of the latent position encode the vertices' overall tendency to form edges, with a larger magnitude leading to more edges incident with the vertex.
 
 Formally, let $\mathcal{X} \subset \Re^d$ be a set such that $x, y \in \mathcal{X}$ implies $x^{\top} y =\sum_{i = 1}^d x_i y_i \in [0, 1]$.
-Let $X_1,\dotsc,X_N\in \mathcal{X}$ and write $X = [X_1|\cdots|X_N]^{\top} \in \Re^{N \times d}$.
+Let $X_1,\dotsc,X_N\in \mathcal{X}$ be the column vectors representing the $N$ latent positions and write $X = [X_1|\cdots|X_N]^{\top} \in \Re^{N \times d}$.
 A random graph $G$ with adjacency matrix $A$ is said to be an RDPG if for any adjacency matrix $a$ of the same size,
 \[
     \Pr[A = a|X] = \prod_{i<j} (X_i^{\top} X_j)^{a_{ij}} ( 1 - (X_i^{\top} X_j))^{1 - a_{ij}}.
@@ -257,20 +257,20 @@ The SBM is parameterized by the number of blocks $K$ (generally much less than t
 $\tau\in\{1,\dotsc,K\}^N$, where for each $i \in [N]$, $\tau_i = k$ means vertex $i$ is a member of block $k$.
 
 % We will assume each vertex is assigned its block independently according to the probability vector $\rho$, so $\Pr[tau_i = k] = \rho_k$. 
-Conditioned on $\tau$, each entry of the adjacency matrix $A_{ij}$ is independently sampled from the Bernoulli distribution with parameter $B_{\tau_i,\tau_j}$.
+Conditioned on $\tau$, each entry of the adjacency matrix $A_{ij}$ ($i < j$) is independently sampled from the Bernoulli distribution with parameter $B_{\tau_i,\tau_j}$.
 To ensure that the SBM can be considered as an RDPG, we impose that the $B$ matrix for the SBM is positive semidefinite. 
 For notational convenience we will refer to the sub-model of the SBM with positive semidefinite $B$ matrix as the SBM.
 
-In order to analyze the estimator $\hat{P}$ motivated by RDPG, we will represent the SBM as an RDPG by
+In order to analyze the estimator $\hat{P}$ motivated by RDPG (details about how to construct $\hat{P}$ are discussed in Section~\ref{sec:phat}), we will represent the SBM as an RDPG by
 decomposing $B$ as $\nu \nu^{\top}$, where $\nu \in \Re^{K \times d}$ with rows given by $\nu_1^{\top}, \dotsc, \nu_K^{\top}$ and each row $\nu_k^{\top}$ is the shared latent position for all vertices assigned to block $k$. 
 For $X \in \Re^{N \times d}$ with rows given by $X_1^{\top} = \nu_{\tau_1}^{\top}, \dotsc, X_N^{\top} = \nu_{\tau_N}^{\top}$, since $\tau_i$ and $\tau_j$ represent the blocks that vertex $i$ and vertex $j$ belong to respectively, we have
 \[
     \Pr[A_{ij} = 1|\tau] = B_{\tau_i, \tau_j} = \nu_{\tau_i}^{\top} \nu_{\tau_j}^{\phantom{\top}} \in [0, 1].
 \]
-In this way, the SBM can be seen as an RDPG where all vertices in the same block will have identical latent positions.
+In this way, the SBM can be seen as an RDPG where all vertices in the same block have identical latent positions.
 
 An example SBM is illustrated in Fig.~\ref{fig:SBM_example}.
-We consider a 5-block SBM and plot the corresponding probability matrix and one adjacency matrix generated from it with 200 vertices. From the top two panels of the figure, we can clearly see the structure of 25 blocks in both the probability matrix and the adjacency matrix as a result of 5 different blocks among vertices.
+We consider a 5-block SBM and plot the corresponding probability matrix and one adjacency matrix generated from it with 200 vertices. We omit the details of the parameter setting of this example for conciseness. From the top two panels of the figure, we can clearly see the structure of 25 blocks in both the probability matrix and the adjacency matrix as a result of 5 different blocks among vertices.
 
 
 
@@ -355,7 +355,7 @@ For a given dimension $d$ we consider the estimator $\mathrm{lowrank}_d(\bar{A})
 Since the graphs are symmetric, we can compute the eigen-decomposition of $\bar{A}$ as $\hat{U} \hat{S} \hat{U}^{\top} + \tilde{U}\tilde{S}\tilde{U}^{\top}$, where $\hat{S}$ is a diagonal matrix with non-increasing entries along the diagonal corresponding to the largest $d$ eigenvalues of $\bar{A}$, and $\hat{U}$ has columns given by the corresponding eigenvectors. Similarly, $\tilde{S}$ is the diagonal matrix with non-increasing entries along the diagonal corresponding to the rest $N - d$ eigenvalues of $\bar{A}$, and $\tilde{U}$ has the columns given by the corresponding eigenvectors.
 The $d$-dimensional adjacency spectral embedding (ASE) of $\bar{A}$ is given by $\hat{X}=\hat{U} \hat{S}^{1/2}\in \Re^{N \times d}$.
 For an RDPG, the rows of $\hat{X}$ are estimates of the latent vectors for each vertex \citep{sussman2014consistent}.
-Using the adjacency spectral embedding, we have that the low-rank approximation of $\bar{A}$ is $\hat{X} \hat{X}^{\top}=\hat{U}\hat{S}\hat{U}^{\top}$.
+Using the adjacency spectral embedding, we have the low-rank approximation of $\bar{A}$ to be $\hat{X} \hat{X}^{\top}=\hat{U}\hat{S}\hat{U}^{\top}$.
 Algorithm~\ref{algo:lowrank} gives the steps to compute this low-rank approximation for a general symmetric matrix $A$.
 
 \begin{algorithm}[H]
@@ -384,12 +384,11 @@ Details are discussed in Section~\ref{section:diag_aug}.
 
 
 Algorithm~\ref{algo:basic} gives the steps involved to compute the low-rank estimate $\hat{P}$.
+The bottom panels of Fig.~\ref{fig:SBM_example} demonstrate the two estimators $\hat{P}$ and $\bar{A}$ for the stochastic blockmodel given by the upper left panel. 
+The estimates are based on a sample of size $M=3$ and in this instance visual inspection demonstrates that $\hat{P}$ performs much better than $\bar{A}$.
 As we will see in the succeeding sections, this procedure will frequently yield improvements in estimation as compared to using the sample mean $\bar{A}$.
 While this is unsurprising for random dot product graphs, where we are able to show theoretical results to this effect, we also see this effect for connectome data and more general independent edge graphs.
 In the following sections, we explore this estimator in the context of the stochastic blockmodel.
-
-The bottom panels of Fig.~\ref{fig:SBM_example} demonstrate the two estimators $\hat{P}$ and $\bar{A}$ for the stochastic blockmodel given by the upper left panel. 
-The estimates are based on a sample of size $M=3$ and in this instance visual inspection demonstrates that $\hat{P}$ performs much better than $\bar{A}$.
 
 
 
@@ -408,25 +407,26 @@ In this section, we analyze the performance of these two estimators under the SB
 We also consider the asymptotic relative efficiency, which is the limit of the relative efficiency as the number of vertices $N\to\infty$ but with the number of graphs $M$ fixed, and the scaled relative efficiency, $N\cdot \mathrm{RE}(\bar{A}_{ij},\hat{P}_{ij}) $ which in our case normalizes the relative efficiency so that the asymptotic scaled relative efficiency is non-zero and finite. Somewhat surprisingly, we will see that the asymptotic relative efficiency will not depend on this fixed sample size $M$.
 
 For this asymptotic framework, we assume the block memberships $\tau_i$ are drawn iid from a categorical distribution with block membership probabilities given by $\rho\in[0,1]^K$.
-In particular, this implies that for each block $k$, the proportion $|\{i:\tau_i=k\}|/N$ of vertices in block $k$ will converge to $\rho_k$ as $N\to\infty$.
+In particular, this implies that for each block $k$, the proportion $|\{i:\tau_i=k\}|/N$ of vertices in block $k$ will converge to $\rho_k$ as $N\to\infty$ by the law of large numbers.
 We will also assume that for a given $N$, the block membership probabilities are fixed for all graphs.
-Denote block probability matrix $B = \nu \nu^{\top}$. 
-By definition, the mean of the collection of graphs generated from this SBM is $P$, where $P_{ij} = B_{\tau_i, \tau_j}$. After observing $M$ graphs on $N$ vertices $A^{(1)}, \cdots, A^{(M)}$ sampled independently from the SBM conditioned on $\tau$, we can calculate the two estimators $\bar{A}$ and $\hat{P}$.
+Denote block probability matrix $B = \nu \nu^{\top} \in [0, 1]^{K \times K}$. 
+By definition, the mean of the collection of graphs generated from this SBM is $P \in [0, 1]^{N \times N}$, where $P_{ij} = B_{\tau_i, \tau_j}$. After observing $M$ graphs on $N$ vertices $A^{(1)}, \cdots, A^{(M)}$ sampled independently from the SBM conditioned on $\tau$, we can calculate the two estimators $\bar{A}$ and $\hat{P}$.
 
 \begin{lemma}
 \label{lm:VarPhat}
-For the above setting, for any $i, j$, if $\mathrm{rank}(B)=K=d$, we have
-\[
-    \lim_{N \to \infty} N \cdot \mathrm{Var}(\hat{P}_{ij}) =
-    \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{M} P_{ij} (1 - P_{ij}),
-\]
-and for large enough $N$, we have
+For the above setting, for any $i \ne j$, if $\mathrm{rank}(B)=K=d$, we have for large enough $N$,
 \[
     \Ex[(\hat{P}_{ij} - P_{ij})^2] \approx
     \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{M N} P_{ij}(1-P_{ij}).
 \]
+And
+\[
+    \lim_{N \to \infty} N \cdot \mathrm{Var}(\hat{P}_{ij}) =
+    \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{M} P_{ij} (1 - P_{ij}).
+\]
 \end{lemma}
-The first part of this Lemma gives the form of the asymptotic variance of $\hat{P}$ and the second part ensures that the estimator is asymptotically unbiased for $P$.
+The first part of this Lemma ensures that the estimator is asymptotically unbiased for $P$,
+and the second part gives the form of the asymptotic variance of $\hat{P}$.
 The proof of this lemma is outlined in Section~\ref{section:outline_proof} and is based on results for the variance of the adjacency spectral embedding from \citet{athreya2013limit}. From Lemma \ref{lm:VarPhat}, we can see that the MSE of $\hat{P}_{ij}$ is of order $O(M^{-1}N^{-1})$ approximately. Similar to $\bar{A}$, the estimate will get better as the number of observations $M$ increases. Furthermore, it also benefits from a larger graph because of the use of low-rank structure. That is, $\hat{P}$ will perform better as the number of vertices of the graph $N$ increases.
 
 Moreover, since $\bar{A}_{ij}$ is the sample mean of $M$ independent Bernoulli random variables with parameter $P_{ij}$, we have
@@ -450,7 +450,7 @@ Based on this MSE result of $\bar{A}_{ij}$ and the MSE result of $\hat{P}_{ij}$ 
 %\end{theorem}
 \begin{theorem}
 \label{thm:ARE}
-In the same setting as in Lemma~\ref{lm:VarPhat}, for any $i$ and $j$, if $\mathrm{rank}(B)=K=d$, then for large enough $N$, we have
+In the same setting as in Lemma~\ref{lm:VarPhat}, for any $i \ne j$, if $\mathrm{rank}(B)=K=d$, then for large enough $N$, we have
 \begin{equation}
 	    \mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij}) \approx
     \frac{1/\rho_{\tau_i} + 1/\rho_{\tau_j}}{N}.
@@ -489,7 +489,7 @@ An important aspect of Theorem~\ref{thm:ARE} is that the ARE does not depend on 
 Note that the asymptotic result here is for number of vertices going to infinity with a fixed number of graphs. Such setting is very useful in connectomics analysis since we anticipate the collection of larger and larger brain network which will also likely initially correspond to smaller sample sizes as the technology to scale these connectome collection techniques is developed.
 
 The approximate formula Eq.~\ref{eq:approx_re} indicates that the sizes of the blocks can greatly impact the relative efficiency.
-As an example, consider a two block stochastic model. 
+As an example, consider a 2-block SBM. 
 If each of the blocks contain half the vertices, then for each pair of vertices, the relative efficiency is approximately $4/N$. 
 If the first block gets larger, with $\rho_1\to 1$, then the RE for estimating $P_{ij}$ with $\tau_i=\tau_j=1$ will tend to its minimum of $2/N$. 
 On the other hand as $\rho_1\to 1$, if $\tau_i=1$ and $\tau_j=2$, then since $\rho_2=1-\rho_1$, the relative efficiency for estimating such an edge pair will be approximately $1$ and the same will hold if $\tau_i=\tau_j=2$.
@@ -506,8 +506,8 @@ Note that the maximum value for the relative efficiency in a two-block model is 
 \begin{figure}[!t]
 \centering
 \includegraphics[width=1\textwidth]{Rho.pdf}
-\caption{{\bf Asymptotic scaled relative efficiency $N\cdot \mathrm{RE}(\bar{A},\hat{P})$ in a two-block SBM.}
-For each distinct pair of edge probabilities in a two-block SBM specified in Eq.~\ref{eq:sim_setting}, the scaled relative efficiency only depends on the proportion of vertices in each block.
+\caption{{\bf Asymptotic scaled relative efficiency $N\cdot \mathrm{RE}(\bar{A},\hat{P})$ in a 2-block SBM.}
+For each distinct pair of edge probabilities in a 2-block SBM specified in Eq.~\ref{eq:sim_setting}, the scaled relative efficiency only depends on the proportion of vertices in each block.
 We show the scaled asymptotic relative efficiency as $\rho_1$ changes from $0,1$ for pairs of vertices where either both are in block one or one is in block one and one is in block two. 
 These curves all intersect at a scaled relative efficiency of 4 when $\rho_1=1/2=\rho_2$.
 Improvements using low-rank methods are greater for larger blocks, such as for $B_{11}$ when $\rho_1$ is close to 1, while the improvements are smaller for block pairs with relatively few vertex pairs such as $B_{11}$ when $\rho_1$ is small and $B_{12}$ when $\rho_1$ is near 0 or 1
@@ -532,10 +532,10 @@ B = \begin{bmatrix}
 \end{bmatrix},
 \label{eq:sim_setting}
 \end{equation}
-so that $|\{i:\tau_i=1\}|=|\{i:\tau_i=2\}|$ for each $N$.
-Note that this simulation only focus on the rank-2 setting primarily for the interpretability.
+so that $|\{i:\tau_i=1\}|=|\{i:\tau_i=2\}|$ for each $N$. (THIS IS NOT TRUE?)
+Note that this simulation only focuses on the rank-2 setting primarily for the interpretability.
 When calculating $\hat{P}$, we omit the dimension selection step from Algorithm~\ref{algo:basic} and instead use the true dimension $d = \mathrm{rank}(B) = 2$.
-Fig.~\ref{fig:RErho} shows $2/\rho_1$ and $1/\rho_1+1/\rho_2$, the scaled asymptotic RE for pairs of vertices both in block one and pairs of vertices in different blocks, respectively, in the two-block stochastic blockmodel we specified earlier.
+Fig.~\ref{fig:RErho} shows $2/\rho_1$ and $1/\rho_1+1/\rho_2$, the scaled asymptotic RE for pairs of vertices both in block one and pairs of vertices in different blocks, respectively, in the 2-block SBM we specified earlier.
 We vary $\rho_1$ between 0 and 1 to demonstrate how the number of pairs of vertices with the corresponding block memberships impacts the overall relative efficiency.
 For $N=500$ and $M=100$, estimates of the scaled RE based on simulations agree very closely with their corresponding theoretical values displayed in the figure. Note that when $\rho_1 = 0.5$, the scaled RE has value $4.0$, which agrees with the result in Fig.~\ref{fig:RE} for simulated data.
 
@@ -604,7 +604,7 @@ B = \begin{bmatrix}
 Similarly, when calculating $\hat{P}$, we omit the dimension selection step from Algorithm~\ref{algo:basic} and instead use the true dimension $d = \mathrm{rank}(B) = 2$.
 
 %\subsubsection{Simulation Results}
-To investigate the finite sample relative efficiency, we first sample 1000 Monte Carlo replicates from the above SBM distribution with different numbers of vertices $N \in \{30, 50, 100, 250, 500, 1000 \}$ and a fixed number of graphs $M = 100$. The  relative efficiency $\mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ can be estimated since $P$ is known for this simulation. Since the relative efficiency only depends on the block memberships of the pair $i,j$, we estimate the relative efficiency for each block pair using
+To investigate the finite sample relative efficiency, we first sample 1000 Monte Carlo replicates from the above SBM distribution with different numbers of vertices $N \in \{30, 50, 100, 250, 500, 1000 \}$ and a fixed number of graphs $M = 100$. The relative efficiency $\mathrm{RE}(\bar{A}_{ij}, \hat{P}_{ij})$ can be estimated since $P$ is known for this simulation. Since the relative efficiency only depends on the block memberships of the pair $i,j$, we estimate the relative efficiency for each block pair using
 \[
     \hat{\mathrm{RE}}_{st}(\bar{A},\hat{P}) = \frac{\sum_{\tau_i=s,\tau_j=t,i \ne j} \hat{\mathrm{MSE}}(\hat{P}_{ij})}{\sum_{\tau_i=s,\tau_j=t,i \ne j} \hat{\mathrm{MSE}}(\bar{A}_{ij})}
 \]
@@ -670,7 +670,7 @@ We then compared these estimates to the sample mean for the remaining $454-M$ ad
 While we cannot interpret this mean graph as the probability matrix for an IEM distribution (see Section~\ref{sec:sim_iem}), the sample mean for the remaining graphs does give the proportion of times each pair of vertices are adjacent in the population from which the graphs were sampled.
 
 While in previous sections we evaluated the mean squared error for either an individual entry or for an entire block in the SBM, in this section and the next section we will focus on the overall error for estimating the mean graph.
-In particular we will use the average of the mean squared error across all pairs of vertices and we define $\mathrm{MSE}(\bar{A}) = \binom{N}{2}^{-1} \sum_{i>j}\Ex[\bar{A}_{ij}-P_{ij}]$ and similarly for $\mathrm{MSE}(\hat{P})$.
+In particular we will use the average of the mean squared error across all pairs of vertices and we define $\mathrm{MSE}(\bar{A}) = \binom{N}{2}^{-1} \sum_{i<j}\Ex[\bar{A}_{ij}-P_{ij}]$ and similarly for $\mathrm{MSE}(\hat{P})$.
 As in the previous section, we will not use analytical evaluations of the MSE and instead estimate the MSE and relative efficiencies via Monte Carlo simulations.
 % By observing 454 graphs generated by the atlas being picked, we use $\hat{P}$ to estimate the mean graph $P$, which is the proportions of the existence of a white-matter tract connecting different parts of the brain. Since $P$ is unknown in practice, we perform a cross-validation study to compare $\bar{A}$ and $\hat{P}$. For each Monte Carlo replicate, we first fix the sample size $M$ and randomly sample $M$ graphs from the total 454 graphs in the dataset. We assure $M$ to be relatively small such that the entry-wise mean of the remaining $(454 - M)$ graphs is a valid approximation of the true probability matrix $P$ we are estimating. Then we can calculate $\bar{A}$ and $\hat{P}$ based on the $M$ samples and compare their performance based on the estimated probability matrix.
 
@@ -693,9 +693,13 @@ With a larger $M$, the performance of $\bar{A}$ improves so that its performance
 
 For a more specific comparison of the performance of $\hat{P}$ and $\bar{A}$ in the most realistic situation where the rank $d$ must be chosen based on data, Table~\ref{tab:corr_re} shows estimated relative efficiencies of $\hat{P}$ versus $\bar{A}$.
 For each atlas and each sample size, we compare the Zhu and Ghodsi method \citep{zhu2006automatic} with the USVT method \citep{chatterjee2015matrix} and note that both perform reasonably well relative to the full-dimensional $\bar{A}$.
-We omit confidence intervals for the estimated relative efficiencies since all confidence intervals (calculated by assuming a normal distribution) had lengths less than $0.015$, indicating that all relative efficiencies, aside from the relative efficiency for the CPAC200 atlas at $M=10$, are very different from 1.
+For $M = 1, 5, 10$, all confidence intervals (calculated by assuming a normal distribution) had lengths less than $0.008$, while for $M=50$ the confidence intervals had length less than $0.046$, and hence we omitted them for clarity. Overall, the relative efficiencies are greater for smaller sample sizes $M$ and larger number of vertices $N$. Although for $M=50$ the RE is large, from Table~\ref{tab:corr_mse} we can see this is due to the small MSE of $\bar{A}$ as the denominator. In this case the actual difference of the performance between $\bar{A}$ and $\hat{P}$ is quite small.
+%indicating that all relative efficiencies, aside from the relative efficiency for the CPAC200 atlas at $M=10$ and $M = 50$, are very different from 1.
 
-Again we can see that the largest improvements using $\hat{P}$ occur when $m$ is small and $N$ is large. 
+For $M = 1, 5, 10$, all confidence intervals had lengths less than $0.008$, while for $M=50$ the confidence intervals had length less than $0.046$, and hence we omitted them for clarity.
+    Overall, the relative efficiencies are greater for smaller sample sizes $M$ and larger number of vertices $N$. Although for $M=50$ the RE is large, from Table~\ref{tab:corr_mse} we can see this is due to the small MSE of $\bar{A}$ as the denominator. In this case the actual difference of the performance between $\bar{A}$ and $\hat{P}$ is quite small.
+
+Again we can see that the largest improvements using $\hat{P}$ occur when $M$ is small and $N$ is large. 
 On the other hand, once $M=10$, $\bar{A}$ tends to do nearly as well or better than $\hat{P}$. 
 Nonetheless, when applied to subgroups inference, such as all females between the age of 21 and 25, $\hat{P}$ can be really helpful for better exploring differences between groups compared to $\bar{A}$ due to a small sample size of each subgroup.
 In addition, $\hat{P}$ offers certain advantages, especially since low-rank estimates can often be more easily interpretable by considering the latent position representation described in Section~\ref{section:sbm_rdpg}.
@@ -759,7 +763,7 @@ USVT    & 0.53 & 0.80 & 0.99 & 2.54 \\\bottomrule
     For each atlas, JHU, Desikan, and CPAC 200, we sampled graphs which we used to compute $\bar{A}$ and $\hat{P}$.
      We compared different sample sizes $M$ and different dimension selection procedures, ZG and USVT.
     For each of the two methods for computing $\hat{P}$, we estimated their relative efficiencies with respect to the sample mean $\bar{A}$.
-    For $M = 1, 5, 10$, all confidence intervals had lengths less than $0.008$, while for $M=10$ the confidence intervals had length less than $0.046$, and hence we omitted them for clarity.
+    For $M = 1, 5, 10$, all confidence intervals had lengths less than $0.008$, while for $M=50$ the confidence intervals had length less than $0.046$, and hence we omitted them for clarity.
     Overall, the relative efficiencies are greater for smaller sample sizes $M$ and larger number of vertices $N$. Although for $M=50$ the RE is large, from Table~\ref{tab:corr_mse} we can see this is due to the small MSE of $\bar{A}$ as the denominator. In this case the actual difference of the performance between $\bar{A}$ and $\hat{P}$ is quite small.
     } 
     \label{tab:corr_re}
@@ -803,7 +807,7 @@ For example, there are some pairs of vertices that are adjacent for all samples 
 \end{center}
 
 \caption{{\bf Heat plot of absolute estimation error for $\bm{\bar{A}}$ and $\bm{\hat{P}}$ (lower triangle) and absolute errors above 0.4 (upper triangle).}
-These heat plots show the absolute estimation error $|\bar{A} - P|$ and $|\hat{P} - P|$ for a sample of size $M=5$ from the Desikan dataset.
+These heat plots show the absolute estimation error $|\bar{A} - P|$, $|\hat{P} - P|$ and $|\bar{A} - \hat{P}|$ for a sample of size $M=5$ from the Desikan dataset.
 The embedding dimension for $\hat{P}$ is $d=11$ selected by the 3rd elbow of the ZG method. The lower triangular matrix shows the actual absolute difference, while the upper triangular matrix only highlights the edges with absolute differences larger than $0.4$. The fact that 18 edges from $\bar{A}$ are highlighted and only six edges from $\hat{P}$ are highlighted indicates that $\hat{P}$ has fewer large outliers compared to $\bar{A}$.
 }
 \label{fig:Diff_desikan_m5}
@@ -876,7 +880,7 @@ Red edges indicate that $\hat{P}$ overestimate $P$ while blue means that $\hat{P
 
 While the theory we have developed is based on the assumption that the mean graph is low rank, as we have seen in Section~\ref{sec:corr_data}, $\hat{P}$ often performs well even when this assumption is false. 
 To further illuminate this point, we performed a synthetic data analysis under a full-rank independent edge model where we used the sample mean of the 454 graphs in the Desikan dataset as the probability matrix $P$.
-As in the previous section, we simulated datasets of size $M=1,5$, and $10$ and used $\bar{A}$ and $\hat{P}$, where we varied the rank of $\hat{P}$ from $1$ to $70$.
+As in the previous section, we simulated datasets from the full rank IEM distribution with probability matrix $P$ of size $M=1,5$, and $10$ and used $\bar{A}$ and $\hat{P}$, where we varied the rank of $\hat{P}$ from $1$ to $70$.
 
 Fig.~\ref{fig:sim_desikan} shows the resulting estimated MSE for $\bar{A}$ (solid line) and $\hat{P}$ (dashed line) for simulated data based on the full rank probability matrix $P$ shown in the left panel of Fig.~\ref{fig:Matrix_desikan_m5}.
 % Vertical lines at each dimension indicate the 95\% confidence intervals for the MSE.
