@@ -21,14 +21,8 @@
 
 import numpy as np
 import nibabel as nib
-import random
-import sys
 import os
-import re
 import vtk
-import paramiko
-import getpass
-import subprocess
 import csv
 
 from dipy.viz import window, actor
