@@ -26,6 +26,7 @@ import vtk
 import csv
 
 from dipy.viz import window, actor
+from itertools import permutations
 from argparse import ArgumentParser
 
 
@@ -44,28 +45,14 @@ def visualize(atlasfile, outdir, intensityfile):
     # load atlas file
     atlas_volume = load_atlas(atlasfile, intensities, signs)
 
-    faces = [( 1, 0, 0),
-             (-1, 0, 0),
-             ( 0, 1, 0),
-             ( 0,-1, 0),
-             ( 0, 1, 0),
-             ( 0, 0, 1),
-             ( 0, 0,-1),
-             ( 1, 1, 0),
-             ( 1, 0, 1),
-             ( 0, 1, 1),
-             (-1,-1, 0),
-             (-1, 0,-1),
-             ( 0,-1,-1),
-             ]
-
+    faces = list(set([t for t in permutations([1,1,1,-1,-1,-1,0,0,0], 3)]))
     for i in range(len(faces)):
         # Initialize renderer
         renderer = window.Renderer()
-
+        renderer.SetBackground(1, 1, 1)
         # Set camera orientation properties
         # TODO: allow this as an argument
-        renderer.set_camera(position=faces[i])  # args are: position=(), focal_point=(), view_up=()
+        renderer.set_camera(position=faces[i], view_up=(0,0,1))  # args are: position=(), focal_point=(), view_up=()
 
         # Add streamlines to viz session
         renderer.add(atlas_volume)
@@ -90,7 +77,7 @@ def load_atlas(path, intensities, signs):
     alphaChannelFunc = vtk.vtkPiecewiseFunction()
     alphaChannelFunc.AddPoint(0, 0.0)
     for i in range(len(intensities)):
-        alphaChannelFunc.AddPoint(i+1, intensities[i])
+        alphaChannelFunc.AddPoint(i+1, np.log2(intensities[i]))
 
     # This class stores color data and can create color tables from a few color
     # points. For this demo, we want the three cubes to be of the colors red
@@ -98,8 +85,8 @@ def load_atlas(path, intensities, signs):
     colorFunc = vtk.vtkColorTransferFunction()
     colorFunc.AddRGBPoint(0, 0.0, 0.0, 0.0)
     for i in range(len(signs)):
-        if signs[i] < 0: colorFunc.AddRGBPoint(i+1, 0.0, 0.0, intensities[i])
-        elif signs[i] > 0: colorFunc.AddRGBPoint(i+1, intensities[i], 0.0, 0.0)
+        if signs[i] < 0: colorFunc.AddRGBPoint(i+1, 0.0, 0.0, np.log2(intensities[i]))
+        elif signs[i] > 0: colorFunc.AddRGBPoint(i+1, np.log2(intensities[i]), 0.0, 0.0)
         else: colorFunc.AddRGBPoint(i+1, 1.0, 1.0, 1.0)
 
     # The previous two classes stored properties. Because we want to apply
@@ -135,7 +122,6 @@ def normalize_intensities(intensities):
     minval = intensities.min()
     maxval = intensities.max()
     intensities = (intensities - minval)/maxval
-    print intensities
     return intensities
 
 def main():
